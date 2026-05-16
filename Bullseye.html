@@ -1231,6 +1231,66 @@ input, select { font-family: inherit; color: inherit; }
   .recs-grid { grid-template-columns: 1fr; }
   .portfolio-summary { grid-template-columns: 1fr 1fr; }
 }
+
+/* ====== LIVE DATA & AI FEATURE STYLES ====== */
+/* Live price indicator dot on card */
+.live-price-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #34d399;
+  border-radius: 50%;
+  margin-left: 4px;
+  vertical-align: middle;
+  animation: livePulse 2s infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* Offline live dot in navbar */
+.live-dot.offline {
+  background: #6b7280;
+  animation: none;
+}
+
+/* AI badge on rec cards */
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--brand);
+  background: var(--brand-w);
+  border: 1px solid var(--brand);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 6px;
+  vertical-align: middle;
+  font-family: var(--font-mono);
+}
+
+/* AI loading card state */
+.rec-card.ai-loading {
+  opacity: 0.65;
+  animation: aiPulse 1.5s ease-in-out infinite;
+}
+@keyframes aiPulse {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 0.85; }
+}
+
+/* AI analyze button */
+.ai-analyze-btn {
+  border: 1px solid !important;
+  font-weight: 600 !important;
+}
+.ai-analyze-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 </style>
 </head>
 <body>
@@ -2855,13 +2915,17 @@ function TargetLadder({ rec }) {
 }
 
 // ----- Recommendation card -----
-function RecCard({ rec, onClick, compact = false }) {
+function RecCard({ rec, onClick, compact = false, aiLoading = false, hasAI = false }) {
+  const { prices } = React.useContext(LiveDataContext);
+  const liveData = prices[rec.symbol];
+  const displayPrice = liveData ? liveData.price : rec.price;
+  const displayChange = liveData ? liveData.change : rec.change;
   const actionCls = rec.action.toLowerCase();
-  const upClass = rec.change >= 0 ? "up" : "dn";
+  const upClass = displayChange >= 0 ? "up" : "dn";
   const isShort = rec.direction === "SHORT";
 
   return (
-    <div className={`rec-card ${actionCls}`} onClick={onClick}>
+    <div className={`rec-card ${actionCls}${aiLoading ? " ai-loading" : ""}`} onClick={onClick}>
       <div className="rec-head">
         <div className="rec-ident">
           <div className={`rec-logo ${rec.market.toLowerCase()}`}>{rec.symbol.slice(0, 3)}</div>
@@ -2869,6 +2933,7 @@ function RecCard({ rec, onClick, compact = false }) {
             <div className="rec-symbol">
               {rec.symbol}
               <span className="rec-exchange">{rec.exchange}</span>
+              {hasAI && <span className="ai-badge">✦ AI</span>}
             </div>
             <div className="rec-name">{rec.name}</div>
           </div>
@@ -2880,8 +2945,8 @@ function RecCard({ rec, onClick, compact = false }) {
       </div>
 
       <div className="rec-price-row">
-        <div className="rec-price">{fmtPrice(rec.price, rec.currency)}</div>
-        <div className={`rec-change ${upClass}`}>{fmtChange(rec.change)}</div>
+        <div className="rec-price">{fmtPrice(displayPrice, rec.currency)}{liveData && <span className="live-price-dot"></span>}</div>
+        <div className={`rec-change ${upClass}`}>{fmtChange(displayChange)}</div>
         <div className="rec-spark">
           <Sparkline data={rec.sparkline} action={rec.action} />
         </div>
@@ -2951,11 +3016,220 @@ Object.assign(window, {
   fmtPrice, fmtChange, pctFromCurrent, marketLabel,
   Sparkline, ConfRing, BigChart, TargetLadder, RecCard, WatchlistItem
 });
+
+</script>
+
+<script type="text/babel">
+/* global React */
+// ====================================================================
+// LIVE DATA CONTEXT — polls Yahoo Finance + CoinGecko every 60s
+// ====================================================================
+
+const LiveDataContext = React.createContext({ prices: {}, lastUpdated: null, isLive: false, error: null });
+
+// Crypto id → symbol mapping
+const CRYPTO_ID_MAP = {
+  bitcoin: "BTC", ethereum: "ETH", solana: "SOL",
+  dogecoin: "DOGE", binancecoin: "BNB", chainlink: "LINK"
+};
+
+// NSE symbols that need .NS suffix for Yahoo Finance
+const NSE_SYMBOLS_LIST = [
+  "RELIANCE.NS","HDFCBANK.NS","TATAMOTORS.NS","INFY.NS","ADANIGREEN.NS",
+  "POLYCAB.NS","ZOMATO.NS","SBIN.NS","IRFC.NS","TRENT.NS","DIXON.NS","TCS.NS"
+];
+
+// US symbols (no suffix needed)
+const US_SYMBOLS_LIST = ["NVDA","AAPL","TSLA","AMD","GOOGL","META","AMZN","PLTR","UBER"];
+
+async function fetchYahooQuotes(symbols) {
+  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols.join(",")}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Yahoo fetch failed: ${res.status}`);
+  const data = await res.json();
+  const quotes = data?.quoteResponse?.result || [];
+  const out = {};
+  for (const q of quotes) {
+    const sym = q.symbol.replace(".NS", "");
+    out[sym] = {
+      price: q.regularMarketPrice,
+      change: q.regularMarketChangePercent
+    };
+  }
+  return out;
+}
+
+async function fetchCryptoPrices() {
+  const ids = Object.keys(CRYPTO_ID_MAP).join(",");
+  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`CoinGecko fetch failed: ${res.status}`);
+  const data = await res.json();
+  const out = {};
+  for (const [id, sym] of Object.entries(CRYPTO_ID_MAP)) {
+    if (data[id]) {
+      out[sym] = {
+        price: data[id].usd,
+        change: data[id].usd_24h_change ?? 0
+      };
+    }
+  }
+  return out;
+}
+
+function LiveDataProvider({ children }) {
+  const [state, setState] = React.useState({
+    prices: {}, lastUpdated: null, isLive: false, error: null
+  });
+
+  const fetchAll = React.useCallback(async () => {
+    try {
+      const [nseData, usData, cryptoData] = await Promise.allSettled([
+        fetchYahooQuotes(NSE_SYMBOLS_LIST),
+        fetchYahooQuotes(US_SYMBOLS_LIST),
+        fetchCryptoPrices()
+      ]);
+
+      const prices = {};
+      if (nseData.status === "fulfilled") Object.assign(prices, nseData.value);
+      if (usData.status === "fulfilled") Object.assign(prices, usData.value);
+      if (cryptoData.status === "fulfilled") Object.assign(prices, cryptoData.value);
+
+      const hasAny = Object.keys(prices).length > 0;
+      setState({
+        prices,
+        lastUpdated: new Date(),
+        isLive: hasAny,
+        error: hasAny ? null : "All data sources unavailable"
+      });
+    } catch (err) {
+      setState(prev => ({ ...prev, isLive: false, error: err.message }));
+    }
+  }, []);
+
+  React.useEffect(() => {
+    fetchAll();
+    const id = setInterval(fetchAll, 60000);
+    return () => clearInterval(id);
+  }, [fetchAll]);
+
+  return (
+    <LiveDataContext.Provider value={state}>
+      {children}
+    </LiveDataContext.Provider>
+  );
+}
+
+// AI Analysis state — stored in module scope so it persists across re-renders
+window.__aiAnalysisCache = window.__aiAnalysisCache || {};
+window.__aiAnalysisListeners = window.__aiAnalysisListeners || [];
+
+function notifyAIListeners() {
+  window.__aiAnalysisListeners.forEach(fn => fn());
+}
+
+function useAIAnalysis() {
+  const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+  React.useEffect(() => {
+    window.__aiAnalysisListeners.push(forceUpdate);
+    return () => {
+      window.__aiAnalysisListeners = window.__aiAnalysisListeners.filter(fn => fn !== forceUpdate);
+    };
+  }, []);
+  return window.__aiAnalysisCache;
+}
+
+async function analyzeStockWithClaude(rec, apiKey) {
+  const prompt = `You are a quantitative equity analyst. Analyze this stock recommendation and return ONLY valid JSON with no markdown or explanation.
+
+Stock: ${rec.symbol} (${rec.name}) on ${rec.exchange}
+Current Price: ${rec.currency}${rec.price}
+Change Today: ${rec.change > 0 ? "+" : ""}${rec.change.toFixed(2)}%
+Current Action: ${rec.action}
+Confidence: ${rec.confidence}%
+Entry Zone: ${rec.currency}${rec.entry.low}–${rec.currency}${rec.entry.high}
+Targets: ${rec.targets.map((t, i) => `T${i+1}=${rec.currency}${t}`).join(", ")}
+Stop Loss: ${rec.currency}${rec.stopLoss}
+R:R Ratio: ${rec.rr}:1
+Risk: ${rec.risk}
+Horizon: ${rec.horizon}
+RSI(14): ${rec.rsi}
+P/E: ${rec.pe || "N/A"}
+Market Cap: ${rec.marketCap}
+Sector: ${rec.sector}
+Rationale: ${rec.rationale}
+Catalysts: ${rec.catalysts.join(", ")}
+
+Return JSON with exactly these fields:
+{
+  "action": "BUY" | "SELL" | "HOLD",
+  "confidence": 0-100,
+  "rationale": "2-3 sentence AI analysis",
+  "entry": {"low": number, "high": number},
+  "targets": [number, number, number],
+  "stopLoss": number,
+  "rr": number,
+  "catalysts": ["string", "string", "string"],
+  "risk": "LOW" | "MEDIUM" | "HIGH" | "VERY HIGH",
+  "horizon": "string like '3-6 months'"
+}`;
+
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true"
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 800,
+      messages: [{ role: "user", content: prompt }]
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Claude API error ${response.status}: ${errText}`);
+  }
+  const data = await response.json();
+  const text = data.content[0].text;
+  // extract JSON from response
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error("No JSON found in Claude response");
+  return JSON.parse(jsonMatch[0]);
+}
+
+// Batch analyze with max 5 concurrent
+async function analyzeAllStocks(recs, apiKey, onProgress) {
+  const batchSize = 5;
+  for (let i = 0; i < recs.length; i += batchSize) {
+    const batch = recs.slice(i, i + batchSize);
+    await Promise.allSettled(batch.map(async rec => {
+      window.__aiAnalysisCache[rec.id] = { loading: true };
+      notifyAIListeners();
+      try {
+        const result = await analyzeStockWithClaude(rec, apiKey);
+        window.__aiAnalysisCache[rec.id] = { loading: false, data: result };
+      } catch (err) {
+        window.__aiAnalysisCache[rec.id] = { loading: false, error: err.message };
+      }
+      notifyAIListeners();
+      if (onProgress) onProgress();
+    }));
+  }
+}
+
+Object.assign(window, {
+  LiveDataContext, LiveDataProvider, useAIAnalysis, analyzeAllStocks, analyzeStockWithClaude, notifyAIListeners
+});
 </script>
 
 <script type="text/babel">
 /* global React, RECOMMENDATIONS, NEWS_ITEMS, ALERTS_DATA, PORTFOLIO */
 /* global RecCard, WatchlistItem, ConfRing, BigChart, TargetLadder, Sparkline, fmtPrice, fmtChange, pctFromCurrent */
+/* global LiveDataContext, useAIAnalysis, analyzeAllStocks, analyzeStockWithClaude, notifyAIListeners */
 // All screens for BULLSEYE
 
 const { useState: useS, useMemo: useM, useEffect: useE } = React;
@@ -2964,6 +3238,9 @@ const { useState: useS, useMemo: useM, useEffect: useE } = React;
 function HomeScreen({ onOpenDetail }) {
   const [filter, setFilter] = useS("all");
   const [actionFilter, setActionFilter] = useS("ALL");
+  const [aiRunning, setAiRunning] = useS(false);
+  const aiCache = useAIAnalysis();
+  const apiKey = typeof localStorage !== "undefined" ? localStorage.getItem("bullseye_anthropic_key") : null;
 
   const filtered = useM(() => {
     let r = RECOMMENDATIONS;
@@ -2982,6 +3259,17 @@ function HomeScreen({ onOpenDetail }) {
   }, []);
 
   const watchlistRecs = RECOMMENDATIONS.slice(0, 7);
+
+  const handleAnalyzeAll = async () => {
+    if (!apiKey || aiRunning) return;
+    setAiRunning(true);
+    try {
+      await analyzeAllStocks(filtered, apiKey, () => {});
+    } catch (e) {
+      console.error("AI analyze all error:", e);
+    }
+    setAiRunning(false);
+  };
 
   return (
     <div>
@@ -3040,6 +3328,16 @@ function HomeScreen({ onOpenDetail }) {
             <button className={`chip ${actionFilter === "BUY" ? "active" : ""}`} onClick={() => setActionFilter("BUY")}>Buy</button>
             <button className={`chip ${actionFilter === "SELL" ? "active" : ""}`} onClick={() => setActionFilter("SELL")}>Sell</button>
             <button className={`chip ${actionFilter === "HOLD" ? "active" : ""}`} onClick={() => setActionFilter("HOLD")}>Hold</button>
+            {apiKey && (
+              <button
+                className="chip ai-analyze-btn"
+                onClick={handleAnalyzeAll}
+                disabled={aiRunning}
+                style={{ marginLeft: 4, background: "var(--brand-w)", color: "var(--brand)", borderColor: "var(--brand)" }}
+              >
+                {aiRunning ? "✦ Analyzing…" : "✦ AI Analyze All"}
+              </button>
+            )}
             <div className="right">
               <button className="iconbtn" title="Grid">▦</button>
               <button className="iconbtn" title="List">≡</button>
@@ -3047,9 +3345,18 @@ function HomeScreen({ onOpenDetail }) {
           </div>
 
           <div className="recs-grid">
-            {filtered.map(r => (
-              <RecCard key={r.id} rec={r} onClick={() => onOpenDetail(r)} />
-            ))}
+            {filtered.map(r => {
+              const ai = aiCache[r.id];
+              return (
+                <RecCard
+                  key={r.id}
+                  rec={ai?.data ? { ...r, ...ai.data, analyst: "BULLSEYE AI", source: "AI Analysis" } : r}
+                  onClick={() => onOpenDetail(ai?.data ? { ...r, ...ai.data, analyst: "BULLSEYE AI", source: "AI Analysis" } : r)}
+                  aiLoading={ai?.loading}
+                  hasAI={!!ai?.data}
+                />
+              );
+            })}
           </div>
         </div>
 
@@ -3117,11 +3424,33 @@ function HomeScreen({ onOpenDetail }) {
 }
 
 // =============== DETAIL OVERLAY ===============
-function DetailPanel({ rec, onClose }) {
+function DetailPanel({ rec, onClose, onRecUpdate }) {
   if (!rec) return null;
+  const [analyzing, setAnalyzing] = useS(false);
+  const [analyzeError, setAnalyzeError] = useS(null);
+  const { prices } = React.useContext(LiveDataContext);
+  const liveData = prices[rec.symbol];
+  const displayPrice = liveData ? liveData.price : rec.price;
+  const displayChange = liveData ? liveData.change : rec.change;
   const actionCls = rec.action.toLowerCase();
-  const upCls = rec.change >= 0 ? "up" : "dn";
+  const upCls = displayChange >= 0 ? "up" : "dn";
   const isShort = rec.direction === "SHORT";
+  const apiKey = typeof localStorage !== "undefined" ? localStorage.getItem("bullseye_anthropic_key") : null;
+
+  const handleAnalyze = async () => {
+    if (!apiKey || analyzing) return;
+    setAnalyzing(true);
+    setAnalyzeError(null);
+    try {
+      const result = await analyzeStockWithClaude(rec, apiKey);
+      window.__aiAnalysisCache[rec.id] = { loading: false, data: result };
+      notifyAIListeners();
+      if (onRecUpdate) onRecUpdate({ ...rec, ...result, analyst: "BULLSEYE AI", source: "AI Analysis" });
+    } catch (err) {
+      setAnalyzeError(err.message);
+    }
+    setAnalyzing(false);
+  };
 
   return (
     <div className={`detail-overlay ${rec ? "open" : ""}`} onClick={onClose}>
@@ -3143,8 +3472,8 @@ function DetailPanel({ rec, onClose }) {
 
         <div className="detail-price-row">
           <div>
-            <span className="detail-price">{fmtPrice(rec.price, rec.currency)}</span>
-            <span className={`detail-change ${upCls}`}>{fmtChange(rec.change)}</span>
+            <span className="detail-price">{fmtPrice(displayPrice, rec.currency)}{liveData && <span className="live-price-dot" style={{marginLeft:6}}></span>}</span>
+            <span className={`detail-change ${upCls}`}>{fmtChange(displayChange)}</span>
           </div>
           <div className={`detail-action-large ${actionCls}`}>
             {rec.action}{isShort && " · SHORT"}
@@ -3225,7 +3554,18 @@ function DetailPanel({ rec, onClose }) {
           </button>
           <button className="btn-secondary">+ Watchlist</button>
           <button className="btn-secondary">Set Alert</button>
+          {apiKey && (
+            <button className="btn-secondary" onClick={handleAnalyze} disabled={analyzing}
+              style={{ color: "var(--brand)", borderColor: "var(--brand)" }}>
+              {analyzing ? "✦ Analyzing…" : "✦ Analyze"}
+            </button>
+          )}
         </div>
+        {analyzeError && (
+          <div style={{ padding: "10px 24px", color: "var(--sell)", fontSize: 12, fontFamily: "var(--font-mono)" }}>
+            AI Error: {analyzeError}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -3391,9 +3731,26 @@ function PortfolioScreen({ onOpenDetail }) {
 }
 
 // =============== SCREENER ===============
+const NIFTY50_SYMBOLS = [
+  "RELIANCE.NS","TCS.NS","HDFCBANK.NS","BHARTIARTL.NS","ICICIBANK.NS",
+  "INFOSYS.NS","SBIN.NS","LICI.NS","HINDUNILVR.NS","ITC.NS",
+  "BAJFINANCE.NS","KOTAKBANK.NS","LT.NS","HCLTECH.NS","MARUTI.NS",
+  "SUNPHARMA.NS","TITAN.NS","WIPRO.NS","ULTRACEMCO.NS","ONGC.NS",
+  "NTPC.NS","POWERGRID.NS","TATAMOTORS.NS","NESTLEIND.NS","TATASTEEL.NS",
+  "AXISBANK.NS","INDUSINDBK.NS","BAJAJFINSV.NS","TECHM.NS","DRREDDY.NS",
+  "ADANIENT.NS","ADANIPORTS.NS","CIPLA.NS","JSWSTEEL.NS","DIVISLAB.NS",
+  "COALINDIA.NS","ASIANPAINT.NS","GRASIM.NS","EICHERMOT.NS","BPCL.NS",
+  "APOLLOHOSP.NS","HEROMOTOCO.NS","BRITANNIA.NS","BAJAJ-AUTO.NS","SBILIFE.NS",
+  "HDFCLIFE.NS","HINDALCO.NS","M&M.NS","TATACONSUM.NS","UPL.NS"
+];
+
 function ScreenerScreen({ onOpenDetail }) {
   const [sortBy, setSortBy] = useS("confidence");
   const [filter, setFilter] = useS("all");
+  const [nseData, setNseData] = useS(null);
+  const [nseLoading, setNseLoading] = useS(false);
+  const [nseError, setNseError] = useS(null);
+  const [showNse, setShowNse] = useS(false);
 
   const data = useM(() => {
     let r = [...RECOMMENDATIONS];
@@ -3407,6 +3764,48 @@ function ScreenerScreen({ onOpenDetail }) {
     });
     return r;
   }, [sortBy, filter]);
+
+  const loadNseData = async () => {
+    setNseLoading(true);
+    setNseError(null);
+    try {
+      const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${NIFTY50_SYMBOLS.join(",")}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      const quotes = json?.quoteResponse?.result || [];
+      const mapped = quotes.map(q => ({
+        symbol: q.symbol.replace(".NS", ""),
+        name: q.longName || q.shortName || q.symbol,
+        price: q.regularMarketPrice,
+        change: q.regularMarketChangePercent,
+        volume: q.regularMarketVolume,
+        marketCap: q.marketCap,
+        pe: q.trailingPE || q.forwardPE || null,
+        high52: q.fiftyTwoWeekHigh,
+        low52: q.fiftyTwoWeekLow
+      }));
+      setNseData(mapped);
+      setShowNse(true);
+    } catch (err) {
+      setNseError(err.message);
+    }
+    setNseLoading(false);
+  };
+
+  const fmtVol = (v) => {
+    if (!v) return "—";
+    if (v >= 1e7) return (v / 1e7).toFixed(2) + " Cr";
+    if (v >= 1e5) return (v / 1e5).toFixed(2) + " L";
+    return v.toLocaleString();
+  };
+  const fmtMktCap = (v) => {
+    if (!v) return "—";
+    const cr = v / 1e7;
+    if (cr >= 1e5) return (cr / 1e5).toFixed(1) + "L Cr";
+    if (cr >= 1000) return Math.round(cr / 1000) + "K Cr";
+    return Math.round(cr) + " Cr";
+  };
 
   return (
     <div>
@@ -3428,8 +3827,76 @@ function ScreenerScreen({ onOpenDetail }) {
         <button className={`chip ${sortBy === "upside" ? "active" : ""}`} onClick={() => setSortBy("upside")}>Upside</button>
         <button className={`chip ${sortBy === "rr" ? "active" : ""}`} onClick={() => setSortBy("rr")}>R:R</button>
         <button className={`chip ${sortBy === "change" ? "active" : ""}`} onClick={() => setSortBy("change")}>Today's Move</button>
+        <button
+          className="chip"
+          onClick={loadNseData}
+          disabled={nseLoading}
+          style={{ marginLeft: 8, background: "rgba(52,211,153,0.1)", color: "#34d399", borderColor: "#34d39944" }}
+        >
+          {nseLoading ? "⟳ Loading…" : "🔄 Load Live NSE Data"}
+        </button>
       </div>
 
+      {nseError && (
+        <div style={{ margin: "8px 0 12px", padding: "10px 16px", background: "var(--sell-w)", color: "var(--sell)", borderRadius: 8, fontSize: 12, fontFamily: "var(--font-mono)" }}>
+          NSE fetch error: {nseError}
+        </div>
+      )}
+
+      {showNse && nseData && (
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--t-1)" }}>
+              Nifty 50 — Live NSE Data
+            </div>
+            <span style={{ fontSize: 11, color: "#34d399", fontFamily: "var(--font-mono)" }}>● LIVE</span>
+            <button className="iconbtn" style={{ marginLeft: "auto", fontSize: 11 }} onClick={() => setShowNse(false)}>✕ Hide</button>
+          </div>
+          <table className="screener-table">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Price (₹)</th>
+                <th>Change%</th>
+                <th>Volume</th>
+                <th>Mkt Cap</th>
+                <th>P/E</th>
+                <th>52W High</th>
+                <th>52W Low</th>
+                <th>Picks</th>
+              </tr>
+            </thead>
+            <tbody>
+              {nseData.map(row => {
+                const matchRec = RECOMMENDATIONS.find(r => r.symbol === row.symbol);
+                return (
+                  <tr key={row.symbol} style={{ cursor: matchRec ? "pointer" : "default" }}
+                    onClick={() => matchRec && onOpenDetail(matchRec)}>
+                    <td style={{ fontWeight: 700 }}>{row.symbol}</td>
+                    <td style={{ fontSize: 11, color: "var(--t-2)", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.name}</td>
+                    <td className="num">₹{row.price?.toLocaleString("en-IN", { maximumFractionDigits: 2 }) || "—"}</td>
+                    <td className={`num ${row.change >= 0 ? "up" : "dn"}`}>{row.change != null ? (row.change > 0 ? "+" : "") + row.change.toFixed(2) + "%" : "—"}</td>
+                    <td className="num" style={{ fontSize: 11 }}>{fmtVol(row.volume)}</td>
+                    <td className="num" style={{ fontSize: 11 }}>{fmtMktCap(row.marketCap)}</td>
+                    <td className="num">{row.pe ? row.pe.toFixed(1) : "—"}</td>
+                    <td className="num up">{row.high52 ? "₹" + row.high52.toLocaleString("en-IN", { maximumFractionDigits: 0 }) : "—"}</td>
+                    <td className="num dn">{row.low52 ? "₹" + row.low52.toLocaleString("en-IN", { maximumFractionDigits: 0 }) : "—"}</td>
+                    <td>{matchRec
+                      ? <span className={`action-badge ${matchRec.action.toLowerCase()}`} style={{ cursor: "pointer" }}>{matchRec.action}</span>
+                      : <span style={{ color: "var(--t-4)", fontSize: 11 }}>—</span>}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div style={{ marginBottom: 12, fontSize: 13, fontWeight: 600, color: "var(--t-1)" }}>
+        Bullseye Recommendations
+      </div>
       <table className="screener-table">
         <thead>
           <tr>
@@ -3613,6 +4080,32 @@ function NewsScreen() {
 
 // =============== SETTINGS / PROFILE ===============
 function SettingsScreen() {
+  const [apiKeyInput, setApiKeyInput] = useS(() => {
+    try { return localStorage.getItem("bullseye_anthropic_key") || ""; } catch { return ""; }
+  });
+  const [apiKeyMasked, setApiKeyMasked] = useS(true);
+  const [apiKeySaved, setApiKeySaved] = useS(() => {
+    try { return !!localStorage.getItem("bullseye_anthropic_key"); } catch { return false; }
+  });
+  const [apiKeySaveMsg, setApiKeySaveMsg] = useS("");
+
+  const handleSaveKey = () => {
+    try {
+      if (apiKeyInput.trim()) {
+        localStorage.setItem("bullseye_anthropic_key", apiKeyInput.trim());
+        setApiKeySaved(true);
+        setApiKeySaveMsg("API key saved successfully.");
+      } else {
+        localStorage.removeItem("bullseye_anthropic_key");
+        setApiKeySaved(false);
+        setApiKeySaveMsg("API key removed.");
+      }
+      setTimeout(() => setApiKeySaveMsg(""), 3000);
+    } catch (e) {
+      setApiKeySaveMsg("Error saving key: " + e.message);
+    }
+  };
+
   return (
     <div>
       <div className="hero">
@@ -3624,6 +4117,52 @@ function SettingsScreen() {
 
       <div className="page-grid">
         <div>
+          <div className="rail-card" style={{ marginBottom: 20 }}>
+            <div className="rail-head"><div className="rail-title">✦ AI Analysis</div></div>
+            <div style={{ padding: "20px 22px" }}>
+              <div style={{ fontSize: 13, color: "var(--t-2)", marginBottom: 14, lineHeight: 1.6 }}>
+                Connect your Anthropic API key to enable AI-powered stock analysis. The key is stored locally in your browser and never sent to any server other than Anthropic.
+              </div>
+              <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+                <input
+                  type={apiKeyMasked ? "password" : "text"}
+                  value={apiKeyInput}
+                  onChange={e => setApiKeyInput(e.target.value)}
+                  placeholder="sk-ant-api03-..."
+                  style={{
+                    flex: 1, background: "var(--surface-2)", border: "1px solid var(--border-2)",
+                    borderRadius: 8, padding: "10px 14px", color: "var(--t-1)",
+                    fontFamily: "var(--font-mono)", fontSize: 13, outline: "none"
+                  }}
+                />
+                <button
+                  className="btn-secondary"
+                  onClick={() => setApiKeyMasked(!apiKeyMasked)}
+                  style={{ flexShrink: 0 }}
+                >{apiKeyMasked ? "Show" : "Hide"}</button>
+                <button
+                  className="btn-primary"
+                  onClick={handleSaveKey}
+                  style={{ flexShrink: 0 }}
+                >Save Key</button>
+              </div>
+              {apiKeySaveMsg && (
+                <div style={{ fontSize: 12, color: apiKeySaved ? "var(--buy)" : "var(--sell)", fontFamily: "var(--font-mono)" }}>
+                  {apiKeySaveMsg}
+                </div>
+              )}
+              {apiKeySaved && (
+                <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 8, fontSize: 12 }}>
+                  <span style={{ color: "var(--buy)" }}>✓</span>
+                  <span style={{ color: "var(--t-2)" }}>API key active — ✦ AI Analyze buttons are now enabled on the Picks screen and in stock detail panels.</span>
+                </div>
+              )}
+              <div style={{ marginTop: 16, padding: "12px 14px", background: "var(--surface-2)", borderRadius: 8, fontSize: 11, color: "var(--t-3)", lineHeight: 1.5, fontFamily: "var(--font-mono)" }}>
+                Model: claude-sonnet-4-6 · Max 5 parallel requests · Key stored in localStorage
+              </div>
+            </div>
+          </div>
+
           <div className="rail-card">
             <div className="rail-head"><div className="rail-title">Account</div></div>
             <div style={{ padding: "20px 22px", display: "flex", alignItems: "center", gap: 16, borderBottom: "1px solid var(--border)" }}>
@@ -3726,6 +4265,7 @@ Object.assign(window, {
 /* global React, ReactDOM */
 /* global HomeScreen, DetailPanel, WatchlistScreen, PortfolioScreen, ScreenerScreen, AlertsScreen, NewsScreen, SettingsScreen, OnboardingScreen */
 /* global TweaksPanel, TweakSection, TweakRadio, TweakColor, TweakToggle, TweakSelect, useTweaks */
+/* global LiveDataContext, LiveDataProvider */
 
 const { useState, useEffect } = React;
 
@@ -3740,10 +4280,11 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 const ACCENT_OPTIONS = ["#d4a04a", "#34d399", "#6fa0ff", "#f87171", "#c084fc"];
 const FONT_OPTIONS = ["Instrument Serif", "Manrope", "Space Grotesk"];
 
-function App() {
+function AppInner() {
   const [tab, setTab] = useState("home");
   const [detail, setDetail] = useState(null);
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const liveData = React.useContext(LiveDataContext);
 
   // Apply tweaks live via CSS vars
   useEffect(() => {
@@ -3830,8 +4371,10 @@ function App() {
                 <span className="kbd">⌘K</span>
               </div>
               <div className="market-pill">
-                <span className="live-dot"></span>
-                NSE OPEN · 13:42 IST
+                <span className={liveData.isLive ? "live-dot" : "live-dot offline"}></span>
+                {liveData.isLive
+                  ? <>🟢 LIVE · NSE OPEN</>
+                  : <>⚫ CACHED · NSE OPEN</>}
               </div>
               <div className="avatar">A</div>
             </div>
@@ -3847,7 +4390,7 @@ function App() {
             {tab === "settings" && <SettingsScreen />}
           </div>
 
-          {detail && <DetailPanel rec={detail} onClose={() => setDetail(null)} />}
+          {detail && <DetailPanel rec={detail} onClose={() => setDetail(null)} onRecUpdate={(updated) => setDetail(updated)} />}
         </React.Fragment>
       )}
 
@@ -3881,6 +4424,14 @@ function App() {
         </TweakSection>
       </TweaksPanel>
     </React.Fragment>
+  );
+}
+
+function App() {
+  return (
+    <LiveDataProvider>
+      <AppInner />
+    </LiveDataProvider>
   );
 }
 
