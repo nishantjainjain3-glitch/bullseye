@@ -1672,6 +1672,164 @@ input, select { font-family: inherit; color: inherit; }
   border-radius: 6px;
   animation: aiPulse 1.5s ease-in-out infinite;
 }
+
+/* ====== TECHNICAL ANALYSIS STYLES ====== */
+/* Tech badge strip on rec cards */
+.tech-strip {
+  padding: 6px 16px 8px;
+  display: flex; gap: 5px; flex-wrap: wrap; align-items: center;
+  border-top: 1px solid var(--border);
+}
+.tech-chip {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.tech-chip.rsi-low { background: rgba(52,211,153,0.15); color: #34d399; }
+.tech-chip.rsi-high { background: rgba(248,113,113,0.15); color: #f87171; }
+.tech-chip.rsi-neutral { background: var(--surface-3); color: var(--t-2); }
+.tech-chip.trend-up { background: rgba(52,211,153,0.1); color: #34d399; }
+.tech-chip.trend-down { background: rgba(248,113,113,0.1); color: #f87171; }
+.tech-chip.trend-side { background: var(--surface-3); color: var(--t-3); }
+.tech-chip.vol-high { background: rgba(212,160,74,0.15); color: var(--brand); }
+.tech-chip.macd-bull { background: rgba(52,211,153,0.1); color: #34d399; }
+.tech-chip.macd-bear { background: rgba(248,113,113,0.1); color: #f87171; }
+.tech-chip.loading { background: var(--surface-3); color: var(--t-4); animation: aiPulse 1.5s ease-in-out infinite; width: 80px; height: 18px; }
+
+/* Market Movers panel */
+.movers-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.movers-head {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.movers-title {
+  font-size: 13px; font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+}
+.movers-cols {
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+.movers-col { padding: 10px 14px; }
+.movers-col:first-child { border-right: 1px solid var(--border); }
+.movers-col-head {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 8px; font-weight: 700;
+}
+.movers-col-head.g { color: var(--buy); }
+.movers-col-head.l { color: var(--sell); }
+.mover-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.mover-row:last-child { border-bottom: none; }
+.mover-row:hover { background: var(--bg-soft); margin: 0 -14px; padding: 5px 14px; }
+.mover-sym { font-size: 11px; font-weight: 700; }
+.mover-name { font-size: 9px; color: var(--t-3); font-family: var(--font-mono); max-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mover-chg { font-family: var(--font-mono); font-size: 11px; font-weight: 700; }
+.movers-timestamp { font-size: 10px; color: var(--t-4); font-family: var(--font-mono); }
+
+/* Screener tech filter chips */
+.screener-tech-filters {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 14px; align-items: center;
+}
+.screener-tech-filters .chip.tech-active {
+  background: rgba(52,211,153,0.15); color: #34d399; border-color: rgba(52,211,153,0.4);
+}
+
+/* RSI Gauge in Detail Panel */
+.rsi-gauge-wrap {
+  margin: 12px 0;
+}
+.rsi-gauge-bar {
+  position: relative; height: 12px; border-radius: 6px;
+  background: linear-gradient(90deg, #f87171 0%, #f87171 30%, var(--surface-3) 30%, var(--surface-3) 70%, #f87171 70%, #f87171 100%);
+  overflow: visible;
+}
+.rsi-gauge-marker {
+  position: absolute; top: 50%; transform: translate(-50%, -50%);
+  width: 14px; height: 14px;
+  background: var(--t-1); border: 2px solid var(--bg); border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0,0,0,0.5);
+  transition: left 0.4s ease;
+}
+.rsi-gauge-labels {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 9px; color: var(--t-3);
+  margin-top: 4px;
+}
+.rsi-gauge-label {
+  font-size: 12px; font-weight: 600; margin-top: 8px;
+  font-family: var(--font-mono);
+}
+
+/* MACD mini bars chart */
+.macd-bars {
+  display: flex; align-items: flex-end; gap: 3px; height: 40px;
+  padding: 4px 0;
+}
+.macd-bar {
+  flex: 1; border-radius: 2px 2px 0 0; min-width: 6px;
+  transition: height 0.3s ease;
+}
+.macd-bar.pos { background: rgba(52,211,153,0.7); }
+.macd-bar.neg { background: rgba(248,113,113,0.7); border-radius: 0 0 2px 2px; }
+
+/* Key levels vertical indicator */
+.key-levels-bar {
+  position: relative; width: 24px; height: 100px;
+  background: var(--surface-3); border-radius: 4px;
+  flex-shrink: 0;
+}
+.key-levels-bar .level-dot {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.key-levels-bar .level-dot.support { background: var(--buy); }
+.key-levels-bar .level-dot.price { background: var(--t-1); border: 2px solid var(--bg); }
+.key-levels-bar .level-dot.resistance { background: var(--sell); }
+.key-levels-container { display: flex; gap: 16px; align-items: flex-start; }
+.key-levels-values { flex: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100px; }
+.key-level-item { display: flex; flex-direction: column; }
+.key-level-label { font-size: 9px; color: var(--t-3); font-family: var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.key-level-value { font-family: var(--font-mono); font-size: 14px; font-weight: 700; }
+.key-level-item.s .key-level-value { color: var(--buy); }
+.key-level-item.r .key-level-value { color: var(--sell); }
+.key-level-item.p .key-level-value { color: var(--t-1); }
+
+/* MA Table */
+.ma-table { width: 100%; border-collapse: collapse; }
+.ma-table th { font-family: var(--font-mono); font-size: 10px; color: var(--t-3); letter-spacing: 0.06em; text-transform: uppercase; text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+.ma-table td { font-family: var(--font-mono); font-size: 12px; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.ma-table tr:last-child td { border-bottom: none; }
+.ma-table .up { color: var(--buy); }
+.ma-table .dn { color: var(--sell); }
+
+/* Load tech data button */
+.load-tech-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  background: var(--surface-2); border: 1px solid var(--border-2);
+  border-radius: 8px; color: var(--t-2); font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: var(--font-sans); transition: all 0.2s;
+}
+.load-tech-btn:hover { border-color: var(--brand); color: var(--brand); }
+.load-tech-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -6415,11 +6573,1295 @@ Object.assign(window, {
 </script>
 
 <script type="text/babel">
+/* global React, fmtPrice, fmtChange, LiveDataContext, RECOMMENDATIONS, ALERTS_DATA, NEWS_ITEMS */
+/* global AICouncilModal, AIPill, TodayTopPicks, AveragingAssistant, MyHoldings, FreeAIKeysSection, getFreeAIKeys */
+/* global analyzeStockWithClaude, notifyAIListeners, useAIAnalysis, analyzeAllStocks */
+/* global RecCard, WatchlistItem, ConfRing, BigChart, TargetLadder, Sparkline */
+/* global callGemini, extractJSON, buildStockPrompt */
+// ====================================================================
+// TECHNICAL ANALYSIS ENGINE + ENHANCED FEATURES
+// ====================================================================
+
+// ---- FEATURE 1: Technical Analysis Engine ----
+window.__techCache = window.__techCache || {};
+
+function calcEMA(data, period) {
+  if (data.length < period) return null;
+  const k = 2 / (period + 1);
+  let ema = data.slice(0, period).reduce((s, v) => s + v, 0) / period;
+  for (let i = period; i < data.length; i++) {
+    ema = data[i] * k + ema * (1 - k);
+  }
+  return ema;
+}
+
+function calcEMAArray(data, period) {
+  if (data.length < period) return [];
+  const k = 2 / (period + 1);
+  const result = new Array(period - 1).fill(null);
+  let ema = data.slice(0, period).reduce((s, v) => s + v, 0) / period;
+  result.push(ema);
+  for (let i = period; i < data.length; i++) {
+    ema = data[i] * k + ema * (1 - k);
+    result.push(ema);
+  }
+  return result;
+}
+
+function calcRSI(closes, period = 14) {
+  if (closes.length < period + 1) return null;
+  let gains = 0, losses = 0;
+  for (let i = 1; i <= period; i++) {
+    const diff = closes[i] - closes[i - 1];
+    if (diff > 0) gains += diff; else losses -= diff;
+  }
+  let avgGain = gains / period;
+  let avgLoss = losses / period;
+  for (let i = period + 1; i < closes.length; i++) {
+    const diff = closes[i] - closes[i - 1];
+    avgGain = (avgGain * (period - 1) + (diff > 0 ? diff : 0)) / period;
+    avgLoss = (avgLoss * (period - 1) + (diff < 0 ? -diff : 0)) / period;
+  }
+  if (avgLoss === 0) return 100;
+  const rs = avgGain / avgLoss;
+  return 100 - 100 / (1 + rs);
+}
+
+async function fetchTechnicalData(symbol) {
+  const cached = window.__techCache[symbol];
+  if (cached && (Date.now() - cached.fetchedAt) < 5 * 60 * 1000) {
+    return cached.data;
+  }
+
+  try {
+    const yahooSym = symbol.includes('.') ? symbol : (
+      ["RELIANCE","HDFCBANK","TATAMOTORS","INFY","ADANIGREEN","POLYCAB","ZOMATO","SBIN","IRFC","TRENT","DIXON","TCS","BHARTIARTL","ICICIBANK","INFOSYS","LICI","HINDUNILVR","ITC","BAJFINANCE","KOTAKBANK","LT","HCLTECH","MARUTI","SUNPHARMA","TITAN","WIPRO","ULTRACEMCO","ONGC","NTPC","POWERGRID","NESTLEIND","TATASTEEL","AXISBANK","INDUSINDBK","BAJAJFINSV","TECHM","DRREDDY","ADANIENT","ADANIPORTS","CIPLA","JSWSTEEL","DIVISLAB","COALINDIA","ASIANPAINT","GRASIM","EICHERMOT","BPCL","APOLLOHOSP","HEROMOTOCO","BRITANNIA","SBILIFE","HDFCLIFE","HINDALCO","TATACONSUM","UPL"].includes(symbol) ? symbol + ".NS" : symbol
+    );
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSym}?interval=1d&range=3mo&includePrePost=false`;
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('fetch failed');
+    const json = await res.json();
+    const result = json?.chart?.result?.[0];
+    if (!result) throw new Error('no data');
+
+    const q = result.indicators.quote[0];
+    const closes = q.close.filter(v => v != null);
+    const highs = q.high.filter(v => v != null);
+    const lows = q.low.filter(v => v != null);
+    const volumes = q.volume.filter(v => v != null);
+
+    if (closes.length < 20) throw new Error('insufficient data');
+
+    const price = closes[closes.length - 1];
+
+    // RSI(14)
+    const rsi = calcRSI(closes, 14);
+
+    // SMA50, SMA200
+    const sma = (arr, n) => arr.length >= n ? arr.slice(-n).reduce((s,v) => s+v, 0) / n : null;
+    const sma50 = sma(closes, 50);
+    const sma200 = sma(closes, 200);
+
+    // MACD
+    const ema12Arr = calcEMAArray(closes, 12);
+    const ema26Arr = calcEMAArray(closes, 26);
+    const macdLine = [];
+    for (let i = 0; i < closes.length; i++) {
+      if (ema12Arr[i] != null && ema26Arr[i] != null) {
+        macdLine.push(ema12Arr[i] - ema26Arr[i]);
+      }
+    }
+    const macdSignalLine = calcEMAArray(macdLine, 9);
+    const lastMacd = macdLine.length > 0 ? macdLine[macdLine.length - 1] : 0;
+    const lastSignal = macdSignalLine.length > 0 ? macdSignalLine[macdSignalLine.length - 1] : 0;
+    const macdHistogram = lastMacd - lastSignal;
+
+    // Last 10 MACD histogram values for chart
+    const macdHistArr = [];
+    const minLen = Math.min(macdLine.length, macdSignalLine.filter(v=>v!=null).length);
+    const sigFiltered = macdSignalLine.filter(v=>v!=null);
+    for (let i = 0; i < Math.min(macdLine.length, sigFiltered.length); i++) {
+      macdHistArr.push(macdLine[i] - sigFiltered[i]);
+    }
+    const last10Hist = macdHistArr.slice(-10);
+
+    // Volume SMA20
+    const volumeSma20 = sma(volumes, 20);
+    const currentVolume = volumes[volumes.length - 1];
+    const volumeRatio = volumeSma20 > 0 ? currentVolume / volumeSma20 : 1;
+
+    // 52-week high/low (last 252 days)
+    const slice252 = (arr) => arr.slice(-252);
+    const high52w = Math.max(...slice252(highs));
+    const low52w = Math.min(...slice252(lows));
+
+    // Trend
+    let trend = "SIDEWAYS";
+    if (sma50 && sma200 && price > sma50 && sma50 > sma200) trend = "UPTREND";
+    else if (sma50 && price < sma50) trend = "DOWNTREND";
+
+    // Support / Resistance (last 20 days)
+    const recentLows = lows.slice(-20);
+    const recentHighs = highs.slice(-20);
+    const support = Math.min(...recentLows);
+    const resistance = Math.max(...recentHighs);
+
+    // % vs SMAs
+    const priceVsSma50 = sma50 ? ((price - sma50) / sma50) * 100 : null;
+    const priceVsSma200 = sma200 ? ((price - sma200) / sma200) * 100 : null;
+
+    const data = {
+      rsi: rsi ? parseFloat(rsi.toFixed(1)) : null,
+      sma50: sma50 ? parseFloat(sma50.toFixed(2)) : null,
+      sma200: sma200 ? parseFloat(sma200.toFixed(2)) : null,
+      macd: parseFloat(lastMacd.toFixed(4)),
+      macdSignal: parseFloat(lastSignal.toFixed(4)),
+      macdHistogram: parseFloat(macdHistogram.toFixed(4)),
+      macdHistLast10: last10Hist,
+      volumeSma20: volumeSma20 ? Math.round(volumeSma20) : null,
+      currentVolume: currentVolume || 0,
+      volumeRatio: parseFloat(volumeRatio.toFixed(2)),
+      high52w: parseFloat(high52w.toFixed(2)),
+      low52w: parseFloat(low52w.toFixed(2)),
+      trend,
+      support: parseFloat(support.toFixed(2)),
+      resistance: parseFloat(resistance.toFixed(2)),
+      priceVsSma50: priceVsSma50 ? parseFloat(priceVsSma50.toFixed(2)) : null,
+      priceVsSma200: priceVsSma200 ? parseFloat(priceVsSma200.toFixed(2)) : null,
+    };
+
+    window.__techCache[symbol] = { data, fetchedAt: Date.now() };
+    return data;
+  } catch (e) {
+    return null;
+  }
+}
+
+// ---- FEATURE 2: Enhanced AI Prompt Builder ----
+function buildEnhancedStockPrompt(rec, price, change, techData) {
+  const currency = rec.currency || '₹';
+  const name = rec.name;
+  const symbol = rec.symbol;
+
+  let techSection = '';
+  if (techData) {
+    const rsiLabel = techData.rsi < 30 ? 'Oversold' : techData.rsi > 70 ? 'Overbought' : 'Neutral';
+    const aboveBelow50 = techData.priceVsSma50 != null ? (techData.priceVsSma50 >= 0 ? 'above' : 'below') : '';
+    const aboveBelow200 = techData.priceVsSma200 != null ? (techData.priceVsSma200 >= 0 ? 'above' : 'below') : '';
+    const macdLabel = techData.macdHistogram > 0 ? 'bullish crossover' : techData.macdHistogram < 0 ? 'bearish crossover' : 'neutral';
+    const volLabel = techData.volumeRatio > 1.5 ? 'high' : techData.volumeRatio < 0.8 ? 'low' : 'normal';
+    const pctFrom52High = techData.high52w > 0 ? (((price - techData.high52w) / techData.high52w) * 100).toFixed(1) : 'N/A';
+
+    techSection = `
+PRICE DATA:
+- Current Price: ${currency}${price} (${change >= 0 ? '+' : ''}${change.toFixed(2)}% today)
+- 52W High: ${currency}${techData.high52w} | 52W Low: ${currency}${techData.low52w}
+- vs 52W High: ${pctFrom52High}% below high
+
+TECHNICAL INDICATORS:
+- RSI(14): ${techData.rsi} → ${rsiLabel}
+- Trend: ${techData.trend}
+- Price vs SMA50: ${techData.priceVsSma50 != null ? techData.priceVsSma50.toFixed(2) + '%' : 'N/A'} (${aboveBelow50})
+- Price vs SMA200: ${techData.priceVsSma200 != null ? techData.priceVsSma200.toFixed(2) + '%' : 'insufficient data'} ${aboveBelow200 ? '(' + aboveBelow200 + ')' : ''}
+- MACD: ${techData.macd} | Signal: ${techData.macdSignal} | Histogram: ${techData.macdHistogram} → ${macdLabel}
+- Volume Ratio: ${techData.volumeRatio}x avg (${volLabel} volume)
+- Support: ${currency}${techData.support} | Resistance: ${currency}${techData.resistance}`;
+  } else {
+    techSection = `
+PRICE DATA:
+- Current Price: ${currency}${price} (${change >= 0 ? '+' : ''}${change.toFixed(2)}% today)
+- RSI(14): ${rec.rsi || 'N/A'}`;
+  }
+
+  return `You are an expert Indian stock market analyst. Analyze ${name} (${symbol}):
+${techSection}
+
+Based on these technicals, provide a trading recommendation.
+Respond STRICT JSON only (no markdown):
+{
+  "verdict": "BUY",
+  "confidence": 7,
+  "entry_price": ${price},
+  "target_price": ${rec.targets ? rec.targets[0] : price * 1.1},
+  "stop_loss": ${rec.stopLoss || price * 0.92},
+  "reasoning": "2-3 sentences mentioning specific technicals",
+  "time_horizon": "Short-term (1-4 weeks)",
+  "key_levels": {"support": ${techData ? techData.support : price * 0.95}, "resistance": ${techData ? techData.resistance : price * 1.05}},
+  "rsi_signal": "Neutral"
+}
+
+verdict must be "BUY", "SELL", or "HOLD". confidence is 1-10. time_horizon must be "Intraday", "Short-term (1-4 weeks)", or "Medium-term (1-3 months)". rsi_signal must be "Oversold", "Neutral", or "Overbought".`;
+}
+
+// ---- FEATURE 3: Tech Badge Strip on Cards ----
+function TechStrip({ symbol }) {
+  const [techData, setTechData] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    fetchTechnicalData(symbol).then(data => {
+      if (!cancelled) {
+        setTechData(data);
+        setLoading(false);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [symbol]);
+
+  if (loading) {
+    return (
+      <div className="tech-strip">
+        <span className="tech-chip loading"></span>
+      </div>
+    );
+  }
+  if (!techData) return null;
+
+  const rsiClass = techData.rsi < 40 ? 'rsi-low' : techData.rsi > 70 ? 'rsi-high' : 'rsi-neutral';
+  const trendClass = techData.trend === 'UPTREND' ? 'trend-up' : techData.trend === 'DOWNTREND' ? 'trend-down' : 'trend-side';
+  const trendIcon = techData.trend === 'UPTREND' ? '↑' : techData.trend === 'DOWNTREND' ? '↓' : '→';
+  const macdClass = techData.macdHistogram > 0 ? 'macd-bull' : 'macd-bear';
+  const macdIcon = techData.macdHistogram > 0 ? '▲' : '▼';
+
+  return (
+    <div className="tech-strip">
+      <span className={`tech-chip ${rsiClass}`}>RSI {techData.rsi}</span>
+      <span className={`tech-chip ${trendClass}`}>{trendIcon} {techData.trend}</span>
+      {techData.volumeRatio > 1.5 && (
+        <span className="tech-chip vol-high">🔥 {techData.volumeRatio}x Vol</span>
+      )}
+      <span className={`tech-chip ${macdClass}`}>MACD {macdIcon}</span>
+    </div>
+  );
+}
+
+// ---- FEATURE 4: Market Movers Panel ----
+function MarketMovers({ onOpenDetail }) {
+  const [gainers, setGainers] = React.useState([]);
+  const [losers, setLosers] = React.useState([]);
+  const [lastUpdated, setLastUpdated] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const { prices } = React.useContext(LiveDataContext);
+
+  const fetchMovers = React.useCallback(async () => {
+    setLoading(true);
+    let gotData = false;
+    // Try Yahoo screener first
+    try {
+      const [gRes, lRes] = await Promise.allSettled([
+        fetch('https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?formatted=true&scrIds=day_gainers&count=5&region=IN&lang=en-IN', { mode: 'cors' }),
+        fetch('https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?formatted=true&scrIds=day_losers&count=5&region=IN&lang=en-IN', { mode: 'cors' })
+      ]);
+      if (gRes.status === 'fulfilled' && lRes.status === 'fulfilled' && gRes.value.ok && lRes.value.ok) {
+        const gData = await gRes.value.json();
+        const lData = await lRes.value.json();
+        const mapQuote = (q) => ({
+          symbol: (q.symbol || '').replace('.NS', ''),
+          name: q.shortName || q.longName || q.symbol,
+          change: q.regularMarketChangePercent?.raw ?? q.regularMarketChangePercent ?? 0,
+          price: q.regularMarketPrice?.raw ?? q.regularMarketPrice ?? 0,
+        });
+        const g = (gData?.finance?.result?.[0]?.quotes || []).map(mapQuote);
+        const l = (lData?.finance?.result?.[0]?.quotes || []).map(mapQuote);
+        if (g.length > 0 || l.length > 0) {
+          setGainers(g.slice(0, 5));
+          setLosers(l.slice(0, 5));
+          gotData = true;
+        }
+      }
+    } catch (e) {}
+
+    // Fallback: use live prices from context
+    if (!gotData) {
+      const priceEntries = Object.entries(prices).map(([sym, d]) => {
+        const rec = RECOMMENDATIONS.find(r => r.symbol === sym);
+        return { symbol: sym, name: rec ? rec.name : sym, change: d.change, price: d.price };
+      }).filter(e => e.price > 0 && e.change != null);
+
+      const sorted = [...priceEntries].sort((a, b) => b.change - a.change);
+      setGainers(sorted.slice(0, 5));
+      setLosers(sorted.slice(-5).reverse());
+    }
+
+    setLastUpdated(new Date());
+    setLoading(false);
+  }, [prices]);
+
+  React.useEffect(() => {
+    fetchMovers();
+    const id = setInterval(fetchMovers, 60000);
+    return () => clearInterval(id);
+  }, [fetchMovers]);
+
+  const minutesAgo = lastUpdated ? Math.floor((Date.now() - lastUpdated) / 60000) : null;
+
+  const handleRowClick = (sym) => {
+    const rec = RECOMMENDATIONS.find(r => r.symbol === sym);
+    if (rec && onOpenDetail) onOpenDetail(rec);
+  };
+
+  return (
+    <div className="movers-panel">
+      <div className="movers-head">
+        <div className="movers-title">
+          Market Movers
+          <span style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: 'var(--t-3)', fontWeight: 400 }}>NSE</span>
+          {loading && <span style={{ fontSize: 10, color: 'var(--t-4)', fontFamily: 'var(--font-mono)' }}>loading…</span>}
+        </div>
+        {minutesAgo != null && (
+          <span className="movers-timestamp">Updated {minutesAgo === 0 ? 'just now' : `${minutesAgo}m ago`}</span>
+        )}
+      </div>
+      <div className="movers-cols">
+        <div className="movers-col">
+          <div className="movers-col-head g">Top Gainers</div>
+          {gainers.length === 0 && !loading && <div style={{ fontSize: 11, color: 'var(--t-4)', fontFamily: 'var(--font-mono)' }}>No data</div>}
+          {gainers.map((g, i) => (
+            <div key={i} className="mover-row" onClick={() => handleRowClick(g.symbol)}>
+              <div>
+                <div className="mover-sym">{g.symbol}</div>
+                <div className="mover-name">{g.name}</div>
+              </div>
+              <div className="mover-chg up">+{g.change.toFixed(2)}%</div>
+            </div>
+          ))}
+        </div>
+        <div className="movers-col">
+          <div className="movers-col-head l">Top Losers</div>
+          {losers.length === 0 && !loading && <div style={{ fontSize: 11, color: 'var(--t-4)', fontFamily: 'var(--font-mono)' }}>No data</div>}
+          {losers.map((l, i) => (
+            <div key={i} className="mover-row" onClick={() => handleRowClick(l.symbol)}>
+              <div>
+                <div className="mover-sym">{l.symbol}</div>
+                <div className="mover-name">{l.name}</div>
+              </div>
+              <div className="mover-chg dn">{l.change.toFixed(2)}%</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---- FEATURE 5: Smart Screener Filters ----
+// This patches ScreenerScreen to add tech filters
+const TECH_FILTERS = [
+  { id: 'all', label: 'All' },
+  { id: 'rsi_os', label: 'RSI Oversold' },
+  { id: 'rsi_ob', label: 'RSI Overbought' },
+  { id: 'above50ma', label: 'Above 50MA' },
+  { id: 'vol_spike', label: 'Volume Spike' },
+  { id: 'near52h', label: 'Near 52W High' },
+];
+
+function ScreenerScreenV3({ onOpenDetail }) {
+  const [sortBy, setSortBy] = React.useState("confidence");
+  const [filter, setFilter] = React.useState("all");
+  const [nseData, setNseData] = React.useState(null);
+  const [nseLoading, setNseLoading] = React.useState(false);
+  const [nseError, setNseError] = React.useState(null);
+  const [showNse, setShowNse] = React.useState(false);
+  const [techFilter, setTechFilter] = React.useState('all');
+  const [techFilterLoading, setTechFilterLoading] = React.useState(false);
+  const [nseWithTech, setNseWithTech] = React.useState(null);
+
+  const data = React.useMemo(() => {
+    let r = [...RECOMMENDATIONS];
+    if (filter !== "all") r = r.filter(x => x.market === filter);
+    r.sort((a, b) => {
+      if (sortBy === "confidence") return b.confidence - a.confidence;
+      if (sortBy === "upside") return Math.abs(b.upside) - Math.abs(a.upside);
+      if (sortBy === "change") return b.change - a.change;
+      if (sortBy === "rr") return b.rr - a.rr;
+      return 0;
+    });
+    return r;
+  }, [sortBy, filter]);
+
+  const loadNseData = async () => {
+    setNseLoading(true);
+    setNseError(null);
+    try {
+      const NIFTY50_SYMBOLS = [
+        "RELIANCE.NS","TCS.NS","HDFCBANK.NS","BHARTIARTL.NS","ICICIBANK.NS",
+        "INFOSYS.NS","SBIN.NS","LICI.NS","HINDUNILVR.NS","ITC.NS",
+        "BAJFINANCE.NS","KOTAKBANK.NS","LT.NS","HCLTECH.NS","MARUTI.NS",
+        "SUNPHARMA.NS","TITAN.NS","WIPRO.NS","ULTRACEMCO.NS","ONGC.NS",
+        "NTPC.NS","POWERGRID.NS","TATAMOTORS.NS","NESTLEIND.NS","TATASTEEL.NS",
+        "AXISBANK.NS","INDUSINDBK.NS","BAJAJFINSV.NS","TECHM.NS","DRREDDY.NS",
+        "ADANIENT.NS","ADANIPORTS.NS","CIPLA.NS","JSWSTEEL.NS","DIVISLAB.NS",
+        "COALINDIA.NS","ASIANPAINT.NS","GRASIM.NS","EICHERMOT.NS","BPCL.NS",
+        "APOLLOHOSP.NS","HEROMOTOCO.NS","BRITANNIA.NS","BAJAJ-AUTO.NS","SBILIFE.NS",
+        "HDFCLIFE.NS","HINDALCO.NS","M&M.NS","TATACONSUM.NS","UPL.NS"
+      ];
+      const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${NIFTY50_SYMBOLS.join(",")}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      const quotes = json?.quoteResponse?.result || [];
+      const mapped = quotes.map(q => ({
+        symbol: q.symbol.replace(".NS", ""),
+        name: q.longName || q.shortName || q.symbol,
+        price: q.regularMarketPrice,
+        change: q.regularMarketChangePercent,
+        volume: q.regularMarketVolume,
+        marketCap: q.marketCap,
+        pe: q.trailingPE || q.forwardPE || null,
+        high52: q.fiftyTwoWeekHigh,
+        low52: q.fiftyTwoWeekLow
+      }));
+      setNseData(mapped);
+      setNseWithTech(null);
+      setShowNse(true);
+    } catch (err) { setNseError(err.message); }
+    setNseLoading(false);
+  };
+
+  const applyTechFilter = async (filterId) => {
+    setTechFilter(filterId);
+    if (filterId === 'all' || !nseData) return;
+    setTechFilterLoading(true);
+
+    // Fetch tech data in batches of 5
+    const results = {};
+    const batchSize = 5;
+    for (let i = 0; i < nseData.length; i += batchSize) {
+      const batch = nseData.slice(i, i + batchSize);
+      await Promise.allSettled(batch.map(async row => {
+        results[row.symbol] = await fetchTechnicalData(row.symbol);
+      }));
+      if (i + batchSize < nseData.length) {
+        await new Promise(r => setTimeout(r, 200));
+      }
+    }
+
+    const filtered = nseData.filter(row => {
+      const t = results[row.symbol];
+      if (!t) return false;
+      if (filterId === 'rsi_os') return t.rsi != null && t.rsi < 35;
+      if (filterId === 'rsi_ob') return t.rsi != null && t.rsi > 65;
+      if (filterId === 'above50ma') return t.sma50 != null && row.price > t.sma50;
+      if (filterId === 'vol_spike') return t.volumeRatio > 1.5;
+      if (filterId === 'near52h') return t.high52w > 0 && ((row.price / t.high52w) >= 0.95);
+      return true;
+    });
+
+    setNseWithTech({ filtered, techMap: results });
+    setTechFilterLoading(false);
+  };
+
+  const displayedNse = (techFilter !== 'all' && nseWithTech) ? nseWithTech.filtered : nseData;
+
+  const fmtVol = (v) => {
+    if (!v) return "—";
+    if (v >= 1e7) return (v / 1e7).toFixed(2) + " Cr";
+    if (v >= 1e5) return (v / 1e5).toFixed(2) + " L";
+    return v.toLocaleString();
+  };
+  const fmtMktCap = (v) => {
+    if (!v) return "—";
+    const cr = v / 1e7;
+    if (cr >= 1e5) return (cr / 1e5).toFixed(1) + "L Cr";
+    if (cr >= 1000) return Math.round(cr / 1000) + "K Cr";
+    return Math.round(cr) + " Cr";
+  };
+
+  return (
+    <div>
+      <div className="hero">
+        <div>
+          <div className="hero-eyebrow">Screener</div>
+          <h1>Find your next <em>position</em>.</h1>
+        </div>
+      </div>
+
+      <div className="filter-bar">
+        <button className={`chip ${filter === "all" ? "active" : ""}`} onClick={() => setFilter("all")}>All</button>
+        <button className={`chip ${filter === "IN" ? "active" : ""}`} onClick={() => setFilter("IN")}>Indian</button>
+        <button className={`chip ${filter === "US" ? "active" : ""}`} onClick={() => setFilter("US")}>US</button>
+        <button className={`chip ${filter === "CRYPTO" ? "active" : ""}`} onClick={() => setFilter("CRYPTO")}>Crypto</button>
+        <div className="chip-divider"></div>
+        <span style={{ fontSize: 11, color: "var(--t-3)", marginRight: 4, fontFamily: "var(--font-mono)" }}>SORT</span>
+        <button className={`chip ${sortBy === "confidence" ? "active" : ""}`} onClick={() => setSortBy("confidence")}>Confidence</button>
+        <button className={`chip ${sortBy === "upside" ? "active" : ""}`} onClick={() => setSortBy("upside")}>Upside</button>
+        <button className={`chip ${sortBy === "rr" ? "active" : ""}`} onClick={() => setSortBy("rr")}>R:R</button>
+        <button className={`chip ${sortBy === "change" ? "active" : ""}`} onClick={() => setSortBy("change")}>Today's Move</button>
+        <button className="chip" onClick={loadNseData} disabled={nseLoading}
+          style={{ marginLeft: 8, background: "rgba(52,211,153,0.1)", color: "#34d399", borderColor: "#34d39944" }}>
+          {nseLoading ? "⟳ Loading…" : "🔄 Load Live NSE Data"}
+        </button>
+      </div>
+
+      {nseError && (
+        <div style={{ margin: "8px 0 12px", padding: "10px 16px", background: "var(--sell-w)", color: "var(--sell)", borderRadius: 8, fontSize: 12, fontFamily: "var(--font-mono)" }}>
+          NSE fetch error: {nseError}
+        </div>
+      )}
+
+      {showNse && nseData && (
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--t-1)" }}>Nifty 50 — Live NSE Data</div>
+            <span style={{ fontSize: 11, color: "#34d399", fontFamily: "var(--font-mono)" }}>● LIVE</span>
+            <button className="iconbtn" style={{ marginLeft: "auto", fontSize: 11 }} onClick={() => { setShowNse(false); setTechFilter('all'); setNseWithTech(null); }}>✕ Hide</button>
+          </div>
+
+          {/* Tech Filter Chips */}
+          <div className="screener-tech-filters">
+            <span style={{ fontSize: 10, color: 'var(--t-3)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>TECH FILTER</span>
+            {TECH_FILTERS.map(f => (
+              <button key={f.id}
+                className={`chip ${techFilter === f.id ? (f.id === 'all' ? 'active' : 'tech-active') : ''}`}
+                style={{ fontSize: 11, padding: '5px 10px' }}
+                onClick={() => applyTechFilter(f.id)}
+                disabled={techFilterLoading}>
+                {techFilterLoading && techFilter === f.id ? '⟳ ' : ''}{f.label}
+              </button>
+            ))}
+            {techFilter !== 'all' && nseWithTech && (
+              <span style={{ fontSize: 11, color: 'var(--t-3)', fontFamily: 'var(--font-mono)' }}>
+                {nseWithTech.filtered.length} stocks match
+              </span>
+            )}
+          </div>
+
+          <table className="screener-table">
+            <thead>
+              <tr>
+                <th>Symbol</th><th>Name</th><th>Price (₹)</th><th>Change%</th>
+                <th>Volume</th><th>Mkt Cap</th><th>P/E</th><th>52W High</th><th>52W Low</th><th>Picks</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(displayedNse || []).map(row => {
+                const matchRec = RECOMMENDATIONS.find(r => r.symbol === row.symbol);
+                return (
+                  <tr key={row.symbol} style={{ cursor: matchRec ? "pointer" : "default" }}
+                    onClick={() => matchRec && onOpenDetail(matchRec)}>
+                    <td style={{ fontWeight: 700 }}>{row.symbol}</td>
+                    <td style={{ fontSize: 11, color: "var(--t-2)", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.name}</td>
+                    <td className="num">₹{row.price?.toLocaleString("en-IN", { maximumFractionDigits: 2 }) || "—"}</td>
+                    <td className={`num ${row.change >= 0 ? "up" : "dn"}`}>{row.change != null ? (row.change > 0 ? "+" : "") + row.change.toFixed(2) + "%" : "—"}</td>
+                    <td className="num" style={{ fontSize: 11 }}>{fmtVol(row.volume)}</td>
+                    <td className="num" style={{ fontSize: 11 }}>{fmtMktCap(row.marketCap)}</td>
+                    <td className="num">{row.pe ? row.pe.toFixed(1) : "—"}</td>
+                    <td className="num up">{row.high52 ? "₹" + row.high52.toLocaleString("en-IN", { maximumFractionDigits: 0 }) : "—"}</td>
+                    <td className="num dn">{row.low52 ? "₹" + row.low52.toLocaleString("en-IN", { maximumFractionDigits: 0 }) : "—"}</td>
+                    <td>{matchRec
+                      ? <span className={`action-badge ${matchRec.action.toLowerCase()}`}>{matchRec.action}</span>
+                      : <span style={{ color: "var(--t-4)", fontSize: 11 }}>—</span>}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div style={{ marginBottom: 12, fontSize: 13, fontWeight: 600, color: "var(--t-1)" }}>
+        Bullseye Recommendations
+      </div>
+      <table className="screener-table">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Action</th><th>Price</th><th>Today</th>
+            <th>Entry</th><th>T1</th><th>T2</th><th>T3</th><th>Stop</th><th>R:R</th><th>Conf</th><th>Risk</th><th>Horizon</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map(r => (
+            <tr key={r.id} onClick={() => onOpenDetail(r)} style={{ cursor: "pointer" }}>
+              <td>
+                <div className="sym-cell">
+                  <div className="wl-mini-logo" style={{
+                    background: r.market === "CRYPTO" ? "#f7931a22" : r.market === "US" ? "#4480ff22" : "#d4a04a22",
+                    color: r.market === "CRYPTO" ? "#f7931a" : r.market === "US" ? "#6fa0ff" : "var(--brand)"
+                  }}>{r.symbol.slice(0, 2)}</div>
+                  <div>
+                    <div style={{ fontWeight: 600 }}>{r.symbol}</div>
+                    <div style={{ fontSize: 10, color: "var(--t-3)" }}>{r.exchange}</div>
+                  </div>
+                </div>
+              </td>
+              <td><span className={`action-badge ${r.action.toLowerCase()}`}>{r.action}</span></td>
+              <td className="num">{fmtPrice(r.price, r.currency)}</td>
+              <td className={`num ${r.change >= 0 ? "up" : "dn"}`}>{fmtChange(r.change)}</td>
+              <td className="num" style={{ fontSize: 11 }}>{r.currency}{r.entry.low}–{r.entry.high}</td>
+              <td className="num up">{fmtPrice(r.targets[0], r.currency)}</td>
+              <td className="num" style={{ color: "var(--brand)" }}>{fmtPrice(r.targets[1], r.currency)}</td>
+              <td className="num" style={{ color: "#6fa0ff" }}>{fmtPrice(r.targets[2], r.currency)}</td>
+              <td className="num dn">{fmtPrice(r.stopLoss, r.currency)}</td>
+              <td><span className="rr-chip">{r.rr}:1</span></td>
+              <td className="num">{r.confidence}%</td>
+              <td><span className={`risk-chip risk-${r.risk.replace(" ", "-")}`}>{r.risk}</span></td>
+              <td style={{ fontSize: 11, color: "var(--t-2)" }}>{r.horizon}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ---- FEATURE 6: Technical Analysis Panel in DetailPanel ----
+function TechnicalAnalysisPanel({ symbol, price }) {
+  const [techData, setTechData] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const [loaded, setLoaded] = React.useState(false);
+
+  // Check if already cached
+  React.useEffect(() => {
+    const cached = window.__techCache[symbol];
+    if (cached && (Date.now() - cached.fetchedAt) < 5 * 60 * 1000) {
+      setTechData(cached.data);
+      setLoaded(true);
+    }
+  }, [symbol]);
+
+  const handleLoad = async () => {
+    setLoading(true);
+    const data = await fetchTechnicalData(symbol);
+    setTechData(data);
+    setLoaded(true);
+    setLoading(false);
+  };
+
+  if (!loaded) {
+    return (
+      <div style={{ padding: '16px 0' }}>
+        <button className="load-tech-btn" onClick={handleLoad} disabled={loading}>
+          {loading ? '⟳ Loading technical data…' : '📊 Load Technical Data'}
+        </button>
+        {loading && (
+          <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div className="skeleton-block" style={{ height: 20, width: '60%' }} />
+            <div className="skeleton-block" style={{ height: 14, width: '80%' }} />
+            <div className="skeleton-block" style={{ height: 14, width: '70%' }} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (!techData) {
+    return (
+      <div style={{ padding: '8px 0', fontSize: 12, color: 'var(--t-3)', fontFamily: 'var(--font-mono)' }}>
+        Technical data unavailable for {symbol}
+      </div>
+    );
+  }
+
+  const rsiLabel = techData.rsi < 30 ? 'Oversold' : techData.rsi > 70 ? 'Overbought' : 'Neutral';
+  const rsiColor = techData.rsi < 30 ? 'var(--buy)' : techData.rsi > 70 ? 'var(--sell)' : 'var(--t-2)';
+  const rsiPct = Math.min(100, Math.max(0, techData.rsi || 0));
+
+  // Key levels positioning
+  const levelRange = techData.resistance - techData.support;
+  const pricePos = levelRange > 0 ? Math.min(100, Math.max(0, ((price - techData.support) / levelRange) * 100)) : 50;
+  const supportPosFromTop = 100; // support is at bottom
+  const resistancePosFromTop = 0; // resistance is at top
+  const pricePosFromTop = Math.max(0, Math.min(95, 100 - pricePos));
+
+  // MACD bars
+  const histArr = techData.macdHistLast10 || [];
+  const maxAbsHist = Math.max(0.0001, ...histArr.map(v => Math.abs(v)));
+
+  return (
+    <div>
+      {/* RSI Gauge */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontSize: 11, color: 'var(--t-3)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>RSI Gauge</div>
+        <div className="rsi-gauge-wrap">
+          <div className="rsi-gauge-bar">
+            <div className="rsi-gauge-marker" style={{ left: `${rsiPct}%`, background: rsiColor }} />
+          </div>
+          <div className="rsi-gauge-labels">
+            <span>0 — Oversold</span>
+            <span>30</span>
+            <span>70</span>
+            <span>Overbought — 100</span>
+          </div>
+          <div className="rsi-gauge-label" style={{ color: rsiColor }}>
+            RSI 14: {techData.rsi} — {rsiLabel}
+          </div>
+        </div>
+      </div>
+
+      {/* Moving Averages Table */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontSize: 11, color: 'var(--t-3)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>Moving Averages</div>
+        <table className="ma-table">
+          <thead>
+            <tr>
+              <th>Indicator</th>
+              <th>Value</th>
+              <th>vs Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={{ fontWeight: 600 }}>SMA 50</td>
+              <td>{techData.sma50 != null ? `₹${techData.sma50.toLocaleString('en-IN', { maximumFractionDigits: 2 })}` : '—'}</td>
+              <td className={techData.priceVsSma50 != null ? (techData.priceVsSma50 >= 0 ? 'up' : 'dn') : ''}>
+                {techData.priceVsSma50 != null ? `${techData.priceVsSma50 >= 0 ? '+' : ''}${techData.priceVsSma50.toFixed(2)}%` : '—'}
+              </td>
+            </tr>
+            <tr>
+              <td style={{ fontWeight: 600 }}>SMA 200</td>
+              <td>{techData.sma200 != null ? `₹${techData.sma200.toLocaleString('en-IN', { maximumFractionDigits: 2 })}` : '—'}</td>
+              <td className={techData.priceVsSma200 != null ? (techData.priceVsSma200 >= 0 ? 'up' : 'dn') : ''}>
+                {techData.priceVsSma200 != null ? `${techData.priceVsSma200 >= 0 ? '+' : ''}${techData.priceVsSma200.toFixed(2)}%` : 'insufficient data'}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* MACD Mini Chart */}
+      {histArr.length > 0 && (
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ fontSize: 11, color: 'var(--t-3)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
+            MACD Histogram (last {histArr.length} sessions)
+          </div>
+          <div className="macd-bars">
+            {histArr.map((v, i) => {
+              const heightPct = Math.max(4, (Math.abs(v) / maxAbsHist) * 100);
+              return (
+                <div key={i} className={`macd-bar ${v >= 0 ? 'pos' : 'neg'}`}
+                  style={{ height: `${heightPct}%`, alignSelf: v >= 0 ? 'flex-end' : 'flex-start' }}
+                  title={v.toFixed(4)} />
+              );
+            })}
+          </div>
+          <div style={{ fontSize: 10, color: 'var(--t-3)', fontFamily: 'var(--font-mono)', marginTop: 4 }}>
+            Latest: {techData.macdHistogram >= 0 ? '+' : ''}{techData.macdHistogram.toFixed(4)} — {techData.macdHistogram >= 0 ? 'Bullish' : 'Bearish'}
+          </div>
+        </div>
+      )}
+
+      {/* Key Levels */}
+      <div>
+        <div style={{ fontSize: 11, color: 'var(--t-3)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Key Levels</div>
+        <div className="key-levels-container">
+          <div className="key-levels-bar">
+            <div className="level-dot resistance" style={{ top: `${resistancePosFromTop}%` }} title="Resistance" />
+            <div className="level-dot price" style={{ top: `${pricePosFromTop}%` }} title="Current Price" />
+            <div className="level-dot support" style={{ top: `${supportPosFromTop - 10}%` }} title="Support" />
+          </div>
+          <div className="key-levels-values">
+            <div className="key-level-item r">
+              <span className="key-level-label">Resistance</span>
+              <span className="key-level-value">₹{techData.resistance.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+            </div>
+            <div className="key-level-item p">
+              <span className="key-level-label">Current Price</span>
+              <span className="key-level-value">₹{price.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+            </div>
+            <div className="key-level-item s">
+              <span className="key-level-label">Support</span>
+              <span className="key-level-value">₹{techData.support.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---- Enhanced RecCardWithCouncil + TechStrip ----
+function RecCardWithCouncilV2({ rec, onClick, compact, aiLoading, hasAI }) {
+  const { prices } = React.useContext(LiveDataContext);
+  const liveData = prices[rec.symbol];
+  const displayPrice = liveData ? liveData.price : rec.price;
+  const displayChange = liveData ? liveData.change : rec.change;
+  const actionCls = rec.action.toLowerCase();
+  const upClass = displayChange >= 0 ? "up" : "dn";
+  const isShort = rec.direction === "SHORT";
+  const [showCouncil, setShowCouncil] = React.useState(false);
+
+  const keys = getFreeAIKeys();
+  const hasFreeAI = keys.gemini || keys.claude;
+
+  return (
+    <>
+      <div className={`rec-card ${actionCls}${aiLoading ? " ai-loading" : ""}`} onClick={onClick}>
+        <div className="rec-head">
+          <div className="rec-ident">
+            <div className={`rec-logo ${rec.market.toLowerCase()}`}>{rec.symbol.slice(0, 3)}</div>
+            <div style={{ minWidth: 0 }}>
+              <div className="rec-symbol">
+                {rec.symbol}
+                <span className="rec-exchange">{rec.exchange}</span>
+                {hasAI && <span className="ai-badge">✦ AI</span>}
+                {hasFreeAI && (
+                  <span className="council-btn" onClick={e => { e.stopPropagation(); setShowCouncil(true); }}>
+                    🤖 Council
+                  </span>
+                )}
+              </div>
+              <div className="rec-name">{rec.name}</div>
+            </div>
+          </div>
+          <div className={`action-badge ${actionCls}`}>
+            {rec.action}
+            {isShort && <span className="short-tag">SHORT</span>}
+          </div>
+        </div>
+
+        <div className="rec-price-row">
+          <div className="rec-price">{fmtPrice(displayPrice, rec.currency)}{liveData && <span className="live-price-dot"></span>}</div>
+          <div className={`rec-change ${upClass}`}>{fmtChange(displayChange)}</div>
+          <div className="rec-spark"><Sparkline data={rec.sparkline} action={rec.action} /></div>
+        </div>
+
+        <div className="targets-block">
+          <div className="targets-grid">
+            <div className="target-cell sl"><div className="tl">SL</div><div className="tv">{fmtPrice(rec.stopLoss, rec.currency)}</div></div>
+            <div className="target-cell entry"><div className="tl">ENTRY</div><div className="tv mono">{rec.currency}{rec.entry.low}–{rec.entry.high}</div></div>
+            {rec.targets.slice(0, 3).map((t, i) => (
+              <div className={`target-cell t${i + 1}`} key={i}>
+                <div className="tl">T{i + 1}</div>
+                <div className="tv">{fmtPrice(t, rec.currency)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Tech strip — lazy loaded */}
+        <TechStrip symbol={rec.symbol} />
+
+        <div className="rec-foot">
+          <div className="conf-block">
+            <ConfRing value={rec.confidence} />
+            <div className="conf-label">Confidence<strong>{rec.horizon}</strong></div>
+          </div>
+          <div className="rec-meta-tags">
+            <span className={`risk-chip risk-${rec.risk.replace(" ", "-")}`}>{rec.risk}</span>
+            <span className="rr-chip">{rec.rr}:1 R/R</span>
+          </div>
+        </div>
+      </div>
+
+      {showCouncil && (
+        <AICouncilModal rec={rec} displayPrice={displayPrice} displayChange={displayChange} onClose={() => setShowCouncil(false)} />
+      )}
+    </>
+  );
+}
+
+// ---- Enhanced DetailPanelV3 with Tech Analysis section ----
+function DetailPanelV3({ rec, onClose, onRecUpdate }) {
+  if (!rec) return null;
+  const [analyzing, setAnalyzing] = React.useState(false);
+  const [analyzeError, setAnalyzeError] = React.useState(null);
+  const [showCouncil, setShowCouncil] = React.useState(false);
+  const { prices } = React.useContext(LiveDataContext);
+  const liveData = prices[rec.symbol];
+  const displayPrice = liveData ? liveData.price : rec.price;
+  const displayChange = liveData ? liveData.change : rec.change;
+  const actionCls = rec.action.toLowerCase();
+  const upCls = displayChange >= 0 ? "up" : "dn";
+  const isShort = rec.direction === "SHORT";
+  const apiKey = typeof localStorage !== "undefined" ? localStorage.getItem("bullseye_anthropic_key") : null;
+  const keys = getFreeAIKeys();
+  const hasFreeAI = keys.gemini || keys.claude;
+
+  const handleAnalyze = async () => {
+    if (!apiKey || analyzing) return;
+    setAnalyzing(true);
+    setAnalyzeError(null);
+    try {
+      // Use enhanced prompt with tech data
+      const techData = window.__techCache[rec.symbol]?.data || null;
+      const enhancedPrompt = buildEnhancedStockPrompt(rec, displayPrice, displayChange, techData);
+      const result = await callGemini(enhancedPrompt, GEMINI_KEY);
+      // Merge result into rec
+      const merged = {
+        ...rec,
+        action: result.verdict || rec.action,
+        confidence: (result.confidence || 7) * 10,
+        rationale: result.reasoning || rec.rationale,
+        analyst: "BULLSEYE AI",
+        source: "AI Analysis"
+      };
+      window.__aiAnalysisCache[rec.id] = { loading: false, data: merged };
+      notifyAIListeners();
+      if (onRecUpdate) onRecUpdate(merged);
+    } catch (err) { setAnalyzeError(err.message); }
+    setAnalyzing(false);
+  };
+
+  return (
+    <>
+      <div className={`detail-overlay ${rec ? "open" : ""}`} onClick={onClose}>
+        <div className="detail-panel" onClick={e => e.stopPropagation()}>
+          <div className="detail-head">
+            <div className="detail-title-block">
+              <div className={`detail-logo ${rec.market.toLowerCase()}`} style={{
+                background: rec.market === "CRYPTO" ? "#f7931a22" : rec.market === "US" ? "#4480ff22" : "#d4a04a22",
+                color: rec.market === "CRYPTO" ? "#f7931a" : rec.market === "US" ? "#6fa0ff" : "var(--brand)",
+                borderColor: rec.market === "CRYPTO" ? "#f7931a44" : rec.market === "US" ? "#4480ff44" : "#d4a04a44"
+              }}>{rec.symbol.slice(0, 3)}</div>
+              <div className="detail-name-block">
+                <h2>{rec.name}</h2>
+                <div className="detail-sub">{rec.symbol} · {rec.exchange} · {rec.sector}</div>
+              </div>
+            </div>
+            <button className="detail-close" onClick={onClose}>✕</button>
+          </div>
+
+          <div className="detail-price-row">
+            <div>
+              <span className="detail-price">{fmtPrice(displayPrice, rec.currency)}{liveData && <span className="live-price-dot" style={{ marginLeft: 6 }}></span>}</span>
+              <span className={`detail-change ${upCls}`}>{fmtChange(displayChange)}</span>
+            </div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              {hasFreeAI && (
+                <button style={{ padding: "6px 12px", borderRadius: 7, fontSize: 12, fontWeight: 600, background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.4)", color: "#c084fc", cursor: "pointer" }}
+                  onClick={() => setShowCouncil(true)}>
+                  🤖 Council Vote
+                </button>
+              )}
+              <div className={`detail-action-large ${actionCls}`}>
+                {rec.action}{isShort && " · SHORT"}
+              </div>
+            </div>
+          </div>
+
+          <div className="detail-chart">
+            <BigChart data={rec.sparkline} action={rec.action} />
+          </div>
+
+          <div className="detail-section">
+            <h3>Price Targets · Risk:Reward {rec.rr}:1</h3>
+            <div className="detail-targets">
+              <div className="detail-target sl">
+                <div className="lbl">STOP LOSS</div>
+                <div className="val">{fmtPrice(rec.stopLoss, rec.currency)}</div>
+                <div className="upside">{pctFromCurrent(rec.price, rec.stopLoss).toFixed(1)}%</div>
+              </div>
+              <div className="detail-target entry">
+                <div className="lbl">ENTRY ZONE</div>
+                <div className="val" style={{ fontSize: 15 }}>{rec.currency}{rec.entry.low}–{rec.entry.high}</div>
+                <div className="upside">avg {rec.currency}{((rec.entry.low + rec.entry.high) / 2).toFixed(2)}</div>
+              </div>
+              {rec.targets.map((t, i) => (
+                <div className={`detail-target t${i + 1}`} key={i}>
+                  <div className="lbl">TARGET {i + 1}</div>
+                  <div className="val">{fmtPrice(t, rec.currency)}</div>
+                  <div className="upside">{pctFromCurrent(rec.price, t) > 0 ? "+" : ""}{pctFromCurrent(rec.price, t).toFixed(1)}%</div>
+                </div>
+              ))}
+            </div>
+            <TargetLadder rec={rec} />
+          </div>
+
+          <div className="detail-section">
+            <h3>Analyst Thesis</h3>
+            <div className={`rationale-box ${actionCls}`}>
+              {rec.rationale}
+              <div className="analyst-line">
+                <span>— {rec.analyst}</span><span>·</span>
+                <span>via {rec.source}</span><span>·</span>
+                <span>{rec.posted}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="detail-section">
+            <h3>Catalysts to Watch</h3>
+            <div className="catalyst-list">
+              {rec.catalysts.map((c, i) => (
+                <div className="catalyst-row" key={i}>
+                  <div className="catalyst-num">{i + 1}</div>
+                  <div className="catalyst-text">{c}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Enhanced Technical Analysis Section */}
+          <div className="detail-section">
+            <h3>Technical Analysis</h3>
+            <TechnicalAnalysisPanel symbol={rec.symbol} price={displayPrice} />
+          </div>
+
+          <div className="detail-section">
+            <h3>Key Metrics</h3>
+            <div className="metrics-grid">
+              <div className="metric-cell"><div className="metric-lbl">Confidence</div><div className="metric-val">{rec.confidence}%</div></div>
+              <div className="metric-cell"><div className="metric-lbl">Risk Level</div><div className="metric-val">{rec.risk}</div></div>
+              <div className="metric-cell"><div className="metric-lbl">Time Horizon</div><div className="metric-val" style={{ fontSize: 13 }}>{rec.horizon}</div></div>
+              <div className="metric-cell"><div className="metric-lbl">RSI (14)</div><div className="metric-val">{rec.rsi}</div></div>
+              <div className="metric-cell"><div className="metric-lbl">P/E Ratio</div><div className="metric-val">{rec.pe || "—"}</div></div>
+              <div className="metric-cell"><div className="metric-lbl">Market Cap</div><div className="metric-val" style={{ fontSize: 13 }}>{rec.marketCap}</div></div>
+              <div className="metric-cell"><div className="metric-lbl">Upside (T3)</div><div className="metric-val">{(rec.upside > 0 ? "+" : "") + rec.upside.toFixed(1)}%</div></div>
+              <div className="metric-cell"><div className="metric-lbl">Source</div><div className="metric-val" style={{ fontSize: 12 }}>{rec.source}</div></div>
+            </div>
+          </div>
+
+          <AveragingAssistant rec={rec} displayPrice={displayPrice} displayChange={displayChange} />
+
+          <div className="detail-actions">
+            <button className={`btn-primary ${actionCls === "sell" ? "sell" : ""}`}>
+              {rec.action === "SELL" ? `Sell @ ${rec.currency}${rec.entry.low}–${rec.entry.high}` : `Buy @ ${rec.currency}${rec.entry.low}–${rec.entry.high}`}
+            </button>
+            <button className="btn-secondary">+ Watchlist</button>
+            <button className="btn-secondary">Set Alert</button>
+            <button className="btn-secondary" onClick={handleAnalyze} disabled={analyzing}
+              style={{ color: "var(--brand)", borderColor: "var(--brand)" }}>
+              {analyzing ? "✦ Analyzing…" : "✦ AI Analyze"}
+            </button>
+          </div>
+          {analyzeError && (
+            <div style={{ padding: "10px 24px", color: "var(--sell)", fontSize: 12, fontFamily: "var(--font-mono)" }}>
+              AI Error: {analyzeError}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showCouncil && (
+        <AICouncilModal rec={rec} displayPrice={displayPrice} displayChange={displayChange} onClose={() => setShowCouncil(false)} />
+      )}
+    </>
+  );
+}
+
+// ---- Enhanced HomeScreenV3 with MarketMovers ----
+function HomeScreenV3({ onOpenDetail, onGoToSettings }) {
+  const [filter, setFilter] = React.useState("all");
+  const [actionFilter, setActionFilter] = React.useState("ALL");
+  const [aiRunning, setAiRunning] = React.useState(false);
+  const aiCache = useAIAnalysis();
+  const apiKey = typeof localStorage !== "undefined" ? localStorage.getItem("bullseye_anthropic_key") : null;
+
+  const filtered = React.useMemo(() => {
+    let r = RECOMMENDATIONS;
+    if (filter !== "all") r = r.filter(x => x.market === filter);
+    if (actionFilter !== "ALL") r = r.filter(x => x.action === actionFilter);
+    return r;
+  }, [filter, actionFilter]);
+
+  const stats = React.useMemo(() => {
+    const total = RECOMMENDATIONS.length;
+    const buys = RECOMMENDATIONS.filter(r => r.action === "BUY").length;
+    const sells = RECOMMENDATIONS.filter(r => r.action === "SELL").length;
+    const holds = RECOMMENDATIONS.filter(r => r.action === "HOLD").length;
+    const avgConf = Math.round(RECOMMENDATIONS.reduce((a, r) => a + r.confidence, 0) / total);
+    return { total, buys, sells, holds, avgConf };
+  }, []);
+
+  const watchlistRecs = RECOMMENDATIONS.slice(0, 7);
+
+  const handleAnalyzeAll = async () => {
+    if (aiRunning) return;
+    setAiRunning(true);
+    // Use enhanced prompts with tech data
+    for (let i = 0; i < filtered.length; i += 5) {
+      const batch = filtered.slice(i, i + 5);
+      await Promise.allSettled(batch.map(async rec => {
+        window.__aiAnalysisCache[rec.id] = { loading: true };
+        notifyAIListeners();
+        try {
+          const techData = await fetchTechnicalData(rec.symbol);
+          const { prices } = { prices: {} };
+          const price = rec.price;
+          const change = rec.change;
+          const prompt = buildEnhancedStockPrompt(rec, price, change, techData);
+          const result = await callGemini(prompt, GEMINI_KEY);
+          window.__aiAnalysisCache[rec.id] = {
+            loading: false,
+            data: {
+              action: result.verdict || rec.action,
+              confidence: (result.confidence || 7) * 10,
+              rationale: result.reasoning || rec.rationale,
+              analyst: "BULLSEYE AI",
+              source: "AI Analysis"
+            }
+          };
+        } catch (err) {
+          window.__aiAnalysisCache[rec.id] = { loading: false, error: err.message };
+        }
+        notifyAIListeners();
+      }));
+      if (i + 5 < filtered.length) await new Promise(r => setTimeout(r, 200));
+    }
+    setAiRunning(false);
+  };
+
+  return (
+    <div>
+      <div className="hero">
+        <div>
+          <div className="hero-eyebrow">Friday · 16 May 2026 · Market Open</div>
+          <h1>Today's <em>highest-conviction</em><br />picks across the board.</h1>
+        </div>
+        <div className="hero-meta">
+          <div>Active Picks<strong>{stats.total}</strong></div>
+          <div>Avg Confidence<strong>{stats.avgConf}%</strong></div>
+          <div>Buy / Sell / Hold<strong>{stats.buys} / {stats.sells} / {stats.holds}</strong></div>
+        </div>
+      </div>
+
+      <div className="macro-strip">
+        <div className="macro-cell"><div className="ml">NIFTY 50</div><div className="mv">24,180</div><div className="mc up">+0.84%</div></div>
+        <div className="macro-cell"><div className="ml">SENSEX</div><div className="mv">79,450</div><div className="mc up">+0.62%</div></div>
+        <div className="macro-cell"><div className="ml">NASDAQ</div><div className="mv">21,420</div><div className="mc up">+1.12%</div></div>
+        <div className="macro-cell"><div className="ml">S&amp;P 500</div><div className="mv">5,842</div><div className="mc up">+0.48%</div></div>
+        <div className="macro-cell"><div className="ml">BTC / USD</div><div className="mv">$98,420</div><div className="mc up">+1.84%</div></div>
+        <div className="macro-cell"><div className="ml">USD / INR</div><div className="mv">83.42</div><div className="mc dn">−0.12%</div></div>
+        <div className="macro-cell"><div className="ml">India VIX</div><div className="mv">13.8</div><div className="mc dn">−2.40%</div></div>
+        <div className="macro-cell"><div className="ml">GOLD ₹/10g</div><div className="mv">71,820</div><div className="mc up">+0.42%</div></div>
+      </div>
+
+      <div className="page-grid">
+        <div>
+          {/* Market Movers Panel */}
+          <MarketMovers onOpenDetail={onOpenDetail} />
+
+          {/* Today's Picks button */}
+          <div style={{ marginBottom: 16 }}>
+            <TodayTopPicks onOpenDetail={onOpenDetail} onGoToSettings={onGoToSettings} />
+          </div>
+
+          <div className="filter-bar">
+            <button className={`chip ${filter === "all" ? "active" : ""}`} onClick={() => setFilter("all")}>
+              All Markets <span className="count">{RECOMMENDATIONS.length}</span>
+            </button>
+            <button className={`chip ${filter === "IN" ? "active" : ""}`} onClick={() => setFilter("IN")}>
+              🇮🇳 Indian <span className="count">{RECOMMENDATIONS.filter(r => r.market === "IN").length}</span>
+            </button>
+            <button className={`chip ${filter === "US" ? "active" : ""}`} onClick={() => setFilter("US")}>
+              🇺🇸 US <span className="count">{RECOMMENDATIONS.filter(r => r.market === "US").length}</span>
+            </button>
+            <button className={`chip ${filter === "CRYPTO" ? "active" : ""}`} onClick={() => setFilter("CRYPTO")}>
+              ₿ Crypto <span className="count">{RECOMMENDATIONS.filter(r => r.market === "CRYPTO").length}</span>
+            </button>
+            <div className="chip-divider"></div>
+            <button className={`chip ${actionFilter === "ALL" ? "active" : ""}`} onClick={() => setActionFilter("ALL")}>Any</button>
+            <button className={`chip ${actionFilter === "BUY" ? "active" : ""}`} onClick={() => setActionFilter("BUY")}>Buy</button>
+            <button className={`chip ${actionFilter === "SELL" ? "active" : ""}`} onClick={() => setActionFilter("SELL")}>Sell</button>
+            <button className={`chip ${actionFilter === "HOLD" ? "active" : ""}`} onClick={() => setActionFilter("HOLD")}>Hold</button>
+            <button className="chip ai-analyze-btn" onClick={handleAnalyzeAll} disabled={aiRunning}
+              style={{ marginLeft: 4, background: "var(--brand-w)", color: "var(--brand)", borderColor: "var(--brand)" }}>
+              {aiRunning ? "✦ Analyzing…" : "✦ AI Analyze All"}
+            </button>
+            <div className="right">
+              <button className="iconbtn" title="Grid">▦</button>
+              <button className="iconbtn" title="List">≡</button>
+            </div>
+          </div>
+
+          <div className="recs-grid">
+            {filtered.map(r => {
+              const ai = aiCache[r.id];
+              const merged = ai?.data ? { ...r, ...ai.data } : r;
+              return (
+                <RecCardWithCouncilV2
+                  key={r.id}
+                  rec={merged}
+                  onClick={() => onOpenDetail(merged)}
+                  aiLoading={ai?.loading}
+                  hasAI={!!ai?.data}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        <aside>
+          <div className="rail-card">
+            <div className="rail-head">
+              <div className="rail-title">Watchlist <span className="count-pill">{watchlistRecs.length}</span></div>
+              <a className="rail-action">Manage</a>
+            </div>
+            {watchlistRecs.map(r => (
+              <WatchlistItem key={r.id} rec={r} onClick={() => onOpenDetail(r)} />
+            ))}
+          </div>
+
+          <div className="rail-card">
+            <div className="rail-head">
+              <div className="rail-title">Live Alerts <span className="count-pill">{ALERTS_DATA.length}</span></div>
+              <a className="rail-action">View all</a>
+            </div>
+            {ALERTS_DATA.slice(0, 4).map(a => (
+              <div className="alert-item" key={a.id}>
+                <div className={`alert-icon ${a.type}`}>
+                  {a.type === "TARGET_HIT" && "✓"}
+                  {a.type === "STOP_LOSS" && "!"}
+                  {a.type === "BREAKOUT" && "↗"}
+                  {a.type === "NEW_PICK" && "★"}
+                  {a.type === "PRICE_ALERT" && "◉"}
+                  {a.type === "NEWS" && "▤"}
+                </div>
+                <div className="alert-body">
+                  <div className="alert-title">{a.type.replace("_", " ")}<span className="alert-sym">{a.symbol}</span></div>
+                  <div className="alert-msg">{a.message}</div>
+                  <div className="alert-time">{a.time}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="rail-card">
+            <div className="rail-head">
+              <div className="rail-title">Market News</div>
+              <a className="rail-action">All news →</a>
+            </div>
+            {NEWS_ITEMS.slice(0, 5).map((n, i) => (
+              <div className="news-item" key={i}>
+                <div className="news-headline">{n.title}</div>
+                <div className="news-meta">
+                  <span className={`news-impact ${n.impact}`}>{n.impact}</span>
+                  <span className="news-source">{n.source}</span>
+                  <span className="news-dot">•</span>
+                  <span>{n.category}</span>
+                  <span className="news-dot">•</span>
+                  <span>{n.time}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+// Expose new V3 components
+Object.assign(window, {
+  fetchTechnicalData,
+  buildEnhancedStockPrompt,
+  TechStrip,
+  MarketMovers,
+  ScreenerScreenV3,
+  TechnicalAnalysisPanel,
+  RecCardWithCouncilV2,
+  DetailPanelV3,
+  HomeScreenV3,
+});
+
+// Also alias pctFromCurrent so it's available globally (it's defined in shared components block)
+if (!window.pctFromCurrent) {
+  window.pctFromCurrent = function(current, target) {
+    return ((target - current) / current) * 100;
+  };
+}
+</script>
+
+<script type="text/babel">
 /* global React, ReactDOM */
 /* global HomeScreenV2, DetailPanelV2, PortfolioScreenV2, SettingsScreenV2 */
+/* global HomeScreenV3, DetailPanelV3, ScreenerScreenV3 */
 /* global TweaksPanel, TweakSection, TweakRadio, TweakColor, TweakToggle, TweakSelect, useTweaks */
 /* global LiveDataContext, LiveDataProvider */
-/* global WatchlistScreen, ScreenerScreen, AlertsScreen, NewsScreen, OnboardingScreen */
+/* global WatchlistScreen, AlertsScreen, NewsScreen, OnboardingScreen */
 
 // Completely replace App to use V2 components directly (avoids the late-binding issue)
 
@@ -6507,8 +7949,8 @@ function AppInnerV2() {
           </nav>
 
           <div className="page">
-            {tab === "home"      && <HomeScreenV2 onOpenDetail={openDetail} onGoToSettings={() => setTab("settings")} />}
-            {tab === "screener"  && <ScreenerScreen onOpenDetail={openDetail} />}
+            {tab === "home"      && <HomeScreenV3 onOpenDetail={openDetail} onGoToSettings={() => setTab("settings")} />}
+            {tab === "screener"  && <ScreenerScreenV3 onOpenDetail={openDetail} />}
             {tab === "watchlist" && <WatchlistScreen onOpenDetail={openDetail} />}
             {tab === "portfolio" && <PortfolioScreenV2 onOpenDetail={openDetail} />}
             {tab === "alerts"    && <AlertsScreen onOpenDetail={openDetail} />}
@@ -6516,7 +7958,7 @@ function AppInnerV2() {
             {tab === "settings"  && <SettingsScreenV2 />}
           </div>
 
-          {detail && <DetailPanelV2 rec={detail} onClose={() => setDetail(null)} onRecUpdate={(updated) => setDetail(updated)} />}
+          {detail && <DetailPanelV3 rec={detail} onClose={() => setDetail(null)} onRecUpdate={(updated) => setDetail(updated)} />}
         </React.Fragment>
       )}
 
