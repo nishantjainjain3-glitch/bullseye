@@ -3802,7 +3802,7 @@ Object.assign(window, {
 // LIVE DATA CONTEXT — polls Yahoo Finance + CoinGecko every 60s
 // ====================================================================
 
-const LiveDataContext = React.createContext({ prices: {}, lastUpdated: null, isLive: false, error: null });
+const LiveDataContext = React.createContext({ prices: {}, macros: {}, lastUpdated: null, isLive: false, error: null });
 
 // Crypto CoinGecko id → symbol key mapping (symbol keys use -USD format)
 const CRYPTO_ID_MAP = {
@@ -3817,6 +3817,21 @@ const CRYPTO_ID_MAP = {
   "chainlink": "LINK-USD",
   "polkadot": "DOT-USD"
 };
+
+// Macro index symbols for Yahoo Finance
+const MACRO_SYMBOLS = ["^NSEI","^BSESN","^IXIC","^GSPC","USDINR=X","^INDIAVIX","GC=F"];
+
+async function fetchMacroQuotes() {
+  const res = await fetch(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${MACRO_SYMBOLS.join(",")}`);
+  if (!res.ok) throw new Error(`Macro fetch failed: ${res.status}`);
+  const data = await res.json();
+  const quotes = data?.quoteResponse?.result || [];
+  const out = {};
+  for (const q of quotes) {
+    out[q.symbol] = { price: q.regularMarketPrice, change: q.regularMarketChangePercent };
+  }
+  return out;
+}
 
 // NSE symbols that need .NS suffix for Yahoo Finance
 const NSE_SYMBOLS_LIST = [
@@ -3892,23 +3907,26 @@ async function fetchCryptoPrices() {
 
 function LiveDataProvider({ children }) {
   const [state, setState] = React.useState({
-    prices: {}, lastUpdated: null, isLive: false, error: null
+    prices: {}, macros: {}, lastUpdated: null, isLive: false, error: null
   });
 
   const fetchAll = React.useCallback(async () => {
     try {
-      const [nseData, cryptoData] = await Promise.allSettled([
+      const [nseData, cryptoData, macroData] = await Promise.allSettled([
         fetchYahooQuotes(NSE_SYMBOLS_LIST),
-        fetchCryptoPrices()
+        fetchCryptoPrices(),
+        fetchMacroQuotes()
       ]);
 
       const prices = {};
       if (nseData.status === "fulfilled") Object.assign(prices, nseData.value);
       if (cryptoData.status === "fulfilled") Object.assign(prices, cryptoData.value);
 
+      const macros = macroData.status === "fulfilled" ? macroData.value : {};
       const hasAny = Object.keys(prices).length > 0;
       setState({
         prices,
+        macros,
         lastUpdated: new Date(),
         isLive: hasAny,
         error: hasAny ? null : "All data sources unavailable"
@@ -4032,9 +4050,65 @@ async function analyzeAllStocks(recs, apiKey, onProgress) {
   }
 }
 
+function isNseOpen() {
+  const ist = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+  const day = ist.getDay();
+  if (day === 0 || day === 6) return false;
+  const mins = ist.getHours() * 60 + ist.getMinutes();
+  return mins >= 9 * 60 + 15 && mins < 15 * 60 + 30;
+}
+
+function getDynamicEyebrow() {
+  const ist = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+  const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const d = `${days[ist.getDay()]} · ${ist.getDate()} ${months[ist.getMonth()]} ${ist.getFullYear()}`;
+  return `${d} · ${isNseOpen() ? "NSE Open" : "NSE Closed"}`;
+}
+
+function LiveMacroStrip() {
+  const { macros, prices } = React.useContext(LiveDataContext);
+  const btc = prices["BTC-USD"];
+
+  function fmtNum(v, decimals = 0, prefix = "") {
+    if (v == null) return "—";
+    return prefix + v.toLocaleString("en-IN", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+  function fmtChg(c) {
+    if (c == null) return "—";
+    return `${c >= 0 ? "+" : ""}${c.toFixed(2)}%`;
+  }
+
+  const cells = [
+    { label: "NIFTY 50",  d: macros["^NSEI"],     fmt: v => fmtNum(v) },
+    { label: "SENSEX",    d: macros["^BSESN"],    fmt: v => fmtNum(v) },
+    { label: "NASDAQ",    d: macros["^IXIC"],     fmt: v => fmtNum(v) },
+    { label: "S&P 500",   d: macros["^GSPC"],     fmt: v => fmtNum(v) },
+    { label: "BTC/USD",   d: btc ? { price: btc.price, change: btc.change } : null, fmt: v => "$" + Math.round(v).toLocaleString() },
+    { label: "USD/INR",   d: macros["USDINR=X"],  fmt: v => fmtNum(v, 2) },
+    { label: "India VIX", d: macros["^INDIAVIX"], fmt: v => fmtNum(v, 1) },
+    { label: "GOLD $/oz", d: macros["GC=F"],      fmt: v => "$" + Math.round(v).toLocaleString() },
+  ];
+
+  return (
+    <div className="macro-strip">
+      {cells.map(({ label, d, fmt }) => {
+        const up = d?.change >= 0;
+        return (
+          <div className="macro-cell" key={label}>
+            <div className="ml">{label}</div>
+            <div className="mv">{d?.price != null ? fmt(d.price) : "—"}</div>
+            <div className={`mc ${d?.change != null ? (up ? "up" : "dn") : ""}`}>{d?.change != null ? fmtChg(d.change) : "—"}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 Object.assign(window, {
   LiveDataContext, LiveDataProvider, useAIAnalysis, analyzeAllStocks, analyzeStockWithClaude, notifyAIListeners,
-  fetchCoinGeckoMarkets
+  fetchCoinGeckoMarkets, LiveMacroStrip, isNseOpen, getDynamicEyebrow
 });
 </script>
 
@@ -4042,6 +4116,7 @@ Object.assign(window, {
 /* global React, RECOMMENDATIONS, NEWS_ITEMS, ALERTS_DATA, PORTFOLIO */
 /* global RecCard, WatchlistItem, ConfRing, BigChart, TargetLadder, Sparkline, fmtPrice, fmtChange, pctFromCurrent */
 /* global LiveDataContext, useAIAnalysis, analyzeAllStocks, analyzeStockWithClaude, notifyAIListeners */
+/* global LiveMacroStrip, isNseOpen, getDynamicEyebrow */
 // All screens for BULLSEYE
 
 const { useState: useS, useMemo: useM, useEffect: useE } = React;
@@ -4087,7 +4162,7 @@ function HomeScreen({ onOpenDetail }) {
     <div>
       <div className="hero">
         <div>
-          <div className="hero-eyebrow">Friday · 15 May 2026 · Market Open</div>
+          <div className="hero-eyebrow">{getDynamicEyebrow()}</div>
           <h1>
             Today's <em>highest-conviction</em><br />
             picks across the board.
@@ -4109,16 +4184,7 @@ function HomeScreen({ onOpenDetail }) {
         </div>
       </div>
 
-      <div className="macro-strip">
-        <div className="macro-cell"><div className="ml">NIFTY 50</div><div className="mv">24,180</div><div className="mc up">+0.84%</div></div>
-        <div className="macro-cell"><div className="ml">SENSEX</div><div className="mv">79,450</div><div className="mc up">+0.62%</div></div>
-        <div className="macro-cell"><div className="ml">NASDAQ</div><div className="mv">21,420</div><div className="mc up">+1.12%</div></div>
-        <div className="macro-cell"><div className="ml">S&amp;P 500</div><div className="mv">5,842</div><div className="mc up">+0.48%</div></div>
-        <div className="macro-cell"><div className="ml">BTC / USD</div><div className="mv">$98,420</div><div className="mc up">+1.84%</div></div>
-        <div className="macro-cell"><div className="ml">USD / INR</div><div className="mv">83.42</div><div className="mc dn">−0.12%</div></div>
-        <div className="macro-cell"><div className="ml">India VIX</div><div className="mv">13.8</div><div className="mc dn">−2.40%</div></div>
-        <div className="macro-cell"><div className="ml">GOLD ₹/10g</div><div className="mv">71,820</div><div className="mc up">+0.42%</div></div>
-      </div>
+      <LiveMacroStrip />
 
       <div className="page-grid">
         <div>
@@ -6288,7 +6354,7 @@ function HomeScreenV2({ onOpenDetail, onGoToSettings }) {
     <div>
       <div className="hero">
         <div>
-          <div className="hero-eyebrow">Friday · 16 May 2026 · Market Open</div>
+          <div className="hero-eyebrow">{getDynamicEyebrow()}</div>
           <h1>Today's <em>highest-conviction</em><br />picks across the board.</h1>
         </div>
         <div className="hero-meta">
@@ -6298,16 +6364,7 @@ function HomeScreenV2({ onOpenDetail, onGoToSettings }) {
         </div>
       </div>
 
-      <div className="macro-strip">
-        <div className="macro-cell"><div className="ml">NIFTY 50</div><div className="mv">24,180</div><div className="mc up">+0.84%</div></div>
-        <div className="macro-cell"><div className="ml">SENSEX</div><div className="mv">79,450</div><div className="mc up">+0.62%</div></div>
-        <div className="macro-cell"><div className="ml">NASDAQ</div><div className="mv">21,420</div><div className="mc up">+1.12%</div></div>
-        <div className="macro-cell"><div className="ml">S&amp;P 500</div><div className="mv">5,842</div><div className="mc up">+0.48%</div></div>
-        <div className="macro-cell"><div className="ml">BTC / USD</div><div className="mv">$98,420</div><div className="mc up">+1.84%</div></div>
-        <div className="macro-cell"><div className="ml">USD / INR</div><div className="mv">83.42</div><div className="mc dn">−0.12%</div></div>
-        <div className="macro-cell"><div className="ml">India VIX</div><div className="mv">13.8</div><div className="mc dn">−2.40%</div></div>
-        <div className="macro-cell"><div className="ml">GOLD ₹/10g</div><div className="mv">71,820</div><div className="mc up">+0.42%</div></div>
-      </div>
+      <LiveMacroStrip />
 
       <div className="page-grid">
         <div>
@@ -6863,6 +6920,7 @@ Object.assign(window, {
 /* global analyzeStockWithClaude, notifyAIListeners, useAIAnalysis, analyzeAllStocks */
 /* global RecCard, WatchlistItem, ConfRing, BigChart, TargetLadder, Sparkline */
 /* global callGemini, extractJSON, buildStockPrompt */
+/* global LiveMacroStrip, isNseOpen, getDynamicEyebrow */
 // ====================================================================
 // TECHNICAL ANALYSIS ENGINE + ENHANCED FEATURES
 // ====================================================================
@@ -7999,7 +8057,7 @@ function HomeScreenV3({ onOpenDetail, onGoToSettings }) {
     <div>
       <div className="hero">
         <div>
-          <div className="hero-eyebrow">Friday · 16 May 2026 · Market Open</div>
+          <div className="hero-eyebrow">{getDynamicEyebrow()}</div>
           <h1>Today's <em>highest-conviction</em><br />picks across the board.</h1>
         </div>
         <div className="hero-meta">
@@ -8009,16 +8067,7 @@ function HomeScreenV3({ onOpenDetail, onGoToSettings }) {
         </div>
       </div>
 
-      <div className="macro-strip">
-        <div className="macro-cell"><div className="ml">NIFTY 50</div><div className="mv">24,180</div><div className="mc up">+0.84%</div></div>
-        <div className="macro-cell"><div className="ml">SENSEX</div><div className="mv">79,450</div><div className="mc up">+0.62%</div></div>
-        <div className="macro-cell"><div className="ml">NASDAQ</div><div className="mv">21,420</div><div className="mc up">+1.12%</div></div>
-        <div className="macro-cell"><div className="ml">S&amp;P 500</div><div className="mv">5,842</div><div className="mc up">+0.48%</div></div>
-        <div className="macro-cell"><div className="ml">BTC / USD</div><div className="mv">$98,420</div><div className="mc up">+1.84%</div></div>
-        <div className="macro-cell"><div className="ml">USD / INR</div><div className="mv">83.42</div><div className="mc dn">−0.12%</div></div>
-        <div className="macro-cell"><div className="ml">India VIX</div><div className="mv">13.8</div><div className="mc dn">−2.40%</div></div>
-        <div className="macro-cell"><div className="ml">GOLD ₹/10g</div><div className="mv">71,820</div><div className="mc up">+0.42%</div></div>
-      </div>
+      <LiveMacroStrip />
 
       <div className="page-grid">
         <div>
@@ -8158,9 +8207,9 @@ if (!window.pctFromCurrent) {
 /* global HomeScreenV2, DetailPanelV2, PortfolioScreenV2, SettingsScreenV2 */
 /* global HomeScreenV3, DetailPanelV3, ScreenerScreenV3 */
 /* global TweaksPanel, TweakSection, TweakRadio, TweakColor, TweakToggle, TweakSelect, useTweaks */
-/* global LiveDataContext, LiveDataProvider */
+/* global LiveDataContext, LiveDataProvider, LiveMacroStrip, isNseOpen, getDynamicEyebrow */
 /* global WatchlistScreen, AlertsScreen, NewsScreen, OnboardingScreen */
-/* global fetchCoinGeckoMarkets, GEMINI_KEY, callGemini */
+/* global fetchCoinGeckoMarkets, GEMINI_KEY, callGemini, RECOMMENDATIONS */
 
 // ============================================================
 // CRYPTO SCREENER — full top-50 CoinGecko table with AI
@@ -8491,11 +8540,106 @@ function CryptoScreener({ onOpenDetail }) {
   );
 }
 
+function SearchOverlay({ onClose, onOpenDetail }) {
+  const [query, setQuery] = React.useState("");
+  const inputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const results = React.useMemo(() => {
+    if (!query.trim()) return [];
+    const q = query.toLowerCase();
+    return RECOMMENDATIONS.filter(r =>
+      r.symbol.toLowerCase().includes(q) || r.name.toLowerCase().includes(q)
+    ).slice(0, 10);
+  }, [query]);
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)",
+      zIndex: 9000, display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 80
+    }} onClick={onClose}>
+      <div style={{
+        width: "100%", maxWidth: 560, background: "var(--surface)",
+        borderRadius: 16, border: "1px solid var(--border-2)", overflow: "hidden",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.5)"
+      }} onClick={e => e.stopPropagation()}>
+        <div style={{ display: "flex", alignItems: "center", padding: "14px 16px", borderBottom: "1px solid var(--border)", gap: 10 }}>
+          <span style={{ color: "var(--t-3)", fontSize: 15 }}>🔍</span>
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="Search NSE stocks or crypto..."
+            style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "var(--t-1)", fontSize: 15 }}
+          />
+          <span style={{ color: "var(--t-4)", fontSize: 11, padding: "3px 7px", border: "1px solid var(--border-2)", borderRadius: 5, cursor: "pointer" }} onClick={onClose}>ESC</span>
+        </div>
+        {query.trim() === "" && (
+          <div style={{ padding: "16px", color: "var(--t-3)", fontSize: 13 }}>
+            {RECOMMENDATIONS.slice(0, 6).map(r => (
+              <div key={r.id} onClick={() => { onOpenDetail(r); onClose(); }} style={{
+                display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", margin: "3px",
+                borderRadius: 20, border: "1px solid var(--border)", cursor: "pointer",
+                color: "var(--t-2)", fontSize: 12, background: "var(--surface-2)"
+              }}>
+                <span style={{ color: r.market === "CRYPTO" ? "var(--brand)" : "var(--t-3)", fontWeight: 600 }}>
+                  {r.market === "CRYPTO" ? "₿" : "₹"}
+                </span>
+                {r.symbol}
+              </div>
+            ))}
+          </div>
+        )}
+        {results.map(r => (
+          <div key={r.id} style={{
+            display: "flex", alignItems: "center", gap: 12, padding: "11px 16px",
+            borderBottom: "1px solid var(--border)", cursor: "pointer"
+          }} onClick={() => { onOpenDetail(r); onClose(); }}
+          onMouseEnter={e => e.currentTarget.style.background = "var(--surface-2)"}
+          onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 8, background: "var(--surface-2)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 13, fontWeight: 700, color: "var(--brand)"
+            }}>{r.market === "CRYPTO" ? "₿" : "₹"}</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600, color: "var(--t-1)", fontSize: 14 }}>{r.symbol}</div>
+              <div style={{ fontSize: 12, color: "var(--t-3)" }}>{r.name}</div>
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <div style={{ fontWeight: 600, color: "var(--t-1)", fontSize: 13 }}>
+                {r.currency === "INR" ? "₹" : "$"}{r.price?.toLocaleString()}
+              </div>
+              <div style={{ fontSize: 12, color: r.change >= 0 ? "var(--buy)" : "var(--sell)" }}>
+                {r.change >= 0 ? "+" : ""}{r.change?.toFixed(2)}%
+              </div>
+            </div>
+            <div style={{
+              padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 700,
+              background: r.action === "BUY" ? "var(--buy-w)" : r.action === "SELL" ? "var(--sell-w)" : "var(--hold-w)",
+              color: r.action === "BUY" ? "var(--buy)" : r.action === "SELL" ? "var(--sell)" : "var(--hold)"
+            }}>{r.action}</div>
+          </div>
+        ))}
+        {query.trim() && results.length === 0 && (
+          <div style={{ padding: "24px 16px", color: "var(--t-3)", fontSize: 13, textAlign: "center" }}>
+            No results for "{query}"
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Completely replace App to use V2 components directly (avoids the late-binding issue)
 
 function AppInnerV2() {
   const [tab, setTab] = React.useState("home");
   const [detail, setDetail] = React.useState(null);
+  const [showSearch, setShowSearch] = React.useState(false);
   const [t, setTweak] = useTweaks({
     "accent": "#d4a04a",
     "theme": "dark",
@@ -8531,7 +8675,10 @@ function AppInnerV2() {
   }, [t.accent, t.theme, t.headlineFont]);
 
   React.useEffect(() => {
-    const fn = (e) => { if (e.key === "Escape") setDetail(null); };
+    const fn = (e) => {
+      if (e.key === "Escape") { setDetail(null); setShowSearch(false); }
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") { e.preventDefault(); setShowSearch(s => !s); }
+    };
     window.addEventListener("keydown", fn);
     return () => window.removeEventListener("keydown", fn);
   }, []);
@@ -8540,6 +8687,7 @@ function AppInnerV2() {
 
   return (
     <React.Fragment>
+      {showSearch && <SearchOverlay onClose={() => setShowSearch(false)} onOpenDetail={openDetail} />}
       {t.showOnboarding && (
         <OnboardingScreen onContinue={() => setTweak("showOnboarding", false)} />
       )}
@@ -8564,14 +8712,16 @@ function AppInnerV2() {
               <button className={`navtab ${tab === "settings" ? "active" : ""}`} onClick={() => setTab("settings")}>Profile</button>
             </div>
             <div className="navright">
-              <div className="search-mini" onClick={() => alert("Search opens here")}>
+              <div className="search-mini" onClick={() => setShowSearch(true)}>
                 <span>🔍</span>
                 <span>Search any stock or crypto…</span>
                 <span className="kbd">⌘K</span>
               </div>
               <div className="market-pill">
                 <span className={liveData.isLive ? "live-dot" : "live-dot offline"}></span>
-                {liveData.isLive ? <>🟢 LIVE · NSE OPEN</> : <>⚫ CACHED · NSE OPEN</>}
+                {liveData.isLive
+                  ? <>{isNseOpen() ? "🟢 LIVE · NSE OPEN" : "🟢 LIVE · NSE CLOSED"}</>
+                  : <>{isNseOpen() ? "⚫ CACHED · NSE OPEN" : "⚫ CACHED · NSE CLOSED"}</>}
               </div>
               <div className="avatar">A</div>
             </div>
