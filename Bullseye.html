@@ -4862,9 +4862,9 @@ verdict must be exactly "BUY", "SELL", or "HOLD". confidence is 1-10. time_horiz
 }
 
 async function callGemini(prompt, apiKey) {
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+  const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
   });
   if (!res.ok) {
@@ -5632,7 +5632,7 @@ function FreeAIKeysSection() {
   const aiRows = [
     {
       label: "Gemini (Google)",
-      sub: "gemini-2.0-flash · Free · No credit card",
+      sub: "gemini-3-flash-preview · Free · No credit card",
       link: "https://ai.google.dev",
       linkLabel: "Get free key → ai.google.dev",
       pill: "gemini",
