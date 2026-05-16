@@ -4823,7 +4823,7 @@ function App() {
 <script type="text/babel">
 /* global React, fmtPrice, fmtChange, LiveDataContext */
 // ====================================================================
-// FREE AI COUNCIL — Gemini, Groq, OpenRouter (Mistral), Claude
+// FREE AI COUNCIL — Gemini, Claude
 // ====================================================================
 
 // ---------- helpers ----------
@@ -4831,11 +4831,11 @@ function getFreeAIKeys() {
   try {
     return {
       gemini:      localStorage.getItem("bullseye_gemini_key") || "",
-      groq:        localStorage.getItem("bullseye_groq_key") || "",
-      openrouter:  localStorage.getItem("bullseye_openrouter_key") || "",
+      groq:        "",
+      openrouter:  "",
       claude:      localStorage.getItem("bullseye_anthropic_key") || "",
     };
-  } catch { return { gemini: "", groq: "", openrouter: "", claude: "" }; }
+  } catch { return { gemini: "", groq: "", openrouter: "", claude: "" }; } // groq/openrouter reserved for future
 }
 
 function extractJSON(text) {
@@ -4939,8 +4939,6 @@ async function runAICouncil(rec, displayPrice, displayChange) {
 
   const tasks = [];
   if (keys.gemini)     tasks.push(["gemini",   callGemini(prompt, keys.gemini)]);
-  if (keys.groq)       tasks.push(["groq",      callGroq(prompt, keys.groq)]);
-  if (keys.openrouter) tasks.push(["mistral",   callOpenRouter(prompt, keys.openrouter)]);
   if (keys.claude)     tasks.push(["claude",    callClaudeForCouncil(prompt, keys.claude)]);
 
   const settled = await Promise.allSettled(tasks.map(([, p]) => p));
@@ -5033,8 +5031,6 @@ function AICouncilModal({ rec, displayPrice, displayChange, onClose }) {
     const keys = getFreeAIKeys();
     const names = [];
     if (keys.gemini)     names.push("gemini");
-    if (keys.groq)       names.push("groq");
-    if (keys.openrouter) names.push("mistral");
     if (keys.claude)     names.push("claude");
     setActiveNames(names);
 
@@ -5130,8 +5126,6 @@ function TodayTopPicks({ onOpenDetail, onGoToSettings }) {
     const keys = getFreeAIKeys();
     const tasks = [];
     if (keys.gemini)     tasks.push(["gemini",  fetchTopPicksFromAI("gemini",  keys.gemini)]);
-    if (keys.groq)       tasks.push(["groq",    fetchTopPicksFromAI("groq",    keys.groq)]);
-    if (keys.openrouter) tasks.push(["mistral", fetchTopPicksFromAI("mistral", keys.openrouter)]);
     if (keys.claude)     tasks.push(["claude",  fetchTopPicksFromAI("claude",  keys.claude)]);
 
     if (tasks.length === 0) {
@@ -5166,7 +5160,7 @@ function TodayTopPicks({ onOpenDetail, onGoToSettings }) {
   };
 
   const keys = getFreeAIKeys();
-  const hasKeys = keys.gemini || keys.groq || keys.openrouter || keys.claude;
+  const hasKeys = keys.gemini || keys.claude;
 
   if (!hasKeys) {
     return (
@@ -5174,7 +5168,7 @@ function TodayTopPicks({ onOpenDetail, onGoToSettings }) {
         <div style={{ fontSize: 24 }}>🤖</div>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Set up a free AI key to get Today's Picks</div>
-          <div style={{ fontSize: 12, color: "var(--t-3)", lineHeight: 1.5 }}>Gemini, Groq (Llama), and Mistral are all free — no credit card needed. Takes 2 minutes.</div>
+          <div style={{ fontSize: 12, color: "var(--t-3)", lineHeight: 1.5 }}>Add your Gemini key (free) or Claude key to get AI-powered stock picks.</div>
         </div>
         {onGoToSettings && (
           <button className="btn-secondary" onClick={onGoToSettings} style={{ whiteSpace: "nowrap", fontSize: 12 }}>
@@ -5301,8 +5295,6 @@ async function runAveragingAdvisor(rec, displayPrice, displayChange, buyPrice, q
   const results = {};
   const tasks = [];
   if (keys.gemini)     tasks.push(["gemini",  callGemini(prompt, keys.gemini)]);
-  if (keys.groq)       tasks.push(["groq",    callGroq(prompt, keys.groq)]);
-  if (keys.openrouter) tasks.push(["mistral", callOpenRouter(prompt, keys.openrouter)]);
   if (keys.claude)     tasks.push(["claude",  callClaudeForCouncil(prompt, keys.claude)]);
 
   const settled = await Promise.allSettled(tasks.map(([,p]) => p));
@@ -5322,7 +5314,7 @@ function AveragingAssistant({ rec, displayPrice, displayChange }) {
   const [error, setError] = React.useState(null);
 
   const keys = getFreeAIKeys();
-  const hasKeys = keys.gemini || keys.groq || keys.openrouter || keys.claude;
+  const hasKeys = keys.gemini || keys.claude;
 
   const handleSubmit = async () => {
     const bp = parseFloat(buyPrice);
@@ -5609,11 +5601,7 @@ function FreeAIKeysSection() {
   };
 
   const [geminiKey,    setGeminiKey]    = React.useState(mkState("bullseye_gemini_key"));
-  const [groqKey,      setGroqKey]      = React.useState(mkState("bullseye_groq_key"));
-  const [orKey,        setOrKey]        = React.useState(mkState("bullseye_openrouter_key"));
   const [geminiShow,   setGeminiShow]   = React.useState(false);
-  const [groqShow,     setGroqShow]     = React.useState(false);
-  const [orShow,       setOrShow]       = React.useState(false);
   const [msgs,         setMsgs]         = React.useState({});
 
   const saveKey = (lsKey, val, msgKey) => {
@@ -5627,38 +5615,18 @@ function FreeAIKeysSection() {
     }
   };
 
-  const configured = [geminiKey, groqKey, orKey].filter(k => k.trim()).length;
+  const configured = geminiKey.trim() ? 1 : 0;
 
   const aiRows = [
     {
       label: "Gemini (Google)",
-      sub: "gemini-3-flash-preview · Free · No credit card",
+      sub: "gemini-3-flash-preview · Free · No credit card needed",
       link: "https://ai.google.dev",
       linkLabel: "Get free key → ai.google.dev",
       pill: "gemini",
       value: geminiKey, setValue: setGeminiKey,
       show: geminiShow, setShow: setGeminiShow,
       lsKey: "bullseye_gemini_key", msgKey: "gemini"
-    },
-    {
-      label: "Groq",
-      sub: "llama-3.3-70b-versatile · Very fast · Free tier",
-      link: "https://console.groq.com",
-      linkLabel: "Get free key → console.groq.com",
-      pill: "groq",
-      value: groqKey, setValue: setGroqKey,
-      show: groqShow, setShow: setGroqShow,
-      lsKey: "bullseye_groq_key", msgKey: "groq"
-    },
-    {
-      label: "OpenRouter (Mistral)",
-      sub: "mistral-7b-instruct:free · No billing required",
-      link: "https://openrouter.ai",
-      linkLabel: "Get free key → openrouter.ai",
-      pill: "mistral",
-      value: orKey, setValue: setOrKey,
-      show: orShow, setShow: setOrShow,
-      lsKey: "bullseye_openrouter_key", msgKey: "openrouter"
     },
   ];
 
@@ -5667,14 +5635,14 @@ function FreeAIKeysSection() {
       <div className="free-ai-header">
         <div>
           <div style={{ fontSize: 14, fontWeight: 700, color: "var(--t-1)", display: "flex", alignItems: "center", gap: 8 }}>
-            🤖 Free AI Keys
+            ✦ Gemini AI (Google)
           </div>
           <div style={{ fontSize: 11, color: "var(--t-3)", marginTop: 3, fontFamily: "var(--font-mono)" }}>
-            All these AIs are FREE — no credit card needed
+            Free · No credit card · Works alongside Claude
           </div>
         </div>
         <span className={`free-ai-status-pill ${configured > 0 ? "some" : "none"}`}>
-          {configured > 0 ? `✓ ${configured} of 3 configured` : "0 of 3 configured"}
+          {configured > 0 ? "✓ Gemini configured" : "Not configured"}
         </span>
       </div>
 
@@ -5758,7 +5726,7 @@ function RecCardWithCouncil({ rec, onClick, compact, aiLoading, hasAI }) {
   const [showCouncil, setShowCouncil] = React.useState(false);
 
   const keys = getFreeAIKeys();
-  const hasFreeAI = keys.gemini || keys.groq || keys.openrouter || keys.claude;
+  const hasFreeAI = keys.gemini || keys.claude;
 
   const handleCouncilClick = (e) => {
     e.stopPropagation();
@@ -6033,7 +6001,7 @@ function DetailPanelV2({ rec, onClose, onRecUpdate }) {
   const apiKey = typeof localStorage !== "undefined" ? localStorage.getItem("bullseye_anthropic_key") : null;
 
   const keys = getFreeAIKeys();
-  const hasFreeAI = keys.gemini || keys.groq || keys.openrouter || keys.claude;
+  const hasFreeAI = keys.gemini || keys.claude;
 
   const handleAnalyze = async () => {
     if (!apiKey || analyzing) return;
