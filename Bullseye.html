@@ -4827,15 +4827,10 @@ function App() {
 // ====================================================================
 
 // ---------- helpers ----------
+const GEMINI_KEY = "AIzaSyDsfyiPJKoORXlraWSlbAi1D7muG-r6Jns";
+
 function getFreeAIKeys() {
-  try {
-    return {
-      gemini:      localStorage.getItem("bullseye_gemini_key") || "",
-      groq:        "",
-      openrouter:  "",
-      claude:      localStorage.getItem("bullseye_anthropic_key") || "",
-    };
-  } catch { return { gemini: "", groq: "", openrouter: "", claude: "" }; } // groq/openrouter reserved for future
+  return { gemini: GEMINI_KEY, groq: "", openrouter: "", claude: "" };
 }
 
 function extractJSON(text) {
@@ -6335,45 +6330,15 @@ function SettingsScreenV2() {
 
       <div className="page-grid">
         <div>
-          {/* FREE AI KEYS — new section above Claude */}
-          <FreeAIKeysSection />
-
           <div className="rail-card" style={{ marginBottom: 20 }}>
-            <div className="rail-head"><div className="rail-title">✦ Claude AI (Anthropic)</div></div>
+            <div className="rail-head"><div className="rail-title">✦ AI Engine</div></div>
             <div style={{ padding: "20px 22px" }}>
-              <div style={{ fontSize: 13, color: "var(--t-2)", marginBottom: 14, lineHeight: 1.6 }}>
-                Connect your Anthropic API key to enable Claude AI stock analysis. Stored locally — never sent to any server other than Anthropic.
-              </div>
-              <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-                <input
-                  type={apiKeyMasked ? "password" : "text"}
-                  value={apiKeyInput}
-                  onChange={e => setApiKeyInput(e.target.value)}
-                  placeholder="sk-ant-api03-..."
-                  style={{
-                    flex: 1, background: "var(--surface-2)", border: "1px solid var(--border-2)",
-                    borderRadius: 8, padding: "10px 14px", color: "var(--t-1)",
-                    fontFamily: "var(--font-mono)", fontSize: 13, outline: "none"
-                  }}
-                />
-                <button className="btn-secondary" onClick={() => setApiKeyMasked(!apiKeyMasked)} style={{ flexShrink: 0 }}>
-                  {apiKeyMasked ? "Show" : "Hide"}
-                </button>
-                <button className="btn-primary" onClick={handleSaveKey} style={{ flexShrink: 0 }}>Save Key</button>
-              </div>
-              {apiKeySaveMsg && (
-                <div style={{ fontSize: 12, color: apiKeySaved ? "var(--buy)" : "var(--sell)", fontFamily: "var(--font-mono)" }}>
-                  {apiKeySaveMsg}
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#00e676", boxShadow: "0 0 8px #00e676" }}></div>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>Gemini Active</div>
+                  <div style={{ fontSize: 11, color: "var(--t-3)", fontFamily: "var(--font-mono)", marginTop: 2 }}>gemini-3-flash-preview · Google AI · All features enabled</div>
                 </div>
-              )}
-              {apiKeySaved && (
-                <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 8, fontSize: 12 }}>
-                  <span style={{ color: "var(--buy)" }}>✓</span>
-                  <span style={{ color: "var(--t-2)" }}>API key active — ✦ AI Analyze and Council Vote are enabled.</span>
-                </div>
-              )}
-              <div style={{ marginTop: 16, padding: "12px 14px", background: "var(--surface-2)", borderRadius: 8, fontSize: 11, color: "var(--t-3)", lineHeight: 1.5, fontFamily: "var(--font-mono)" }}>
-                Model: claude-sonnet-4-6 · Max 5 parallel requests · Key stored in localStorage
               </div>
             </div>
           </div>
