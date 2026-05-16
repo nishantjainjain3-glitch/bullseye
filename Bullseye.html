@@ -1840,17 +1840,17 @@ input, select { font-family: inherit; color: inherit; }
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
 <script>
-// Mock stock recommendation data — Indian (NSE), US, Crypto
+// Stock recommendation data — Indian (NSE) and Crypto focus
 // All prices and targets are illustrative for design purposes
 
 window.RECOMMENDATIONS = [
-  // ============ INDIAN (NSE) — BUY ============
+  // ============ LARGE CAP — NIFTY 50 ============
   {
     id: "reliance",
     symbol: "RELIANCE",
     exchange: "NSE",
     name: "Reliance Industries",
-    sector: "Energy / Conglomerate",
+    sector: "Energy",
     market: "IN",
     currency: "₹",
     price: 2942.50,
@@ -1859,14 +1859,14 @@ window.RECOMMENDATIONS = [
     confidence: 87,
     risk: "LOW",
     horizon: "3–6 months",
-    entry: { low: 2920, high: 2965 },
-    targets: [3120, 3280, 3450],
-    stopLoss: 2780,
+    entry: { low: 2850, high: 2900 },
+    targets: [3120, 3200, 3450],
+    stopLoss: 2650,
     rr: 3.2,
     upside: 17.2,
     source: "Analyst + Algo",
     analyst: "Motilal Oswal",
-    rationale: "Jio Platforms valuation re-rating expected post 5G monetization. Retail segment Q3 margins expanded 180bps. Refining benchmark cracks turning favourable into Q4.",
+    rationale: "Diversified conglomerate with strong Jio and retail growth. Jio Platforms valuation re-rating expected post 5G monetization. Retail segment Q3 margins expanded 180bps.",
     catalysts: ["Jio IPO speculation H2 FY26", "Refining margin expansion", "Retail festive season"],
     tags: ["Largecap", "Index Heavy", "Conglomerate"],
     sparkline: [2810, 2825, 2850, 2842, 2880, 2905, 2898, 2925, 2940, 2942],
@@ -1883,27 +1883,357 @@ window.RECOMMENDATIONS = [
     sector: "Banking",
     market: "IN",
     currency: "₹",
-    price: 1684.20,
+    price: 1720,
     change: 0.92,
     action: "BUY",
     confidence: 91,
     risk: "LOW",
     horizon: "6–12 months",
-    entry: { low: 1670, high: 1700 },
+    entry: { low: 1720, high: 1750 },
     targets: [1780, 1880, 1950],
-    stopLoss: 1590,
+    stopLoss: 1600,
     rr: 2.8,
     upside: 15.8,
     source: "Analyst Consensus",
     analyst: "Jefferies",
-    rationale: "Merger synergies playing out, NIM stabilizing at 3.6%. Deposit growth accelerating; CASA ratio improving sequentially. Re-rating story intact.",
+    rationale: "India's largest private bank with strong asset quality. Merger synergies playing out, NIM stabilizing at 3.6%. Deposit growth accelerating; CASA ratio improving.",
     catalysts: ["NIM expansion FY26", "Branch productivity gains", "Credit cost normalization"],
     tags: ["Largecap", "Banking", "Defensive"],
-    sparkline: [1620, 1635, 1640, 1655, 1648, 1665, 1672, 1680, 1685, 1684],
+    sparkline: [1620, 1635, 1640, 1655, 1648, 1665, 1672, 1680, 1700, 1720],
     posted: "4h ago",
     rsi: 62,
     pe: 18.9,
     marketCap: "12.8L Cr"
+  },
+  {
+    id: "tcs",
+    symbol: "TCS",
+    exchange: "NSE",
+    name: "Tata Consultancy",
+    sector: "IT",
+    market: "IN",
+    currency: "₹",
+    price: 3600,
+    change: -0.85,
+    action: "HOLD",
+    confidence: 68,
+    risk: "LOW",
+    horizon: "6–12 months",
+    entry: { low: 3600, high: 3650 },
+    targets: [4000, 4200, 4500],
+    stopLoss: 3300,
+    rr: 1.7,
+    upside: 12.7,
+    source: "Analyst Consensus",
+    analyst: "Nomura",
+    rationale: "IT bellwether with strong deal wins and margin expansion. Steady-state compounder. Margin profile best in class.",
+    catalysts: ["BFSI recovery", "AI deal wins", "Buyback"],
+    tags: ["Largecap", "IT", "Defensive"],
+    sparkline: [3700, 3680, 3650, 3620, 3610, 3600, 3595, 3600, 3605, 3600],
+    posted: "9h ago",
+    rsi: 42,
+    pe: 28.4,
+    marketCap: "14.8L Cr"
+  },
+  {
+    id: "infy",
+    symbol: "INFY",
+    exchange: "NSE",
+    name: "Infosys",
+    sector: "IT",
+    market: "IN",
+    currency: "₹",
+    price: 1520,
+    change: -0.42,
+    action: "BUY",
+    confidence: 74,
+    risk: "LOW",
+    horizon: "6–12 months",
+    entry: { low: 1520, high: 1560 },
+    targets: [1650, 1750, 1850],
+    stopLoss: 1400,
+    rr: 1.8,
+    upside: 14.8,
+    source: "Analyst",
+    analyst: "Kotak Institutional",
+    rationale: "Strong order book and improving margins. Deal TCV strong and discretionary spend recovery gaining momentum.",
+    catalysts: ["Q4 FY26 guidance", "BFSI discretionary uptick", "AI deal pipeline"],
+    tags: ["Largecap", "IT", "Defensive"],
+    sparkline: [1480, 1490, 1495, 1500, 1505, 1510, 1515, 1515, 1518, 1520],
+    posted: "6h ago",
+    rsi: 44,
+    pe: 24.1,
+    marketCap: "7.6L Cr"
+  },
+  {
+    id: "icicibank",
+    symbol: "ICICIBANK",
+    exchange: "NSE",
+    name: "ICICI Bank",
+    sector: "Banking",
+    market: "IN",
+    currency: "₹",
+    price: 1250,
+    change: 1.12,
+    action: "BUY",
+    confidence: 88,
+    risk: "LOW",
+    horizon: "6–12 months",
+    entry: { low: 1250, high: 1280 },
+    targets: [1350, 1420, 1500],
+    stopLoss: 1150,
+    rr: 2.9,
+    upside: 20.0,
+    source: "Analyst Consensus",
+    analyst: "Macquarie",
+    rationale: "Best-in-class ROE with retail loan growth. Strong NIM trajectory and improving asset quality.",
+    catalysts: ["Credit cost normalization", "Retail expansion", "Digital banking growth"],
+    tags: ["Largecap", "Banking"],
+    sparkline: [1200, 1210, 1215, 1220, 1225, 1230, 1238, 1242, 1248, 1250],
+    posted: "3h ago",
+    rsi: 60,
+    pe: 17.2,
+    marketCap: "8.8L Cr"
+  },
+  {
+    id: "hindunilvr",
+    symbol: "HINDUNILVR",
+    exchange: "NSE",
+    name: "Hindustan Unilever",
+    sector: "FMCG",
+    market: "IN",
+    currency: "₹",
+    price: 2400,
+    change: 0.35,
+    action: "HOLD",
+    confidence: 62,
+    risk: "LOW",
+    horizon: "6–12 months",
+    entry: { low: 2400, high: 2450 },
+    targets: [2600, 2700, 2850],
+    stopLoss: 2200,
+    rr: 1.5,
+    upside: 12.5,
+    source: "Analyst",
+    analyst: "Morgan Stanley",
+    rationale: "Defensive pick with rural recovery play. Volume growth trajectory improving with commodity tailwinds.",
+    catalysts: ["Rural demand revival", "Premiumisation trend", "Input cost deflation"],
+    tags: ["Largecap", "FMCG", "Defensive"],
+    sparkline: [2380, 2385, 2390, 2392, 2395, 2398, 2400, 2402, 2400, 2400],
+    posted: "5h ago",
+    rsi: 51,
+    pe: 58.0,
+    marketCap: "5.6L Cr"
+  },
+  {
+    id: "bajfinance",
+    symbol: "BAJFINANCE",
+    exchange: "NSE",
+    name: "Bajaj Finance",
+    sector: "NBFC",
+    market: "IN",
+    currency: "₹",
+    price: 7200,
+    change: 2.10,
+    action: "BUY",
+    confidence: 82,
+    risk: "MEDIUM",
+    horizon: "3–6 months",
+    entry: { low: 7200, high: 7400 },
+    targets: [7800, 8200, 8700],
+    stopLoss: 6600,
+    rr: 2.5,
+    upside: 18.1,
+    source: "Analyst",
+    analyst: "ICICI Securities",
+    rationale: "AUM growth and credit card expansion driving upside. Consumer lending franchise strongest in India.",
+    catalysts: ["AUM growth acceleration", "Credit card market share gains", "NIM improvement"],
+    tags: ["Largecap", "NBFC", "Growth"],
+    sparkline: [6900, 6950, 6980, 7000, 7050, 7100, 7120, 7150, 7180, 7200],
+    posted: "4h ago",
+    rsi: 65,
+    pe: 38.5,
+    marketCap: "4.4L Cr"
+  },
+  {
+    id: "sbin",
+    symbol: "SBIN",
+    exchange: "NSE",
+    name: "State Bank of India",
+    sector: "Banking",
+    market: "IN",
+    currency: "₹",
+    price: 820,
+    change: 1.32,
+    action: "BUY",
+    confidence: 85,
+    risk: "LOW",
+    horizon: "6–12 months",
+    entry: { low: 820, high: 840 },
+    targets: [900, 950, 1000],
+    stopLoss: 750,
+    rr: 3.1,
+    upside: 21.2,
+    source: "Analyst Consensus",
+    analyst: "Macquarie",
+    rationale: "Strong loan growth and improving asset quality. Best-in-class PSU bank with sub-2% GNPA.",
+    catalysts: ["Credit growth", "ROA expansion", "Subsidiary value unlock"],
+    tags: ["Largecap", "PSU", "Banking"],
+    sparkline: [780, 788, 795, 800, 805, 808, 810, 812, 814, 820],
+    posted: "7h ago",
+    rsi: 59,
+    pe: 9.8,
+    marketCap: "7.2L Cr"
+  },
+  {
+    id: "wipro",
+    symbol: "WIPRO",
+    exchange: "NSE",
+    name: "Wipro",
+    sector: "IT",
+    market: "IN",
+    currency: "₹",
+    price: 480,
+    change: -0.30,
+    action: "HOLD",
+    confidence: 60,
+    risk: "LOW",
+    horizon: "6–12 months",
+    entry: { low: 480, high: 495 },
+    targets: [530, 555, 585],
+    stopLoss: 440,
+    rr: 1.6,
+    upside: 16.7,
+    source: "Analyst",
+    analyst: "Jefferies",
+    rationale: "Turnaround story with new deal wins. Management restructuring showing results.",
+    catalysts: ["New CEO strategy execution", "Large deal momentum", "Margin recovery"],
+    tags: ["Largecap", "IT"],
+    sparkline: [490, 488, 485, 483, 481, 480, 479, 480, 481, 480],
+    posted: "8h ago",
+    rsi: 43,
+    pe: 21.5,
+    marketCap: "2.5L Cr"
+  },
+  {
+    id: "ltim",
+    symbol: "LTIM",
+    exchange: "NSE",
+    name: "LTIMindtree",
+    sector: "IT",
+    market: "IN",
+    currency: "₹",
+    price: 5200,
+    change: 1.80,
+    action: "BUY",
+    confidence: 78,
+    risk: "MEDIUM",
+    horizon: "6–9 months",
+    entry: { low: 5200, high: 5350 },
+    targets: [5700, 6000, 6400],
+    stopLoss: 4800,
+    rr: 2.3,
+    upside: 22.0,
+    source: "Analyst",
+    analyst: "BULLSEYE AI",
+    rationale: "Strong deal pipeline and margin improvement. Mid-cap IT with fastest growth among tier-2.",
+    catalysts: ["Deal wins momentum", "US BFSI recovery", "Margin expansion"],
+    tags: ["Largecap", "IT", "Growth"],
+    sparkline: [4900, 4950, 5000, 5050, 5080, 5100, 5120, 5150, 5180, 5200],
+    posted: "5h ago",
+    rsi: 62,
+    pe: 32.1,
+    marketCap: "1.5L Cr"
+  },
+  {
+    id: "axisbank",
+    symbol: "AXISBANK",
+    exchange: "NSE",
+    name: "Axis Bank",
+    sector: "Banking",
+    market: "IN",
+    currency: "₹",
+    price: 1180,
+    change: 0.85,
+    action: "BUY",
+    confidence: 76,
+    risk: "LOW",
+    horizon: "6–12 months",
+    entry: { low: 1180, high: 1210 },
+    targets: [1280, 1350, 1420],
+    stopLoss: 1080,
+    rr: 2.0,
+    upside: 20.3,
+    source: "Analyst",
+    analyst: "Goldman Sachs",
+    rationale: "Valuation discount to peers narrowing. Strong ROE trajectory and digital banking growth.",
+    catalysts: ["Credit growth", "CASA improvement", "Subsidiary listing"],
+    tags: ["Largecap", "Banking"],
+    sparkline: [1150, 1155, 1158, 1162, 1165, 1168, 1172, 1175, 1178, 1180],
+    posted: "4h ago",
+    rsi: 55,
+    pe: 14.8,
+    marketCap: "3.6L Cr"
+  },
+  {
+    id: "maruti",
+    symbol: "MARUTI",
+    exchange: "NSE",
+    name: "Maruti Suzuki",
+    sector: "Auto",
+    market: "IN",
+    currency: "₹",
+    price: 12500,
+    change: 1.40,
+    action: "BUY",
+    confidence: 80,
+    risk: "MEDIUM",
+    horizon: "3–6 months",
+    entry: { low: 12500, high: 12800 },
+    targets: [13500, 14000, 14800],
+    stopLoss: 11500,
+    rr: 2.4,
+    upside: 18.4,
+    source: "Analyst",
+    analyst: "Motilal Oswal",
+    rationale: "EV transition and strong SUV demand. Market share leadership intact with new model launches.",
+    catalysts: ["CNG model launches", "SUV segment growth", "Export ramp-up"],
+    tags: ["Largecap", "Auto"],
+    sparkline: [12000, 12100, 12200, 12250, 12300, 12350, 12400, 12420, 12460, 12500],
+    posted: "3h ago",
+    rsi: 63,
+    pe: 28.5,
+    marketCap: "3.9L Cr"
+  },
+  {
+    id: "sunpharma",
+    symbol: "SUNPHARMA",
+    exchange: "NSE",
+    name: "Sun Pharmaceutical",
+    sector: "Pharma",
+    market: "IN",
+    currency: "₹",
+    price: 1650,
+    change: 0.95,
+    action: "BUY",
+    confidence: 79,
+    risk: "MEDIUM",
+    horizon: "6–9 months",
+    entry: { low: 1650, high: 1700 },
+    targets: [1800, 1900, 2000],
+    stopLoss: 1500,
+    rr: 2.2,
+    upside: 21.2,
+    source: "Analyst",
+    analyst: "ICICI Securities",
+    rationale: "US generics recovery and specialty pipeline maturing. Strong branded generics in India.",
+    catalysts: ["US ANDA approvals", "Specialty drug launches", "India branded growth"],
+    tags: ["Largecap", "Pharma"],
+    sparkline: [1580, 1590, 1600, 1610, 1620, 1630, 1635, 1640, 1645, 1650],
+    posted: "6h ago",
+    rsi: 58,
+    pe: 34.2,
+    marketCap: "3.9L Cr"
   },
   {
     id: "tatamotors",
@@ -1913,590 +2243,377 @@ window.RECOMMENDATIONS = [
     sector: "Auto",
     market: "IN",
     currency: "₹",
-    price: 982.40,
+    price: 950,
     change: 2.43,
     action: "BUY",
     confidence: 78,
     risk: "MEDIUM",
     horizon: "1–3 months",
-    entry: { low: 968, high: 992 },
-    targets: [1040, 1100, 1180],
-    stopLoss: 920,
+    entry: { low: 950, high: 980 },
+    targets: [1050, 1100, 1200],
+    stopLoss: 860,
     rr: 2.4,
-    upside: 20.1,
+    upside: 26.3,
     source: "Algo Signal",
     analyst: "BULLSEYE Quant",
-    rationale: "Breakout from 3-month consolidation on 2.1x avg volume. JLR Q3 wholesale beat. EV portfolio gaining traction. RSI cooling from overbought zone.",
+    rationale: "JLR turnaround and EV launch momentum. Breakout from consolidation with improving quarterly numbers.",
     catalysts: ["JLR Q4 guidance", "EV deliveries", "Demerger progress"],
     tags: ["Largecap", "Auto", "Cyclical"],
-    sparkline: [905, 920, 938, 945, 952, 968, 962, 975, 980, 982],
+    sparkline: [905, 920, 930, 935, 940, 945, 945, 948, 950, 950],
     posted: "1h ago",
     rsi: 67,
     pe: 14.2,
     marketCap: "3.6L Cr"
   },
   {
-    id: "infy",
-    symbol: "INFY",
+    id: "hcltech",
+    symbol: "HCLTECH",
     exchange: "NSE",
-    name: "Infosys",
-    sector: "IT Services",
+    name: "HCL Technologies",
+    sector: "IT",
     market: "IN",
     currency: "₹",
-    price: 1842.60,
-    change: -0.42,
+    price: 1620,
+    change: -0.22,
     action: "HOLD",
-    confidence: 64,
+    confidence: 65,
     risk: "LOW",
     horizon: "6–12 months",
-    entry: { low: 1810, high: 1860 },
-    targets: [1920, 2000, 2080],
-    stopLoss: 1740,
-    rr: 1.8,
-    upside: 12.9,
+    entry: { low: 1620, high: 1660 },
+    targets: [1750, 1820, 1920],
+    stopLoss: 1490,
+    rr: 1.7,
+    upside: 18.5,
     source: "Analyst",
-    analyst: "Kotak Institutional",
-    rationale: "Deal TCV strong but discretionary spend recovery slower than peers. Wait for Q4 guidance before adding aggressively. Margin levers intact.",
-    catalysts: ["Q4 FY26 guidance", "BFSI discretionary uptick", "AI deal pipeline"],
-    tags: ["Largecap", "IT", "Defensive"],
-    sparkline: [1880, 1872, 1865, 1858, 1850, 1845, 1838, 1840, 1844, 1842],
-    posted: "6h ago",
-    rsi: 44,
-    pe: 24.1,
-    marketCap: "7.6L Cr"
+    analyst: "Nomura",
+    rationale: "Products segment drives growth differentiation. Services business recovering steadily.",
+    catalysts: ["HCL Software ARR growth", "Cloud services ramp", "GenAI project wins"],
+    tags: ["Largecap", "IT"],
+    sparkline: [1650, 1645, 1640, 1635, 1630, 1625, 1622, 1622, 1621, 1620],
+    posted: "7h ago",
+    rsi: 48,
+    pe: 25.2,
+    marketCap: "4.4L Cr"
   },
   {
-    id: "adanigreen",
-    symbol: "ADANIGREEN",
+    id: "kotakbank",
+    symbol: "KOTAKBANK",
     exchange: "NSE",
-    name: "Adani Green Energy",
-    sector: "Renewables",
+    name: "Kotak Mahindra Bank",
+    sector: "Banking",
     market: "IN",
     currency: "₹",
-    price: 1124.00,
-    change: -2.84,
-    action: "SELL",
-    confidence: 72,
+    price: 1900,
+    change: 0.55,
+    action: "HOLD",
+    confidence: 66,
+    risk: "LOW",
+    horizon: "6–12 months",
+    entry: { low: 1900, high: 1940 },
+    targets: [2050, 2150, 2300],
+    stopLoss: 1750,
+    rr: 1.9,
+    upside: 21.1,
+    source: "Analyst",
+    analyst: "JPMorgan",
+    rationale: "Premium franchise with digital banking growth. Management transition creating uncertainty but fundamentals solid.",
+    catalysts: ["New MD strategy", "Digital banking scale", "NIM recovery"],
+    tags: ["Largecap", "Banking", "Premium"],
+    sparkline: [1870, 1878, 1882, 1885, 1888, 1890, 1893, 1895, 1898, 1900],
+    posted: "6h ago",
+    rsi: 53,
+    pe: 22.4,
+    marketCap: "3.8L Cr"
+  },
+  {
+    id: "titan",
+    symbol: "TITAN",
+    exchange: "NSE",
+    name: "Titan Company",
+    sector: "Consumer",
+    market: "IN",
+    currency: "₹",
+    price: 3400,
+    change: 1.65,
+    action: "BUY",
+    confidence: 81,
+    risk: "MEDIUM",
+    horizon: "6–12 months",
+    entry: { low: 3400, high: 3500 },
+    targets: [3700, 3900, 4200],
+    stopLoss: 3100,
+    rr: 2.3,
+    upside: 23.5,
+    source: "Analyst",
+    analyst: "Morgan Stanley",
+    rationale: "Jewellery and watches demand driven by aspirational India. Strong brand premiumisation trend.",
+    catalysts: ["Festive season sales", "Gold jewellery demand", "Watches segment growth"],
+    tags: ["Largecap", "Consumer", "Aspirational"],
+    sparkline: [3200, 3240, 3280, 3300, 3320, 3340, 3360, 3375, 3390, 3400],
+    posted: "5h ago",
+    rsi: 66,
+    pe: 82.0,
+    marketCap: "3.0L Cr"
+  },
+  {
+    id: "adanient",
+    symbol: "ADANIENT",
+    exchange: "NSE",
+    name: "Adani Enterprises",
+    sector: "Conglomerate",
+    market: "IN",
+    currency: "₹",
+    price: 2800,
+    change: -0.80,
+    action: "HOLD",
+    confidence: 60,
     risk: "HIGH",
-    horizon: "1–2 months",
-    entry: { low: 1115, high: 1140 },
-    targets: [1040, 980, 920],
-    stopLoss: 1185,
-    rr: 2.1,
-    upside: -18.1,
-    direction: "SHORT",
-    source: "Technical",
+    horizon: "6–12 months",
+    entry: { low: 2800, high: 2900 },
+    targets: [3100, 3200, 3500],
+    stopLoss: 2500,
+    rr: 2.0,
+    upside: 17.9,
+    source: "Analyst",
     analyst: "BULLSEYE Quant",
-    rationale: "Head & shoulders breakdown on daily. Capacity addition guidance cut. Debt servicing concerns resurfacing. Below 50DMA with weak volume on bounces.",
-    catalysts: ["Q3 capacity miss risk", "Debt refinance", "Promoter pledge"],
-    tags: ["Smallcap", "Energy", "High Risk"],
-    sparkline: [1240, 1220, 1198, 1175, 1180, 1158, 1142, 1130, 1135, 1124],
-    posted: "3h ago",
-    rsi: 32,
+    rationale: "Airport and green energy expansion driving growth. Regulatory overhang easing.",
+    catalysts: ["Airport monetization", "Green hydrogen projects", "Road portfolio listing"],
+    tags: ["Largecap", "Conglomerate", "Cyclical"],
+    sparkline: [2900, 2880, 2860, 2840, 2820, 2810, 2805, 2800, 2800, 2800],
+    posted: "4h ago",
+    rsi: 42,
     pe: 88.0,
-    marketCap: "1.8L Cr"
+    marketCap: "3.2L Cr"
+  },
+  {
+    id: "ongc",
+    symbol: "ONGC",
+    exchange: "NSE",
+    name: "ONGC",
+    sector: "Energy",
+    market: "IN",
+    currency: "₹",
+    price: 260,
+    change: 0.78,
+    action: "BUY",
+    confidence: 72,
+    risk: "MEDIUM",
+    horizon: "3–6 months",
+    entry: { low: 260, high: 270 },
+    targets: [290, 310, 340],
+    stopLoss: 235,
+    rr: 2.0,
+    upside: 23.1,
+    source: "Analyst",
+    analyst: "Motilal Oswal",
+    rationale: "High dividend yield and oil price recovery. PSU oil producer with improving realizations.",
+    catalysts: ["Oil price recovery", "Gas price revision", "Dividend payout"],
+    tags: ["Largecap", "PSU", "Energy", "Dividend"],
+    sparkline: [245, 248, 250, 252, 255, 257, 258, 259, 260, 260],
+    posted: "8h ago",
+    rsi: 54,
+    pe: 7.8,
+    marketCap: "3.3L Cr"
+  },
+  {
+    id: "powergrid",
+    symbol: "POWERGRID",
+    exchange: "NSE",
+    name: "Power Grid Corp",
+    sector: "Power",
+    market: "IN",
+    currency: "₹",
+    price: 310,
+    change: 0.65,
+    action: "BUY",
+    confidence: 74,
+    risk: "LOW",
+    horizon: "6–12 months",
+    entry: { low: 310, high: 320 },
+    targets: [345, 360, 390],
+    stopLoss: 280,
+    rr: 2.1,
+    upside: 25.8,
+    source: "Analyst",
+    analyst: "ICICI Securities",
+    rationale: "Capex cycle beneficiary with stable regulated returns. Transmission network expansion on track.",
+    catalysts: ["Capex cycle award", "Renewable transmission projects", "Dividend yield"],
+    tags: ["Largecap", "PSU", "Power", "Defensive"],
+    sparkline: [295, 298, 300, 302, 304, 306, 307, 308, 309, 310],
+    posted: "9h ago",
+    rsi: 57,
+    pe: 18.5,
+    marketCap: "2.9L Cr"
+  },
+  // ============ MID CAP ============
+  {
+    id: "persistent",
+    symbol: "PERSISTENT",
+    exchange: "NSE",
+    name: "Persistent Systems",
+    sector: "IT",
+    market: "IN",
+    currency: "₹",
+    price: 5500,
+    change: 2.80,
+    action: "BUY",
+    confidence: 84,
+    risk: "MEDIUM",
+    horizon: "6–9 months",
+    entry: { low: 5500, high: 5700 },
+    targets: [6000, 6500, 7000],
+    stopLoss: 5000,
+    rr: 2.6,
+    upside: 27.3,
+    source: "AI + Analyst",
+    analyst: "BULLSEYE AI",
+    rationale: "Fastest growing mid-cap IT with strong US banking clients. Revenue growth outpacing all peers.",
+    catalysts: ["BFSI deal closures", "Revenue growth acceleration", "Margin expansion"],
+    tags: ["Midcap", "IT", "Growth"],
+    sparkline: [5100, 5150, 5200, 5280, 5320, 5380, 5420, 5460, 5480, 5500],
+    posted: "2h ago",
+    rsi: 68,
+    pe: 55.2,
+    marketCap: "84K Cr"
   },
   {
     id: "polycab",
     symbol: "POLYCAB",
     exchange: "NSE",
     name: "Polycab India",
-    sector: "Capital Goods",
+    sector: "Electrical",
     market: "IN",
     currency: "₹",
-    price: 6840,
+    price: 6200,
     change: 3.21,
     action: "BUY",
     confidence: 82,
     risk: "MEDIUM",
     horizon: "6–9 months",
-    entry: { low: 6750, high: 6900 },
-    targets: [7300, 7800, 8200],
-    stopLoss: 6450,
+    entry: { low: 6200, high: 6400 },
+    targets: [6800, 7200, 7800],
+    stopLoss: 5700,
     rr: 2.6,
-    upside: 19.9,
+    upside: 25.8,
     source: "Analyst",
     analyst: "ICICI Securities",
-    rationale: "Capex cycle tailwinds. FMEG segment turning profitable. T&D infra orders robust. Pricing power evident in wires & cables.",
+    rationale: "Infrastructure capex tailwind and FMEG expansion. Capex cycle tailwinds with strong T&D infra orders.",
     catalysts: ["Capex cycle", "FMEG margins", "Export growth"],
-    tags: ["Midcap", "Capex Theme"],
-    sparkline: [6520, 6580, 6610, 6650, 6720, 6780, 6810, 6790, 6830, 6840],
+    tags: ["Midcap", "Capex Theme", "Electrical"],
+    sparkline: [5900, 5950, 5980, 6010, 6040, 6080, 6100, 6120, 6150, 6200],
     posted: "5h ago",
     rsi: 64,
     pe: 48.2,
-    marketCap: "1.0L Cr"
-  },
-  {
-    id: "zomato",
-    symbol: "ZOMATO",
-    exchange: "NSE",
-    name: "Zomato",
-    sector: "Internet / Food Delivery",
-    market: "IN",
-    currency: "₹",
-    price: 248.30,
-    change: 4.12,
-    action: "BUY",
-    confidence: 76,
-    risk: "MEDIUM",
-    horizon: "3–6 months",
-    entry: { low: 244, high: 252 },
-    targets: [275, 305, 340],
-    stopLoss: 224,
-    rr: 2.9,
-    upside: 22.8,
-    source: "AI + Analyst",
-    analyst: "BULLSEYE AI",
-    rationale: "Blinkit GOV growing 100%+ YoY. Path to quick commerce profitability clearer. Food delivery contribution margin holding 7%+. Net cash positive.",
-    catalysts: ["Blinkit breakeven", "Going-Out segment", "Q4 take rate"],
-    tags: ["Largecap", "New Age", "Quick Commerce"],
-    sparkline: [218, 225, 230, 234, 240, 238, 244, 245, 246, 248],
-    posted: "2h ago",
-    rsi: 71,
-    pe: 142,
-    marketCap: "2.2L Cr"
-  },
-  {
-    id: "sbin",
-    symbol: "SBIN",
-    exchange: "NSE",
-    name: "State Bank of India",
-    sector: "Banking / PSU",
-    market: "IN",
-    currency: "₹",
-    price: 812.50,
-    change: 1.32,
-    action: "BUY",
-    confidence: 85,
-    risk: "LOW",
-    horizon: "6–12 months",
-    entry: { low: 800, high: 820 },
-    targets: [870, 920, 985],
-    stopLoss: 760,
-    rr: 3.1,
-    upside: 21.2,
-    source: "Analyst Consensus",
-    analyst: "Macquarie",
-    rationale: "Best-in-class PSU bank with sub-2% GNPA. Loan book growing 14%. Treasury gains and recovery write-backs cushion. Cheap on P/B vs private peers.",
-    catalysts: ["Credit growth", "ROA expansion", "Subsidiary value unlock"],
-    tags: ["Largecap", "PSU", "Banking"],
-    sparkline: [780, 788, 795, 800, 805, 808, 810, 812, 814, 812],
-    posted: "7h ago",
-    rsi: 59,
-    pe: 9.8,
-    marketCap: "7.2L Cr"
-  },
-  {
-    id: "irfc",
-    symbol: "IRFC",
-    exchange: "NSE",
-    name: "Indian Railway Finance",
-    sector: "PSU / Finance",
-    market: "IN",
-    currency: "₹",
-    price: 148.20,
-    change: 0.42,
-    action: "HOLD",
-    confidence: 56,
-    risk: "MEDIUM",
-    horizon: "12+ months",
-    entry: { low: 142, high: 152 },
-    targets: [165, 180, 195],
-    stopLoss: 130,
-    rr: 1.9,
-    upside: 11.3,
-    source: "Analyst",
-    analyst: "Anand Rathi",
-    rationale: "Re-rated post FY24 run. Dividend yield attractive but limited near-term catalysts. Railway capex visibility good but priced in.",
-    catalysts: ["Budget capex allocation", "Railway PSU theme"],
-    tags: ["PSU", "Dividend", "Railways"],
-    sparkline: [145, 144, 146, 147, 148, 147, 148, 149, 148, 148],
-    posted: "8h ago",
-    rsi: 51,
-    pe: 28.5,
-    marketCap: "1.9L Cr"
-  },
-  {
-    id: "trent",
-    symbol: "TRENT",
-    exchange: "NSE",
-    name: "Trent",
-    sector: "Retail",
-    market: "IN",
-    currency: "₹",
-    price: 6420,
-    change: 2.84,
-    action: "BUY",
-    confidence: 84,
-    risk: "MEDIUM",
-    horizon: "6–12 months",
-    entry: { low: 6320, high: 6480 },
-    targets: [6900, 7400, 8000],
-    stopLoss: 5980,
-    rr: 2.7,
-    upside: 24.6,
-    source: "Analyst",
-    analyst: "Morgan Stanley",
-    rationale: "Zudio store rollout best-in-class economics. SSSG holding 15%+. Westside revamp showing results. India retail compounder story.",
-    catalysts: ["Zudio store adds", "Star format scaling"],
-    tags: ["Largecap", "Retail", "Compounder"],
-    sparkline: [6100, 6200, 6280, 6310, 6350, 6380, 6400, 6390, 6410, 6420],
-    posted: "5h ago",
-    rsi: 68,
-    pe: 102,
-    marketCap: "2.3L Cr"
+    marketCap: "93K Cr"
   },
   {
     id: "dixon",
     symbol: "DIXON",
     exchange: "NSE",
     name: "Dixon Technologies",
-    sector: "Electronics Mfg",
+    sector: "Electronics",
     market: "IN",
     currency: "₹",
-    price: 14820,
+    price: 15000,
     change: 5.42,
     action: "BUY",
     confidence: 81,
     risk: "HIGH",
     horizon: "6–9 months",
-    entry: { low: 14600, high: 14900 },
-    targets: [15800, 17000, 18500],
-    stopLoss: 13800,
+    entry: { low: 15000, high: 15500 },
+    targets: [16500, 17500, 18500],
+    stopLoss: 13500,
     rr: 2.4,
-    upside: 24.8,
+    upside: 23.3,
     source: "AI + Analyst",
     analyst: "BULLSEYE AI",
-    rationale: "China+1 beneficiary in mobile, displays, IT hardware. PLI scheme tailwinds. Q3 revenue beat with strong order book visibility.",
+    rationale: "PLI scheme beneficiary in electronics manufacturing. China+1 winner in mobile, displays, IT hardware.",
     catalysts: ["PLI scheme expansion", "Mobile capacity ramp", "IT hardware PLI"],
     tags: ["Midcap", "EMS", "China+1"],
-    sparkline: [13200, 13500, 13800, 14000, 14200, 14400, 14600, 14700, 14750, 14820],
+    sparkline: [13200, 13500, 13800, 14000, 14200, 14400, 14600, 14750, 14900, 15000],
     posted: "1h ago",
     rsi: 73,
     pe: 138,
     marketCap: "88K Cr"
   },
   {
-    id: "tcs",
-    symbol: "TCS",
+    id: "tatapower",
+    symbol: "TATAPOWER",
     exchange: "NSE",
-    name: "Tata Consultancy Services",
-    sector: "IT Services",
+    name: "Tata Power",
+    sector: "Power",
     market: "IN",
     currency: "₹",
-    price: 4082,
-    change: -0.85,
-    action: "HOLD",
-    confidence: 68,
-    risk: "LOW",
-    horizon: "6–12 months",
-    entry: { low: 4020, high: 4120 },
-    targets: [4280, 4450, 4600],
-    stopLoss: 3880,
-    rr: 1.7,
-    upside: 12.7,
-    source: "Analyst Consensus",
-    analyst: "Nomura",
-    rationale: "Steady-state compounder. Margin profile best in class. Wait for clearer demand environment in BFSI before incremental adds.",
-    catalysts: ["BFSI recovery", "AI deal wins", "Buyback"],
-    tags: ["Largecap", "IT", "Defensive"],
-    sparkline: [4150, 4140, 4125, 4110, 4095, 4080, 4075, 4080, 4085, 4082],
-    posted: "9h ago",
-    rsi: 42,
-    pe: 28.4,
-    marketCap: "14.8L Cr"
-  },
-
-  // ============ US STOCKS ============
-  {
-    id: "nvda",
-    symbol: "NVDA",
-    exchange: "NASDAQ",
-    name: "NVIDIA",
-    sector: "Semiconductors",
-    market: "US",
-    currency: "$",
-    price: 142.84,
-    change: 2.18,
+    price: 420,
+    change: 2.10,
     action: "BUY",
-    confidence: 89,
+    confidence: 77,
     risk: "MEDIUM",
     horizon: "6–12 months",
-    entry: { low: 140, high: 145 },
-    targets: [158, 175, 195],
-    stopLoss: 128,
-    rr: 3.1,
-    upside: 36.5,
-    source: "AI + Analyst",
-    analyst: "Wedbush",
-    rationale: "Blackwell ramp ahead of schedule. Data center growth runway intact through CY27. Sovereign AI demand emerging. CUDA moat unchallenged.",
-    catalysts: ["Blackwell GA Q1", "Sovereign AI orders", "Earnings May 28"],
-    tags: ["Megacap", "AI", "Semiconductors"],
-    sparkline: [130, 132, 135, 138, 140, 139, 141, 142, 143, 142],
-    posted: "1h ago",
-    rsi: 64,
-    pe: 52.3,
-    marketCap: "$3.5T"
-  },
-  {
-    id: "aapl",
-    symbol: "AAPL",
-    exchange: "NASDAQ",
-    name: "Apple",
-    sector: "Consumer Tech",
-    market: "US",
-    currency: "$",
-    price: 218.45,
-    change: 0.84,
-    action: "HOLD",
-    confidence: 62,
-    risk: "LOW",
-    horizon: "6–12 months",
-    entry: { low: 215, high: 222 },
-    targets: [232, 245, 260],
-    stopLoss: 202,
-    rr: 1.7,
-    upside: 19.0,
-    source: "Analyst",
-    analyst: "Morgan Stanley",
-    rationale: "iPhone 17 super cycle thesis intact but services growth decelerating. Apple Intelligence rollout slower than expected. Valuation full.",
-    catalysts: ["iPhone 17 launch Sep", "Services re-acceleration", "Buyback"],
-    tags: ["Megacap", "Consumer Tech"],
-    sparkline: [220, 221, 219, 217, 218, 220, 219, 218, 217, 218],
-    posted: "4h ago",
-    rsi: 51,
-    pe: 33.2,
-    marketCap: "$3.3T"
-  },
-  {
-    id: "tsla",
-    symbol: "TSLA",
-    exchange: "NASDAQ",
-    name: "Tesla",
-    sector: "EV / Auto",
-    market: "US",
-    currency: "$",
-    price: 348.20,
-    change: 3.84,
-    action: "BUY",
-    confidence: 71,
-    risk: "HIGH",
-    horizon: "3–6 months",
-    entry: { low: 340, high: 355 },
-    targets: [385, 425, 475],
-    stopLoss: 310,
-    rr: 2.4,
-    upside: 22.2,
-    source: "AI Signal",
-    analyst: "BULLSEYE AI",
-    rationale: "Robotaxi narrative driving multiple expansion. Energy storage growing 90%+. FSD v13 progress. China deliveries stabilizing.",
-    catalysts: ["Robotaxi rollout", "Q2 deliveries", "Energy backlog"],
-    tags: ["Megacap", "EV", "AI"],
-    sparkline: [310, 318, 325, 332, 338, 342, 345, 346, 348, 348],
-    posted: "2h ago",
-    rsi: 68,
-    pe: 78.4,
-    marketCap: "$1.1T"
-  },
-  {
-    id: "amd",
-    symbol: "AMD",
-    exchange: "NASDAQ",
-    name: "AMD",
-    sector: "Semiconductors",
-    market: "US",
-    currency: "$",
-    price: 168.40,
-    change: -1.42,
-    action: "BUY",
-    confidence: 74,
-    risk: "MEDIUM",
-    horizon: "6–9 months",
-    entry: { low: 162, high: 172 },
-    targets: [188, 210, 235],
-    stopLoss: 148,
-    rr: 2.7,
-    upside: 24.7,
-    source: "Analyst",
-    analyst: "Bank of America",
-    rationale: "MI300X gaining traction at hyperscalers. CPU server share gains continuing. MI400 roadmap competitive vs Blackwell. Client recovery underway.",
-    catalysts: ["MI400 launch", "Server share gains", "PC refresh"],
-    tags: ["Largecap", "AI", "Semis"],
-    sparkline: [180, 178, 175, 172, 170, 168, 165, 168, 170, 168],
-    posted: "3h ago",
-    rsi: 47,
-    pe: 42.1,
-    marketCap: "$272B"
-  },
-  {
-    id: "googl",
-    symbol: "GOOGL",
-    exchange: "NASDAQ",
-    name: "Alphabet",
-    sector: "Internet",
-    market: "US",
-    currency: "$",
-    price: 182.30,
-    change: 1.24,
-    action: "BUY",
-    confidence: 83,
-    risk: "LOW",
-    horizon: "12+ months",
-    entry: { low: 178, high: 184 },
-    targets: [200, 220, 240],
-    stopLoss: 168,
-    rr: 2.6,
-    upside: 21.7,
-    source: "Analyst Consensus",
-    analyst: "Goldman Sachs",
-    rationale: "Gemini integration accelerating. Cloud growth re-accelerating to 30%+. YouTube monetization improving. AI search fears overblown.",
-    catalysts: ["Gemini 3 rollout", "Cloud margins", "Waymo expansion"],
-    tags: ["Megacap", "AI", "Cloud"],
-    sparkline: [175, 177, 179, 178, 180, 181, 180, 182, 183, 182],
-    posted: "5h ago",
-    rsi: 58,
-    pe: 26.4,
-    marketCap: "$2.3T"
-  },
-  {
-    id: "meta",
-    symbol: "META",
-    exchange: "NASDAQ",
-    name: "Meta Platforms",
-    sector: "Internet",
-    market: "US",
-    currency: "$",
-    price: 612.80,
-    change: 0.45,
-    action: "HOLD",
-    confidence: 66,
-    risk: "MEDIUM",
-    horizon: "6–12 months",
-    entry: { low: 600, high: 620 },
-    targets: [658, 700, 750],
-    stopLoss: 560,
-    rr: 1.9,
-    upside: 14.6,
-    source: "Analyst",
-    analyst: "JPMorgan",
-    rationale: "Ad revenue resilient but reality labs losses widening. Llama 4 capex commitment concerns near term. Awaiting clearer AI monetization.",
-    catalysts: ["Reels monetization", "WhatsApp business", "AI ad tools"],
-    tags: ["Megacap", "AI", "Social"],
-    sparkline: [605, 608, 612, 615, 610, 608, 611, 613, 614, 612],
-    posted: "6h ago",
-    rsi: 52,
-    pe: 28.1,
-    marketCap: "$1.5T"
-  },
-  {
-    id: "amzn",
-    symbol: "AMZN",
-    exchange: "NASDAQ",
-    name: "Amazon",
-    sector: "E-commerce / Cloud",
-    market: "US",
-    currency: "$",
-    price: 224.60,
-    change: 1.82,
-    action: "BUY",
-    confidence: 86,
-    risk: "LOW",
-    horizon: "12+ months",
-    entry: { low: 220, high: 228 },
-    targets: [245, 270, 295],
-    stopLoss: 205,
-    rr: 2.8,
-    upside: 20.2,
-    source: "Analyst Consensus",
-    analyst: "Bernstein",
-    rationale: "AWS reacceleration confirmed at 19%+ YoY. Retail margins structurally higher post-fulfillment regionalization. Ad business $60B+ run rate.",
-    catalysts: ["AWS Gen-AI revenue", "Retail margin expansion", "Ads growth"],
-    tags: ["Megacap", "Cloud", "Retail"],
-    sparkline: [215, 218, 220, 222, 223, 224, 223, 224, 225, 224],
-    posted: "4h ago",
-    rsi: 61,
-    pe: 38.4,
-    marketCap: "$2.4T"
-  },
-  {
-    id: "pltr",
-    symbol: "PLTR",
-    exchange: "NYSE",
-    name: "Palantir",
-    sector: "Software / AI",
-    market: "US",
-    currency: "$",
-    price: 78.40,
-    change: -2.14,
-    action: "SELL",
-    confidence: 69,
-    risk: "HIGH",
-    horizon: "1–3 months",
-    entry: { low: 76, high: 80 },
-    targets: [68, 60, 52],
-    stopLoss: 86,
+    entry: { low: 420, high: 435 },
+    targets: [470, 500, 540],
+    stopLoss: 375,
     rr: 2.2,
-    upside: -23.4,
-    direction: "SHORT",
-    source: "Technical",
-    analyst: "BULLSEYE Quant",
-    rationale: "Valuation stretched at 280x forward earnings. Insider selling accelerating. RSI divergence on weekly. Trim positions, take profits.",
-    catalysts: ["Earnings May 7", "Insider Form 4 filings", "Govt budget impact"],
-    tags: ["Midcap", "AI", "Overvalued"],
-    sparkline: [86, 84, 82, 81, 80, 79, 78, 79, 78, 78],
-    posted: "2h ago",
-    rsi: 38,
-    pe: 280,
-    marketCap: "$172B"
+    upside: 28.6,
+    source: "Analyst",
+    analyst: "Motilal Oswal",
+    rationale: "Renewable energy capacity addition on track. Solar EPC and rooftop segments scaling fast.",
+    catalysts: ["Solar capacity ramp", "EV charging expansion", "Odisha discom turnaround"],
+    tags: ["Midcap", "Power", "Renewables"],
+    sparkline: [395, 400, 405, 408, 410, 413, 415, 418, 420, 420],
+    posted: "4h ago",
+    rsi: 62,
+    pe: 38.0,
+    marketCap: "1.3L Cr"
   },
   {
-    id: "uber",
-    symbol: "UBER",
-    exchange: "NYSE",
-    name: "Uber Technologies",
-    sector: "Mobility",
-    market: "US",
-    currency: "$",
-    price: 84.20,
-    change: 2.41,
+    id: "idfcfirstb",
+    symbol: "IDFCFIRSTB",
+    exchange: "NSE",
+    name: "IDFC First Bank",
+    sector: "Banking",
+    market: "IN",
+    currency: "₹",
+    price: 78,
+    change: 1.30,
     action: "BUY",
-    confidence: 79,
+    confidence: 72,
     risk: "MEDIUM",
-    horizon: "6–9 months",
-    entry: { low: 82, high: 86 },
-    targets: [94, 105, 118],
-    stopLoss: 76,
-    rr: 2.5,
-    upside: 24.7,
+    horizon: "6–12 months",
+    entry: { low: 78, high: 82 },
+    targets: [90, 98, 108],
+    stopLoss: 68,
+    rr: 2.0,
+    upside: 38.5,
     source: "Analyst",
-    analyst: "Wells Fargo",
-    rationale: "Robotaxi partnerships (Waymo, Wayve) hedge AV disruption. Delivery EBITDA inflection. International mobility growing 30%+.",
-    catalysts: ["Waymo expansion", "Q1 EBITDA beat", "Buyback execution"],
-    tags: ["Largecap", "Mobility"],
-    sparkline: [78, 80, 81, 82, 83, 82, 83, 84, 84, 84],
-    posted: "5h ago",
-    rsi: 63,
-    pe: 32.4,
-    marketCap: "$176B"
+    analyst: "BULLSEYE AI",
+    rationale: "Retail loan transformation and CASA improvement. Transformation from infra lender to retail bank at inflection.",
+    catalysts: ["CASA improvement", "Retail loan growth", "NIM expansion"],
+    tags: ["Midcap", "Banking", "Transformation"],
+    sparkline: [72, 73, 74, 74, 75, 76, 77, 77, 78, 78],
+    posted: "6h ago",
+    rsi: 55,
+    pe: 16.8,
+    marketCap: "57K Cr"
   },
 
   // ============ CRYPTO ============
   {
     id: "btc",
-    symbol: "BTC",
+    symbol: "BTC-USD",
     exchange: "Crypto",
     name: "Bitcoin",
     sector: "Layer 1",
     market: "CRYPTO",
     currency: "$",
-    price: 98420,
+    price: 95000,
     change: 1.84,
     action: "BUY",
     confidence: 81,
     risk: "MEDIUM",
     horizon: "6–12 months",
-    entry: { low: 96000, high: 99000 },
-    targets: [108000, 125000, 145000],
+    entry: { low: 95000, high: 97000 },
+    targets: [108000, 115000, 125000],
     stopLoss: 88000,
     rr: 2.4,
     upside: 27.0,
@@ -2513,7 +2630,7 @@ window.RECOMMENDATIONS = [
   },
   {
     id: "eth",
-    symbol: "ETH",
+    symbol: "ETH-USD",
     exchange: "Crypto",
     name: "Ethereum",
     sector: "Layer 1 / Smart Contract",
@@ -2543,7 +2660,7 @@ window.RECOMMENDATIONS = [
   },
   {
     id: "sol",
-    symbol: "SOL",
+    symbol: "SOL-USD",
     exchange: "Crypto",
     name: "Solana",
     sector: "Layer 1",
@@ -2572,38 +2689,8 @@ window.RECOMMENDATIONS = [
     marketCap: "$84B"
   },
   {
-    id: "doge",
-    symbol: "DOGE",
-    exchange: "Crypto",
-    name: "Dogecoin",
-    sector: "Memecoin",
-    market: "CRYPTO",
-    currency: "$",
-    price: 0.412,
-    change: -3.24,
-    action: "HOLD",
-    confidence: 48,
-    risk: "VERY HIGH",
-    horizon: "1–3 months",
-    entry: { low: 0.39, high: 0.42 },
-    targets: [0.48, 0.58, 0.72],
-    stopLoss: 0.34,
-    rr: 1.9,
-    upside: 16.5,
-    source: "Sentiment",
-    analyst: "BULLSEYE AI",
-    rationale: "Pure sentiment play. X/Tesla integration rumors recur. Position size small. Highly speculative — only with risk capital.",
-    catalysts: ["X payments integration", "Memecoin season"],
-    tags: ["Memecoin", "Speculative"],
-    sparkline: [0.44, 0.43, 0.425, 0.42, 0.418, 0.415, 0.41, 0.413, 0.414, 0.412],
-    posted: "1h ago",
-    rsi: 42,
-    pe: null,
-    marketCap: "$60B"
-  },
-  {
     id: "bnb",
-    symbol: "BNB",
+    symbol: "BNB-USD",
     exchange: "Crypto",
     name: "BNB",
     sector: "Exchange Token",
@@ -2632,8 +2719,128 @@ window.RECOMMENDATIONS = [
     marketCap: "$104B"
   },
   {
+    id: "xrp",
+    symbol: "XRP-USD",
+    exchange: "Crypto",
+    name: "XRP",
+    sector: "Payments",
+    market: "CRYPTO",
+    currency: "$",
+    price: 2.28,
+    change: 2.15,
+    action: "BUY",
+    confidence: 74,
+    risk: "MEDIUM",
+    horizon: "3–6 months",
+    entry: { low: 2.20, high: 2.35 },
+    targets: [2.80, 3.20, 4.00],
+    stopLoss: 1.90,
+    rr: 2.5,
+    upside: 40.4,
+    source: "On-chain + AI",
+    analyst: "BULLSEYE AI",
+    rationale: "SEC lawsuit resolution removes major overhang. Ripple CBDC and bank partnerships accelerating. XRP ETF approvals pending.",
+    catalysts: ["SEC case resolution", "CBDC partnerships", "XRP ETF approval"],
+    tags: ["Payments", "Institutional"],
+    sparkline: [2.05, 2.10, 2.12, 2.15, 2.18, 2.20, 2.23, 2.25, 2.27, 2.28],
+    posted: "2h ago",
+    rsi: 63,
+    pe: null,
+    marketCap: "$131B"
+  },
+  {
+    id: "doge",
+    symbol: "DOGE-USD",
+    exchange: "Crypto",
+    name: "Dogecoin",
+    sector: "Memecoin",
+    market: "CRYPTO",
+    currency: "$",
+    price: 0.412,
+    change: -3.24,
+    action: "HOLD",
+    confidence: 48,
+    risk: "VERY HIGH",
+    horizon: "1–3 months",
+    entry: { low: 0.39, high: 0.42 },
+    targets: [0.48, 0.58, 0.72],
+    stopLoss: 0.34,
+    rr: 1.9,
+    upside: 16.5,
+    source: "Sentiment",
+    analyst: "BULLSEYE AI",
+    rationale: "Pure sentiment play. X/Tesla integration rumors recur. Position size small. Highly speculative — only with risk capital.",
+    catalysts: ["X payments integration", "Memecoin season"],
+    tags: ["Memecoin", "Speculative"],
+    sparkline: [0.44, 0.43, 0.425, 0.42, 0.418, 0.415, 0.41, 0.413, 0.414, 0.412],
+    posted: "1h ago",
+    rsi: 42,
+    pe: null,
+    marketCap: "$60B"
+  },
+  {
+    id: "ada",
+    symbol: "ADA-USD",
+    exchange: "Crypto",
+    name: "Cardano",
+    sector: "Layer 1",
+    market: "CRYPTO",
+    currency: "$",
+    price: 0.72,
+    change: 1.85,
+    action: "HOLD",
+    confidence: 55,
+    risk: "HIGH",
+    horizon: "6–12 months",
+    entry: { low: 0.70, high: 0.76 },
+    targets: [0.90, 1.05, 1.30],
+    stopLoss: 0.58,
+    rr: 1.9,
+    upside: 30.6,
+    source: "On-chain",
+    analyst: "BULLSEYE Quant",
+    rationale: "Chang hard fork expanding governance and smart contract capabilities. Hydra Layer 2 gaining traction.",
+    catalysts: ["Chang upgrade", "DeFi TVL growth", "Hydra Layer 2"],
+    tags: ["L1", "PoS", "Research-driven"],
+    sparkline: [0.65, 0.66, 0.68, 0.69, 0.70, 0.71, 0.71, 0.72, 0.72, 0.72],
+    posted: "4h ago",
+    rsi: 52,
+    pe: null,
+    marketCap: "$25B"
+  },
+  {
+    id: "avax",
+    symbol: "AVAX-USD",
+    exchange: "Crypto",
+    name: "Avalanche",
+    sector: "Layer 1",
+    market: "CRYPTO",
+    currency: "$",
+    price: 28.50,
+    change: 3.62,
+    action: "BUY",
+    confidence: 68,
+    risk: "HIGH",
+    horizon: "3–6 months",
+    entry: { low: 27.50, high: 29.50 },
+    targets: [35, 42, 52],
+    stopLoss: 23.00,
+    rr: 2.4,
+    upside: 35.1,
+    source: "On-chain + AI",
+    analyst: "BULLSEYE AI",
+    rationale: "Subnet ecosystem growing with institutional chains. C-Chain DeFi TVL recovering. Avalanche9000 upgrade lowering costs.",
+    catalysts: ["Avalanche9000 upgrade", "Subnet institutional adoption", "DeFi TVL recovery"],
+    tags: ["L1", "Subnets", "Institutional"],
+    sparkline: [25, 25.5, 26, 26.5, 27, 27.5, 28, 28.2, 28.4, 28.5],
+    posted: "3h ago",
+    rsi: 61,
+    pe: null,
+    marketCap: "$12B"
+  },
+  {
     id: "link",
-    symbol: "LINK",
+    symbol: "LINK-USD",
     exchange: "Crypto",
     name: "Chainlink",
     sector: "Oracle / DeFi",
@@ -2660,6 +2867,36 @@ window.RECOMMENDATIONS = [
     rsi: 67,
     pe: null,
     marketCap: "$15.8B"
+  },
+  {
+    id: "dot",
+    symbol: "DOT-USD",
+    exchange: "Crypto",
+    name: "Polkadot",
+    sector: "Layer 0 / Interoperability",
+    market: "CRYPTO",
+    currency: "$",
+    price: 7.20,
+    change: 2.30,
+    action: "HOLD",
+    confidence: 52,
+    risk: "HIGH",
+    horizon: "6–12 months",
+    entry: { low: 7.00, high: 7.50 },
+    targets: [9.00, 11.00, 14.00],
+    stopLoss: 5.80,
+    rr: 2.0,
+    upside: 37.5,
+    source: "On-chain",
+    analyst: "BULLSEYE Quant",
+    rationale: "Agile coretime model replacing parachain auctions lowers barriers. JAM upgrade and inter-chain messaging improvements.",
+    catalysts: ["JAM upgrade", "Coretime adoption", "Parachain ecosystem recovery"],
+    tags: ["Layer 0", "Interoperability", "PoS"],
+    sparkline: [6.50, 6.60, 6.70, 6.80, 6.90, 7.00, 7.05, 7.10, 7.15, 7.20],
+    posted: "5h ago",
+    rsi: 48,
+    pe: null,
+    marketCap: "$10.5B"
   }
 ];
 
@@ -2679,18 +2916,19 @@ window.NEWS_ITEMS = [
 window.ALERTS_DATA = [
   { id: 1, type: "TARGET_HIT", symbol: "RELIANCE", message: "Hit Target 1 at ₹3,120", time: "2h ago", triggered: true },
   { id: 2, type: "BREAKOUT", symbol: "TATAMOTORS", message: "Breakout above ₹980 confirmed on volume", time: "4h ago", triggered: true },
-  { id: 3, type: "STOP_LOSS", symbol: "ADANIGREEN", message: "Approaching stop loss at ₹1,185 — short position", time: "1h ago", triggered: false },
-  { id: 4, type: "NEW_PICK", symbol: "DIXON", message: "New BUY recommendation — Entry ₹14,600–14,900", time: "6h ago", triggered: true },
-  { id: 5, type: "PRICE_ALERT", symbol: "BTC", message: "BTC crossed $98K — momentum confirmed", time: "30m ago", triggered: true },
-  { id: 6, type: "NEWS", symbol: "NVDA", message: "Earnings May 28 — high confidence BUY active", time: "5h ago", triggered: false }
+  { id: 3, type: "STOP_LOSS", symbol: "BAJFINANCE", message: "Approaching stop loss at ₹6,800 — monitor closely", time: "1h ago", triggered: false },
+  { id: 4, type: "NEW_PICK", symbol: "DIXON", message: "New BUY recommendation — Entry ₹14,600–15,000", time: "6h ago", triggered: true },
+  { id: 5, type: "PRICE_ALERT", symbol: "BTC-USD", message: "BTC crossed $98K — momentum confirmed", time: "30m ago", triggered: true },
+  { id: 6, type: "NEWS", symbol: "PERSISTENT", message: "Q4 results beat — revenue growth 40% YoY", time: "5h ago", triggered: true }
 ];
 
 window.PORTFOLIO = [
   { symbol: "RELIANCE", market: "IN", qty: 50, avg: 2620, current: 2942.50, currency: "₹" },
-  { symbol: "HDFCBANK", market: "IN", qty: 75, avg: 1540, current: 1684.20, currency: "₹" },
-  { symbol: "ZOMATO", market: "IN", qty: 500, avg: 198, current: 248.30, currency: "₹" },
-  { symbol: "NVDA", market: "US", qty: 12, avg: 118.40, current: 142.84, currency: "$" },
-  { symbol: "BTC", market: "CRYPTO", qty: 0.18, avg: 78400, current: 98420, currency: "$" }
+  { symbol: "HDFCBANK", market: "IN", qty: 75, avg: 1540, current: 1720.00, currency: "₹" },
+  { symbol: "INFY", market: "IN", qty: 100, avg: 1450, current: 1620.00, currency: "₹" },
+  { symbol: "TITAN", market: "IN", qty: 20, avg: 3100, current: 3400.00, currency: "₹" },
+  { symbol: "BTC-USD", market: "CRYPTO", qty: 0.18, avg: 78400, current: 95000, currency: "$" },
+  { symbol: "ETH-USD", market: "CRYPTO", qty: 1.5, avg: 2800, current: 3420, currency: "$" }
 ];
 </script>
 
@@ -3566,20 +3804,33 @@ Object.assign(window, {
 
 const LiveDataContext = React.createContext({ prices: {}, lastUpdated: null, isLive: false, error: null });
 
-// Crypto id → symbol mapping
+// Crypto CoinGecko id → symbol key mapping (symbol keys use -USD format)
 const CRYPTO_ID_MAP = {
-  bitcoin: "BTC", ethereum: "ETH", solana: "SOL",
-  dogecoin: "DOGE", binancecoin: "BNB", chainlink: "LINK"
+  "bitcoin": "BTC-USD",
+  "ethereum": "ETH-USD",
+  "solana": "SOL-USD",
+  "binancecoin": "BNB-USD",
+  "ripple": "XRP-USD",
+  "dogecoin": "DOGE-USD",
+  "cardano": "ADA-USD",
+  "avalanche-2": "AVAX-USD",
+  "chainlink": "LINK-USD",
+  "polkadot": "DOT-USD"
 };
 
 // NSE symbols that need .NS suffix for Yahoo Finance
 const NSE_SYMBOLS_LIST = [
-  "RELIANCE.NS","HDFCBANK.NS","TATAMOTORS.NS","INFY.NS","ADANIGREEN.NS",
-  "POLYCAB.NS","ZOMATO.NS","SBIN.NS","IRFC.NS","TRENT.NS","DIXON.NS","TCS.NS"
+  "RELIANCE.NS","HDFCBANK.NS","TCS.NS","INFY.NS","ICICIBANK.NS",
+  "HINDUNILVR.NS","BAJFINANCE.NS","SBIN.NS","WIPRO.NS","LTIM.NS",
+  "AXISBANK.NS","MARUTI.NS","SUNPHARMA.NS","TATAMOTORS.NS","HCLTECH.NS",
+  "KOTAKBANK.NS","TITAN.NS","ADANIENT.NS","ONGC.NS","POWERGRID.NS",
+  "PERSISTENT.NS","POLYCAB.NS","DIXON.NS","TATAPOWER.NS","IDFCFIRSTB.NS"
 ];
 
-// US symbols (no suffix needed)
-const US_SYMBOLS_LIST = ["NVDA","AAPL","TSLA","AMD","GOOGL","META","AMZN","PLTR","UBER"];
+// CoinGecko markets cache
+let _cgMarketsCache = null;
+let _cgMarketsCacheTime = 0;
+const CG_MARKETS_TTL = 60000; // 60s
 
 async function fetchYahooQuotes(symbols) {
   const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols.join(",")}`;
@@ -3598,18 +3849,41 @@ async function fetchYahooQuotes(symbols) {
   return out;
 }
 
-async function fetchCryptoPrices() {
-  const ids = Object.keys(CRYPTO_ID_MAP).join(",");
-  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`;
+async function fetchCoinGeckoMarkets() {
+  const now = Date.now();
+  if (_cgMarketsCache && (now - _cgMarketsCacheTime) < CG_MARKETS_TTL) {
+    return _cgMarketsCache;
+  }
+  const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h,7d`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`CoinGecko fetch failed: ${res.status}`);
+  if (!res.ok) throw new Error(`CoinGecko markets fetch failed: ${res.status}`);
   const data = await res.json();
+  _cgMarketsCache = data;
+  _cgMarketsCacheTime = now;
+  return data;
+}
+
+async function fetchCryptoPrices() {
+  const data = await fetchCoinGeckoMarkets();
   const out = {};
-  for (const [id, sym] of Object.entries(CRYPTO_ID_MAP)) {
-    if (data[id]) {
-      out[sym] = {
-        price: data[id].usd,
-        change: data[id].usd_24h_change ?? 0
+  const reverseMap = {}; // id → symbol key
+  for (const [id, sym] of Object.entries(CRYPTO_ID_MAP)) reverseMap[id] = sym;
+  for (const coin of data) {
+    const symKey = reverseMap[coin.id];
+    if (symKey) {
+      out[symKey] = {
+        price: coin.current_price,
+        change: coin.price_change_percentage_24h ?? 0,
+        change7d: coin.price_change_percentage_7d_in_currency ?? 0,
+        marketCap: coin.market_cap,
+        volume: coin.total_volume,
+        high24h: coin.high_24h,
+        low24h: coin.low_24h,
+        circulatingSupply: coin.circulating_supply,
+        rank: coin.market_cap_rank,
+        name: coin.name,
+        id: coin.id,
+        image: coin.image
       };
     }
   }
@@ -3623,15 +3897,13 @@ function LiveDataProvider({ children }) {
 
   const fetchAll = React.useCallback(async () => {
     try {
-      const [nseData, usData, cryptoData] = await Promise.allSettled([
+      const [nseData, cryptoData] = await Promise.allSettled([
         fetchYahooQuotes(NSE_SYMBOLS_LIST),
-        fetchYahooQuotes(US_SYMBOLS_LIST),
         fetchCryptoPrices()
       ]);
 
       const prices = {};
       if (nseData.status === "fulfilled") Object.assign(prices, nseData.value);
-      if (usData.status === "fulfilled") Object.assign(prices, usData.value);
       if (cryptoData.status === "fulfilled") Object.assign(prices, cryptoData.value);
 
       const hasAny = Object.keys(prices).length > 0;
@@ -3761,7 +4033,8 @@ async function analyzeAllStocks(recs, apiKey, onProgress) {
 }
 
 Object.assign(window, {
-  LiveDataContext, LiveDataProvider, useAIAnalysis, analyzeAllStocks, analyzeStockWithClaude, notifyAIListeners
+  LiveDataContext, LiveDataProvider, useAIAnalysis, analyzeAllStocks, analyzeStockWithClaude, notifyAIListeners,
+  fetchCoinGeckoMarkets
 });
 </script>
 
@@ -5233,22 +5506,31 @@ function AICouncilModal({ rec, displayPrice, displayChange, onClose }) {
 
 function buildTopPicksPrompt() {
   const today = new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-  return `Today is ${today}. You are a stock market expert for Indian markets (NSE/BSE).
+  return `Today is ${today}. You are a senior equity analyst specializing in Indian stock markets (NSE/BSE).
+
+Consider current Indian market context:
+- FII/DII flows and institutional activity on Dalal Street
+- RBI monetary policy stance and interest rate outlook
+- INR/USD exchange rate impact on export/import sectors
+- Crude oil price impact on Indian markets (OMCs, aviation, paints)
+- Nifty 50 / Nifty Next 50 technical levels and sentiment
 
 Give me your TOP 3 stock picks to BUY today for short-term gains (1-4 weeks).
-Choose from Indian large/mid cap stocks. Consider market momentum.
+Pick from Nifty 50 or Nifty Next 50 constituents only.
+Consider sector rotation, FII buying patterns, and upcoming results catalysts.
 
-Respond STRICT JSON only:
+Respond STRICT JSON only — no markdown, no explanation:
 {
   "picks": [
     {
-      "symbol": "RELIANCE.NS",
+      "symbol": "RELIANCE",
       "name": "Reliance Industries",
       "verdict": "BUY",
-      "entry_range": "2400-2450",
-      "target": 2600,
-      "stop_loss": 2300,
-      "reasoning": "one sentence"
+      "entry_range": "2850-2900",
+      "target": 3120,
+      "stop_loss": 2650,
+      "reasoning": "one sentence max covering key bullish catalyst",
+      "sector": "Energy"
     }
   ]
 }`;
@@ -5857,6 +6139,9 @@ Object.assign(window, {
   AveragingAssistant,
   MyHoldings,
   FreeAIKeysSection,
+  callGemini,
+  GEMINI_KEY,
+  extractJSON,
 });
 </script>
 
@@ -6634,8 +6919,9 @@ async function fetchTechnicalData(symbol) {
   }
 
   try {
+    const NSE_LOOKUP = ["RELIANCE","HDFCBANK","TATAMOTORS","INFY","ADANIGREEN","POLYCAB","ZOMATO","SBIN","IRFC","TRENT","DIXON","TCS","BHARTIARTL","ICICIBANK","INFOSYS","LICI","HINDUNILVR","ITC","BAJFINANCE","KOTAKBANK","LT","LTIM","HCLTECH","MARUTI","SUNPHARMA","TITAN","WIPRO","ULTRACEMCO","ONGC","NTPC","POWERGRID","NESTLEIND","TATASTEEL","AXISBANK","INDUSINDBK","BAJAJFINSV","TECHM","DRREDDY","ADANIENT","ADANIPORTS","CIPLA","JSWSTEEL","DIVISLAB","COALINDIA","ASIANPAINT","GRASIM","EICHERMOT","BPCL","APOLLOHOSP","HEROMOTOCO","BRITANNIA","SBILIFE","HDFCLIFE","HINDALCO","TATACONSUM","UPL","PERSISTENT","TATAPOWER","IDFCFIRSTB"];
     const yahooSym = symbol.includes('.') ? symbol : (
-      ["RELIANCE","HDFCBANK","TATAMOTORS","INFY","ADANIGREEN","POLYCAB","ZOMATO","SBIN","IRFC","TRENT","DIXON","TCS","BHARTIARTL","ICICIBANK","INFOSYS","LICI","HINDUNILVR","ITC","BAJFINANCE","KOTAKBANK","LT","HCLTECH","MARUTI","SUNPHARMA","TITAN","WIPRO","ULTRACEMCO","ONGC","NTPC","POWERGRID","NESTLEIND","TATASTEEL","AXISBANK","INDUSINDBK","BAJAJFINSV","TECHM","DRREDDY","ADANIENT","ADANIPORTS","CIPLA","JSWSTEEL","DIVISLAB","COALINDIA","ASIANPAINT","GRASIM","EICHERMOT","BPCL","APOLLOHOSP","HEROMOTOCO","BRITANNIA","SBILIFE","HDFCLIFE","HINDALCO","TATACONSUM","UPL"].includes(symbol) ? symbol + ".NS" : symbol
+      NSE_LOOKUP.includes(symbol) ? symbol + ".NS" : symbol
     );
     const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSym}?interval=1d&range=3mo&includePrePost=false`;
     const res = await fetch(url, { mode: 'cors' });
@@ -6773,10 +7059,26 @@ PRICE DATA:
 - RSI(14): ${rec.rsi || 'N/A'}`;
   }
 
-  return `You are an expert Indian stock market analyst. Analyze ${name} (${symbol}):
+  const isIndian = rec.market === "IN";
+  const marketContext = isIndian
+    ? `Exchange: NSE/BSE | Market: Indian Equity | Benchmark: Nifty 50 / Nifty Next 50
+Consider: FII/DII flows, RBI rate cycle, INR/USD (currently ~84), crude oil ($80-85/bbl), earnings season.`
+    : `Exchange: Crypto | Market: Global Digital Assets
+Consider: BTC dominance, ETF flows, on-chain metrics, macro risk sentiment.`;
+
+  return `You are a senior Indian market analyst specializing in NSE/BSE equities and crypto assets.
+
+${marketContext}
+
+Analyze ${name} (${symbol}):
 ${techSection}
 
-Based on these technicals, provide a trading recommendation.
+Fundamental context:
+- Sector: ${rec.sector}
+- P/E: ${rec.pe || 'N/A'} | Market Cap: ${rec.marketCap || 'N/A'}
+- Analyst rationale: ${rec.rationale}
+
+Based on technicals, fundamentals, and current Indian market conditions, provide recommendation.
 Respond STRICT JSON only (no markdown):
 {
   "verdict": "BUY",
@@ -6784,7 +7086,7 @@ Respond STRICT JSON only (no markdown):
   "entry_price": ${price},
   "target_price": ${rec.targets ? rec.targets[0] : price * 1.1},
   "stop_loss": ${rec.stopLoss || price * 0.92},
-  "reasoning": "2-3 sentences mentioning specific technicals",
+  "reasoning": "2-3 sentences with specific technicals and market context",
   "time_horizon": "Short-term (1-4 weeks)",
   "key_levels": {"support": ${techData ? techData.support : price * 0.95}, "resistance": ${techData ? techData.resistance : price * 1.05}},
   "rsi_signal": "Neutral"
@@ -7080,9 +7382,8 @@ function ScreenerScreenV3({ onOpenDetail }) {
 
       <div className="filter-bar">
         <button className={`chip ${filter === "all" ? "active" : ""}`} onClick={() => setFilter("all")}>All</button>
-        <button className={`chip ${filter === "IN" ? "active" : ""}`} onClick={() => setFilter("IN")}>Indian</button>
-        <button className={`chip ${filter === "US" ? "active" : ""}`} onClick={() => setFilter("US")}>US</button>
-        <button className={`chip ${filter === "CRYPTO" ? "active" : ""}`} onClick={() => setFilter("CRYPTO")}>Crypto</button>
+        <button className={`chip ${filter === "IN" ? "active" : ""}`} onClick={() => setFilter("IN")}>🇮🇳 NSE</button>
+        <button className={`chip ${filter === "CRYPTO" ? "active" : ""}`} onClick={() => setFilter("CRYPTO")}>₿ Crypto</button>
         <div className="chip-divider"></div>
         <span style={{ fontSize: 11, color: "var(--t-3)", marginRight: 4, fontFamily: "var(--font-mono)" }}>SORT</span>
         <button className={`chip ${sortBy === "confidence" ? "active" : ""}`} onClick={() => setSortBy("confidence")}>Confidence</button>
@@ -7734,10 +8035,7 @@ function HomeScreenV3({ onOpenDetail, onGoToSettings }) {
               All Markets <span className="count">{RECOMMENDATIONS.length}</span>
             </button>
             <button className={`chip ${filter === "IN" ? "active" : ""}`} onClick={() => setFilter("IN")}>
-              🇮🇳 Indian <span className="count">{RECOMMENDATIONS.filter(r => r.market === "IN").length}</span>
-            </button>
-            <button className={`chip ${filter === "US" ? "active" : ""}`} onClick={() => setFilter("US")}>
-              🇺🇸 US <span className="count">{RECOMMENDATIONS.filter(r => r.market === "US").length}</span>
+              🇮🇳 NSE <span className="count">{RECOMMENDATIONS.filter(r => r.market === "IN").length}</span>
             </button>
             <button className={`chip ${filter === "CRYPTO" ? "active" : ""}`} onClick={() => setFilter("CRYPTO")}>
               ₿ Crypto <span className="count">{RECOMMENDATIONS.filter(r => r.market === "CRYPTO").length}</span>
@@ -7862,6 +8160,336 @@ if (!window.pctFromCurrent) {
 /* global TweaksPanel, TweakSection, TweakRadio, TweakColor, TweakToggle, TweakSelect, useTweaks */
 /* global LiveDataContext, LiveDataProvider */
 /* global WatchlistScreen, AlertsScreen, NewsScreen, OnboardingScreen */
+/* global fetchCoinGeckoMarkets, GEMINI_KEY, callGemini */
+
+// ============================================================
+// CRYPTO SCREENER — full top-50 CoinGecko table with AI
+// ============================================================
+
+function fmtLargeNum(n) {
+  if (!n) return "—";
+  if (n >= 1e12) return "$" + (n / 1e12).toFixed(2) + "T";
+  if (n >= 1e9) return "$" + (n / 1e9).toFixed(1) + "B";
+  if (n >= 1e6) return "$" + (n / 1e6).toFixed(1) + "M";
+  return "$" + n.toFixed(0);
+}
+
+function fmtCryptoPrice(p) {
+  if (!p && p !== 0) return "—";
+  if (p >= 1000) return "$" + p.toLocaleString("en-US", { maximumFractionDigits: 0 });
+  if (p >= 1) return "$" + p.toFixed(2);
+  if (p >= 0.01) return "$" + p.toFixed(4);
+  return "$" + p.toFixed(6);
+}
+
+function CryptoPctCell({ value }) {
+  if (value == null) return <td style={{ color: "var(--t-3)" }}>—</td>;
+  const isUp = value >= 0;
+  return (
+    <td style={{ color: isUp ? "var(--buy)" : "var(--sell)", fontWeight: 500 }}>
+      {isUp ? "+" : ""}{value.toFixed(2)}%
+    </td>
+  );
+}
+
+function CryptoDetailModal({ coin, onClose }) {
+  const [aiResult, setAiResult] = React.useState(null);
+  const [aiLoading, setAiLoading] = React.useState(false);
+  const [aiError, setAiError] = React.useState(null);
+
+  const runAI = async () => {
+    setAiLoading(true);
+    setAiError(null);
+    const prompt = `You are a professional crypto analyst. Analyze ${coin.name} (${coin.symbol.toUpperCase()}):
+
+Current Price: $${coin.current_price}
+24h Change: ${coin.price_change_percentage_24h?.toFixed(2)}%
+7d Change: ${coin.price_change_percentage_7d_in_currency?.toFixed(2)}%
+Market Cap: ${fmtLargeNum(coin.market_cap)}
+24h Volume: ${fmtLargeNum(coin.total_volume)}
+24h High: $${coin.high_24h} | 24h Low: $${coin.low_24h}
+Circulating Supply: ${coin.circulating_supply ? (coin.circulating_supply / 1e6).toFixed(2) + "M" : "N/A"}
+Market Cap Rank: #${coin.market_cap_rank}
+
+Consider: BTC dominance trends, macro risk appetite, ETF flows, on-chain adoption, layer-1 competition.
+
+Respond STRICT JSON only (no markdown):
+{
+  "verdict": "BUY",
+  "confidence": 72,
+  "entry_price": ${coin.current_price},
+  "target_price": ${(coin.current_price * 1.2).toFixed(2)},
+  "stop_loss": ${(coin.current_price * 0.85).toFixed(2)},
+  "reasoning": "2-3 sentences with specific on-chain and technical analysis",
+  "time_horizon": "Short-term (1-4 weeks)",
+  "risk_level": "MEDIUM"
+}
+verdict must be BUY, SELL, or HOLD. risk_level must be LOW, MEDIUM, HIGH, or VERY HIGH.`;
+    try {
+      const raw = await callGemini(prompt, GEMINI_KEY);
+      setAiResult(raw);
+    } catch(e) {
+      setAiError(e.message || "AI analysis failed");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const pct24 = coin.price_change_percentage_24h || 0;
+  const pct7d = coin.price_change_percentage_7d_in_currency || 0;
+  const range = coin.high_24h - coin.low_24h;
+  const barPct = range > 0 ? ((coin.current_price - coin.low_24h) / range) * 100 : 50;
+
+  return (
+    <div className="detail-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="detail-panel" style={{ maxWidth: 520 }}>
+        <div className="dp-header">
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {coin.image && <img src={coin.image} alt={coin.name} style={{ width: 40, height: 40, borderRadius: "50%" }} />}
+            <div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: "var(--t-1)" }}>{coin.name}</div>
+              <div style={{ fontSize: 13, color: "var(--t-3)" }}>{coin.symbol.toUpperCase()} · Rank #{coin.market_cap_rank}</div>
+            </div>
+          </div>
+          <button className="close-btn" onClick={onClose}>✕</button>
+        </div>
+
+        <div style={{ padding: "20px 24px" }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 8 }}>
+            <span style={{ fontSize: 32, fontWeight: 700, color: "var(--t-1)" }}>{fmtCryptoPrice(coin.current_price)}</span>
+            <span style={{ color: pct24 >= 0 ? "var(--buy)" : "var(--sell)", fontWeight: 600, fontSize: 16 }}>
+              {pct24 >= 0 ? "+" : ""}{pct24.toFixed(2)}%
+            </span>
+          </div>
+
+          {/* 24h High/Low bar */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--t-3)", marginBottom: 4 }}>
+              <span>24h Low: {fmtCryptoPrice(coin.low_24h)}</span>
+              <span>24h High: {fmtCryptoPrice(coin.high_24h)}</span>
+            </div>
+            <div style={{ height: 6, background: "var(--surface-2)", borderRadius: 3, position: "relative" }}>
+              <div style={{ position: "absolute", left: 0, width: `${Math.max(2, barPct)}%`, height: "100%",
+                background: "linear-gradient(90deg, var(--sell), var(--buy))", borderRadius: 3 }} />
+              <div style={{ position: "absolute", left: `${Math.max(2, barPct)}%`, top: -2, width: 10, height: 10,
+                background: "var(--t-1)", borderRadius: "50%", transform: "translateX(-50%)" }} />
+            </div>
+          </div>
+
+          {/* Stats grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
+            {[
+              ["Market Cap", fmtLargeNum(coin.market_cap)],
+              ["24h Volume", fmtLargeNum(coin.total_volume)],
+              ["7d Change", `${pct7d >= 0 ? "+" : ""}${pct7d.toFixed(2)}%`],
+              ["Circulating", coin.circulating_supply ? (coin.circulating_supply / 1e6).toFixed(2) + "M" : "—"]
+            ].map(([label, value]) => (
+              <div key={label} style={{ background: "var(--surface-2)", borderRadius: 8, padding: "10px 12px" }}>
+                <div style={{ fontSize: 11, color: "var(--t-3)", marginBottom: 2 }}>{label}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: "var(--t-1)" }}>{value}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* CoinGecko link */}
+          <a href={`https://www.coingecko.com/en/coins/${coin.id}`} target="_blank" rel="noopener"
+            style={{ display: "block", textAlign: "center", color: "var(--brand)", fontSize: 13, marginBottom: 16 }}>
+            View on CoinGecko ↗
+          </a>
+
+          {/* AI Analysis */}
+          {!aiResult && !aiLoading && (
+            <button onClick={runAI} style={{
+              width: "100%", padding: "10px 16px", borderRadius: 8, border: "none",
+              background: "var(--brand)", color: "#fff", fontWeight: 600, cursor: "pointer", fontSize: 14
+            }}>
+              ✦ AI Analysis
+            </button>
+          )}
+          {aiLoading && (
+            <div style={{ textAlign: "center", color: "var(--t-3)", padding: "16px" }}>
+              Analyzing with AI...
+            </div>
+          )}
+          {aiError && (
+            <div style={{ color: "var(--sell)", fontSize: 13, padding: "8px 0" }}>{aiError}</div>
+          )}
+          {aiResult && (
+            <div style={{ background: "var(--surface-2)", borderRadius: 10, padding: "16px", border: "1px solid var(--border)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+                <span style={{
+                  background: aiResult.verdict === "BUY" ? "var(--buy-w)" : aiResult.verdict === "SELL" ? "var(--sell-w)" : "var(--surface-3)",
+                  color: aiResult.verdict === "BUY" ? "var(--buy)" : aiResult.verdict === "SELL" ? "var(--sell)" : "var(--t-2)",
+                  padding: "4px 10px", borderRadius: 6, fontWeight: 700, fontSize: 13
+                }}>{aiResult.verdict}</span>
+                <span style={{ color: "var(--t-3)", fontSize: 12 }}>Confidence: {aiResult.confidence}%</span>
+              </div>
+              <p style={{ fontSize: 13, color: "var(--t-2)", lineHeight: 1.5, marginBottom: 12 }}>{aiResult.reasoning}</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, fontSize: 12 }}>
+                <div><div style={{ color: "var(--t-3)" }}>Entry</div><div style={{ fontWeight: 600 }}>{fmtCryptoPrice(aiResult.entry_price)}</div></div>
+                <div><div style={{ color: "var(--t-3)" }}>Target</div><div style={{ fontWeight: 600, color: "var(--buy)" }}>{fmtCryptoPrice(aiResult.target_price)}</div></div>
+                <div><div style={{ color: "var(--t-3)" }}>Stop Loss</div><div style={{ fontWeight: 600, color: "var(--sell)" }}>{fmtCryptoPrice(aiResult.stop_loss)}</div></div>
+              </div>
+              <div style={{ marginTop: 8, fontSize: 11, color: "var(--t-3)" }}>
+                Horizon: {aiResult.time_horizon} · Risk: {aiResult.risk_level}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CryptoScreener({ onOpenDetail }) {
+  const [coins, setCoins] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+  const [filterMode, setFilterMode] = React.useState("all");
+  const [search, setSearch] = React.useState("");
+  const [lastRefresh, setLastRefresh] = React.useState(null);
+  const [selectedCoin, setSelectedCoin] = React.useState(null);
+
+  const loadCoins = React.useCallback(async () => {
+    try {
+      const data = await fetchCoinGeckoMarkets();
+      setCoins(data);
+      setLastRefresh(new Date());
+      setError(null);
+    } catch(e) {
+      setError(e.message || "Failed to fetch crypto data");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    loadCoins();
+    const id = setInterval(loadCoins, 60000);
+    return () => clearInterval(id);
+  }, [loadCoins]);
+
+  const filtered = React.useMemo(() => {
+    let result = coins;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(c => c.name.toLowerCase().includes(q) || c.symbol.toLowerCase().includes(q));
+    }
+    if (filterMode === "top10") result = result.filter(c => c.market_cap_rank <= 10);
+    else if (filterMode === "gainers") result = result.filter(c => (c.price_change_percentage_24h || 0) > 5);
+    else if (filterMode === "losers") result = result.filter(c => (c.price_change_percentage_24h || 0) < -5);
+    else if (filterMode === "highvol") result = result.filter(c => c.total_volume > 1e9);
+    return result;
+  }, [coins, filterMode, search]);
+
+  return (
+    <div style={{ padding: "0 24px 40px" }}>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "24px 0 16px" }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: "var(--t-1)" }}>₿ Crypto Markets</h2>
+          <div style={{ fontSize: 13, color: "var(--t-3)", marginTop: 2 }}>
+            Top 50 by market cap · {lastRefresh ? <>🟢 LIVE · Updated {lastRefresh.toLocaleTimeString()}</> : "Loading..."}
+          </div>
+        </div>
+        <button onClick={loadCoins} style={{
+          padding: "7px 14px", borderRadius: 8, border: "1px solid var(--border)",
+          background: "var(--surface)", color: "var(--t-2)", cursor: "pointer", fontSize: 13
+        }}>⟳ Refresh</button>
+      </div>
+
+      {/* Filters + Search */}
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16, alignItems: "center" }}>
+        {[
+          ["all", "All (50)"],
+          ["top10", "Top 10"],
+          ["gainers", "Gainers 24h>5%"],
+          ["losers", "Losers 24h<-5%"],
+          ["highvol", "High Volume"]
+        ].map(([mode, label]) => (
+          <button key={mode} onClick={() => setFilterMode(mode)} style={{
+            padding: "6px 12px", borderRadius: 20, border: "1px solid var(--border)",
+            background: filterMode === mode ? "var(--brand)" : "var(--surface)",
+            color: filterMode === mode ? "#fff" : "var(--t-2)",
+            cursor: "pointer", fontSize: 12, fontWeight: 500
+          }}>{label}</button>
+        ))}
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search coin..."
+          style={{
+            marginLeft: "auto", padding: "6px 12px", borderRadius: 8,
+            border: "1px solid var(--border)", background: "var(--surface)",
+            color: "var(--t-1)", fontSize: 13, width: 160, outline: "none"
+          }}
+        />
+      </div>
+
+      {/* Table */}
+      {loading && <div style={{ textAlign: "center", padding: 40, color: "var(--t-3)" }}>Loading crypto data...</div>}
+      {error && <div style={{ textAlign: "center", padding: 40, color: "var(--sell)" }}>{error}</div>}
+      {!loading && !error && (
+        <div style={{ overflowX: "auto", borderRadius: 12, border: "1px solid var(--border)" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <thead>
+              <tr style={{ background: "var(--surface-2)", borderBottom: "1px solid var(--border)" }}>
+                {["#", "Name", "Price", "24h %", "7d %", "Market Cap", "Volume 24h", "24h High/Low"].map(h => (
+                  <th key={h} style={{
+                    padding: "10px 14px", textAlign: h === "Name" ? "left" : "right",
+                    color: "var(--t-3)", fontWeight: 600, fontSize: 11, whiteSpace: "nowrap"
+                  }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((coin, i) => {
+                const pct24 = coin.price_change_percentage_24h;
+                const pct7d = coin.price_change_percentage_7d_in_currency;
+                return (
+                  <tr key={coin.id} onClick={() => setSelectedCoin(coin)} style={{
+                    borderBottom: "1px solid var(--border)", cursor: "pointer",
+                    background: i % 2 === 0 ? "transparent" : "var(--surface)"
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = "var(--surface-2)"}
+                  onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? "transparent" : "var(--surface)"}
+                  >
+                    <td style={{ padding: "10px 14px", color: "var(--t-3)", textAlign: "right" }}>{coin.market_cap_rank}</td>
+                    <td style={{ padding: "10px 14px", minWidth: 160 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        {coin.image && <img src={coin.image} alt={coin.name} style={{ width: 24, height: 24, borderRadius: "50%" }} />}
+                        <div>
+                          <div style={{ fontWeight: 600, color: "var(--t-1)" }}>{coin.name}</div>
+                          <div style={{ fontSize: 11, color: "var(--t-3)" }}>{coin.symbol.toUpperCase()}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style={{ padding: "10px 14px", textAlign: "right", fontWeight: 600, color: "var(--t-1)" }}>
+                      {fmtCryptoPrice(coin.current_price)}
+                    </td>
+                    <CryptoPctCell value={pct24} />
+                    <CryptoPctCell value={pct7d} />
+                    <td style={{ padding: "10px 14px", textAlign: "right", color: "var(--t-2)" }}>{fmtLargeNum(coin.market_cap)}</td>
+                    <td style={{ padding: "10px 14px", textAlign: "right", color: "var(--t-2)" }}>{fmtLargeNum(coin.total_volume)}</td>
+                    <td style={{ padding: "10px 14px", textAlign: "right", whiteSpace: "nowrap" }}>
+                      <span style={{ color: "var(--buy)", fontSize: 11 }}>{fmtCryptoPrice(coin.high_24h)}</span>
+                      <span style={{ color: "var(--t-4)", margin: "0 4px" }}>/</span>
+                      <span style={{ color: "var(--sell)", fontSize: 11 }}>{fmtCryptoPrice(coin.low_24h)}</span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {selectedCoin && (
+        <CryptoDetailModal coin={selectedCoin} onClose={() => setSelectedCoin(null)} />
+      )}
+    </div>
+  );
+}
 
 // Completely replace App to use V2 components directly (avoids the late-binding issue)
 
@@ -7926,6 +8554,7 @@ function AppInnerV2() {
             <div className="navtabs">
               <button className={`navtab ${tab === "home" ? "active" : ""}`} onClick={() => setTab("home")}>Picks</button>
               <button className={`navtab ${tab === "screener" ? "active" : ""}`} onClick={() => setTab("screener")}>Screener</button>
+              <button className={`navtab ${tab === "crypto" ? "active" : ""}`} onClick={() => setTab("crypto")}>₿ Crypto</button>
               <button className={`navtab ${tab === "watchlist" ? "active" : ""}`} onClick={() => setTab("watchlist")}>Watchlist</button>
               <button className={`navtab ${tab === "portfolio" ? "active" : ""}`} onClick={() => setTab("portfolio")}>Portfolio</button>
               <button className={`navtab ${tab === "alerts" ? "active" : ""}`} onClick={() => setTab("alerts")}>
@@ -7951,6 +8580,7 @@ function AppInnerV2() {
           <div className="page">
             {tab === "home"      && <HomeScreenV3 onOpenDetail={openDetail} onGoToSettings={() => setTab("settings")} />}
             {tab === "screener"  && <ScreenerScreenV3 onOpenDetail={openDetail} />}
+            {tab === "crypto"    && <CryptoScreener onOpenDetail={openDetail} />}
             {tab === "watchlist" && <WatchlistScreen onOpenDetail={openDetail} />}
             {tab === "portfolio" && <PortfolioScreenV2 onOpenDetail={openDetail} />}
             {tab === "alerts"    && <AlertsScreen onOpenDetail={openDetail} />}
