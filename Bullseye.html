@@ -1291,6 +1291,387 @@ input, select { font-family: inherit; color: inherit; }
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* ====== FREE AI COUNCIL STYLES ====== */
+.ai-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 3px 8px; border-radius: 20px; color: #fff;
+  font-family: var(--font-mono);
+}
+.ai-pill.gemini { background: linear-gradient(135deg, #4285f4, #34a853); }
+.ai-pill.groq   { background: linear-gradient(135deg, #f55036, #ff8c00); }
+.ai-pill.mistral{ background: linear-gradient(135deg, #7c3aed, #a855f7); }
+.ai-pill.claude { background: linear-gradient(135deg, #cc785c, #d4956a); }
+
+.council-modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 600;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.council-modal {
+  background: rgba(20,20,30,0.98);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  width: 100%; max-width: 860px;
+  max-height: 90vh; overflow-y: auto;
+  padding: 28px;
+}
+.council-modal-title {
+  font-family: var(--font-serif);
+  font-size: 26px; color: var(--t-1);
+  margin-bottom: 6px;
+}
+.council-modal-sub {
+  font-size: 12px; color: var(--t-3);
+  font-family: var(--font-mono);
+  margin-bottom: 24px;
+}
+.council-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.council-col {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 12px;
+  padding: 16px;
+}
+.council-col.loading {
+  animation: aiPulse 1.5s ease-in-out infinite;
+}
+.council-verdict {
+  font-size: 20px; font-weight: 800;
+  letter-spacing: 0.04em; margin: 12px 0 4px;
+  font-family: var(--font-mono);
+}
+.council-verdict.BUY  { color: #00e676; }
+.council-verdict.SELL { color: #ff5252; }
+.council-verdict.HOLD { color: #fbbf24; }
+.council-verdict.unavailable { color: var(--t-4); font-size: 13px; }
+.council-conf-bar {
+  height: 4px; background: var(--surface-3);
+  border-radius: 2px; margin: 8px 0;
+}
+.council-conf-fill {
+  height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, var(--brand), #6fa0ff);
+}
+.council-detail-row {
+  display: flex; justify-content: space-between;
+  font-size: 10px; font-family: var(--font-mono);
+  color: var(--t-3); margin: 2px 0;
+}
+.council-detail-val { color: var(--t-1); font-weight: 600; }
+.council-reason {
+  font-size: 11px; color: var(--t-2);
+  line-height: 1.5; margin-top: 8px;
+  padding-top: 8px; border-top: 1px solid var(--border);
+}
+.council-consensus {
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+.council-consensus.strong {
+  border-color: rgba(212,160,74,0.5);
+  background: rgba(212,160,74,0.06);
+  box-shadow: 0 0 20px rgba(212,160,74,0.15);
+}
+.consensus-label {
+  font-size: 11px; color: var(--t-3);
+  font-family: var(--font-mono); letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.consensus-verdict {
+  font-size: 32px; font-weight: 800;
+  letter-spacing: 0.05em; font-family: var(--font-mono);
+}
+.consensus-verdict.BUY  { color: #00e676; }
+.consensus-verdict.SELL { color: #ff5252; }
+.consensus-verdict.HOLD { color: #fbbf24; }
+.consensus-count {
+  font-size: 13px; color: var(--t-2);
+  margin-top: 6px; font-family: var(--font-mono);
+}
+.consensus-fire {
+  font-size: 18px; margin-bottom: 4px;
+}
+
+/* Council vote button on cards */
+.council-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.05em;
+  color: #a855f7; background: rgba(168,85,247,0.12);
+  border: 1px solid rgba(168,85,247,0.4);
+  border-radius: 4px; padding: 2px 6px;
+  margin-left: 6px; cursor: pointer;
+  font-family: var(--font-mono);
+  transition: all 0.15s;
+}
+.council-btn:hover { background: rgba(168,85,247,0.2); }
+
+/* Today's Picks feature */
+.top-picks-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(99,102,241,0.15));
+  border: 1px solid rgba(168,85,247,0.4);
+  border-radius: 8px;
+  color: #c084fc;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all 0.2s;
+}
+.top-picks-btn:hover { background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(99,102,241,0.25)); }
+.top-picks-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.top-picks-panel {
+  background: var(--surface);
+  border: 1px solid rgba(168,85,247,0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.top-picks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.top-pick-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  border-radius: 10px;
+  padding: 16px;
+  position: relative;
+}
+.top-pick-card.multi-ai {
+  border-color: rgba(168,85,247,0.4);
+}
+.multi-ai-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+  background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(99,102,241,0.2));
+  color: #c084fc; border: 1px solid rgba(168,85,247,0.4);
+  border-radius: 4px; padding: 2px 6px;
+  font-family: var(--font-mono);
+}
+.pick-source-pill {
+  display: inline-flex; align-items: center;
+  font-size: 9px; font-weight: 600;
+  background: var(--surface-3); color: var(--t-2);
+  border-radius: 4px; padding: 2px 6px;
+  font-family: var(--font-mono);
+}
+
+/* Averaging assistant */
+.position-section {
+  border-top: 1px solid var(--border);
+  padding: 20px 28px;
+}
+.position-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none;
+}
+.position-toggle h3 {
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 0.12em;
+  color: var(--t-3); text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.position-form {
+  margin-top: 16px;
+  display: grid; gap: 12px;
+}
+.position-input-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.position-input-group { display: flex; flex-direction: column; gap: 5px; }
+.position-label {
+  font-size: 11px; color: var(--t-3);
+  font-family: var(--font-mono); letter-spacing: 0.04em;
+}
+.position-input {
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--t-1);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+}
+.position-input:focus { border-color: var(--brand); }
+.avg-advice-btn {
+  width: 100%;
+  padding: 11px;
+  background: linear-gradient(135deg, rgba(212,160,74,0.2), rgba(168,85,247,0.15));
+  border: 1px solid rgba(212,160,74,0.4);
+  border-radius: 8px;
+  color: var(--brand);
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all 0.2s;
+}
+.avg-advice-btn:hover { background: linear-gradient(135deg, rgba(212,160,74,0.3), rgba(168,85,247,0.2)); }
+.avg-advice-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.avg-result {
+  margin-top: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  border-radius: 10px;
+  padding: 16px;
+}
+.avg-action-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 18px; font-weight: 800;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  margin-bottom: 12px;
+}
+.avg-action-badge.AVERAGE_DOWN { color: #00e676; }
+.avg-action-badge.PYRAMID_UP   { color: #6fa0ff; }
+.avg-action-badge.HOLD         { color: #fbbf24; }
+.avg-action-badge.EXIT         { color: #ff5252; }
+.avg-detail-row {
+  font-size: 12px; color: var(--t-2);
+  font-family: var(--font-mono);
+  margin: 4px 0;
+}
+.avg-detail-row strong { color: var(--t-1); }
+.avg-pnl-row {
+  display: flex; gap: 16px;
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.avg-pnl-cell {
+  flex: 1; text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+}
+.avg-pnl-label { font-size: 10px; color: var(--t-3); font-family: var(--font-mono); letter-spacing: 0.06em; margin-bottom: 3px; }
+.avg-pnl-val { font-size: 16px; font-weight: 700; font-family: var(--font-mono); }
+.avg-pnl-val.profit { color: #00e676; }
+.avg-pnl-val.loss   { color: #ff5252; }
+.avg-agree-bar {
+  margin-top: 12px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--t-3);
+  font-family: var(--font-mono);
+}
+.avg-agree-track {
+  flex: 1; height: 4px; background: var(--surface-3); border-radius: 2px;
+}
+.avg-agree-fill {
+  height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, var(--buy), var(--brand));
+}
+
+/* Holdings section */
+.holdings-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 28px;
+}
+.holdings-head {
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.holdings-title {
+  font-size: 15px; font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+}
+.add-holding-form {
+  display: grid; grid-template-columns: 1fr 1fr 1fr auto auto; gap: 8px;
+  padding: 14px 20px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+  align-items: end;
+}
+.holding-row {
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.holding-row:last-child { border-bottom: none; }
+.holding-symbol { font-weight: 700; font-size: 13px; min-width: 70px; }
+.holding-name { font-size: 11px; color: var(--t-3); }
+.holding-meta { flex: 1; display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+.holding-cell { text-align: right; }
+.holding-cell .hl { font-size: 10px; color: var(--t-3); font-family: var(--font-mono); letter-spacing: 0.04em; }
+.holding-cell .hv { font-size: 13px; font-weight: 600; font-family: var(--font-mono); }
+.ai-advice-btn-small {
+  padding: 6px 12px;
+  background: rgba(168,85,247,0.12);
+  border: 1px solid rgba(168,85,247,0.35);
+  border-radius: 7px;
+  color: #c084fc;
+  font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: var(--font-sans);
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.ai-advice-btn-small:hover { background: rgba(168,85,247,0.22); }
+
+/* Free AI keys section in settings */
+.free-ai-section {
+  background: var(--surface);
+  border: 1px solid rgba(168,85,247,0.3);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.free-ai-header {
+  padding: 16px 22px;
+  background: linear-gradient(135deg, rgba(168,85,247,0.06), rgba(99,102,241,0.04));
+  border-bottom: 1px solid rgba(168,85,247,0.2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.free-ai-status-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+  font-family: var(--font-mono);
+}
+.free-ai-status-pill.some { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+.free-ai-status-pill.none { background: var(--surface-3); color: var(--t-3); border: 1px solid var(--border-2); }
+.free-ai-row {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.free-ai-row:last-child { border-bottom: none; }
+.free-ai-row-header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.free-ai-row-inputs {
+  display: flex; gap: 8px;
+}
+
+/* Skeleton loader */
+.skeleton-block {
+  background: var(--surface-2);
+  border-radius: 6px;
+  animation: aiPulse 1.5s ease-in-out infinite;
+}
 </style>
 </head>
 <body>
@@ -4427,6 +4808,8 @@ function AppInner() {
   );
 }
 
+// App and AppInner are defined here but rendering is done by AppV2 below
+// to incorporate all new features. They remain for reference/legacy.
 function App() {
   return (
     <LiveDataProvider>
@@ -4434,8 +4817,1779 @@ function App() {
     </LiveDataProvider>
   );
 }
+// NOTE: Rendering is done by AppV2 in the last script block.
+</script>
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+<script type="text/babel">
+/* global React, fmtPrice, fmtChange, LiveDataContext */
+// ====================================================================
+// FREE AI COUNCIL — Gemini, Groq, OpenRouter (Mistral), Claude
+// ====================================================================
+
+// ---------- helpers ----------
+function getFreeAIKeys() {
+  try {
+    return {
+      gemini:      localStorage.getItem("bullseye_gemini_key") || "",
+      groq:        localStorage.getItem("bullseye_groq_key") || "",
+      openrouter:  localStorage.getItem("bullseye_openrouter_key") || "",
+      claude:      localStorage.getItem("bullseye_anthropic_key") || "",
+    };
+  } catch { return { gemini: "", groq: "", openrouter: "", claude: "" }; }
+}
+
+function extractJSON(text) {
+  const m = text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error("No JSON found in response");
+  return JSON.parse(m[0]);
+}
+
+function buildStockPrompt(rec, displayPrice, displayChange) {
+  return `You are a stock market expert. Analyze ${rec.name} (${rec.symbol}) currently trading at ${rec.currency}${displayPrice} (change: ${displayChange.toFixed(2)}%).
+
+Give a STRICT JSON response only (no markdown, no extra text):
+{
+  "verdict": "BUY",
+  "confidence": 7,
+  "entry_price": ${displayPrice},
+  "target_price": ${rec.targets[0]},
+  "stop_loss": ${rec.stopLoss},
+  "reasoning": "max 2 sentences",
+  "time_horizon": "Short-term (1-4 weeks)"
+}
+
+verdict must be exactly "BUY", "SELL", or "HOLD". confidence is 1-10. time_horizon must be "Intraday", "Short-term (1-4 weeks)", or "Medium-term (1-3 months)".`;
+}
+
+async function callGemini(prompt, apiKey) {
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    if (res.status === 429) throw new Error("Rate limited — try again in 60s");
+    throw new Error(`Gemini error ${res.status}`);
+  }
+  const data = await res.json();
+  return extractJSON(data.candidates[0].content.parts[0].text);
+}
+
+async function callGroq(prompt, apiKey) {
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{ role: "user", content: prompt }], max_tokens: 500 })
+  });
+  if (!res.ok) {
+    if (res.status === 429) throw new Error("Rate limited — try again in 60s");
+    throw new Error(`Groq error ${res.status}`);
+  }
+  const data = await res.json();
+  return extractJSON(data.choices[0].message.content);
+}
+
+async function callOpenRouter(prompt, apiKey) {
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer": "https://bullseye.app",
+      "X-Title": "Bullseye"
+    },
+    body: JSON.stringify({ model: "mistralai/mistral-7b-instruct:free", messages: [{ role: "user", content: prompt }], max_tokens: 500 })
+  });
+  if (!res.ok) {
+    if (res.status === 429) throw new Error("Rate limited — try again in 60s");
+    throw new Error(`OpenRouter error ${res.status}`);
+  }
+  const data = await res.json();
+  return extractJSON(data.choices[0].message.content);
+}
+
+async function callClaudeForCouncil(prompt, apiKey) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true"
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 500,
+      messages: [{ role: "user", content: prompt }]
+    })
+  });
+  if (!res.ok) {
+    if (res.status === 429) throw new Error("Rate limited — try again in 60s");
+    throw new Error(`Claude error ${res.status}`);
+  }
+  const data = await res.json();
+  return extractJSON(data.content[0].text);
+}
+
+async function runAICouncil(rec, displayPrice, displayChange) {
+  const keys = getFreeAIKeys();
+  const prompt = buildStockPrompt(rec, displayPrice, displayChange);
+  const results = {};
+
+  const tasks = [];
+  if (keys.gemini)     tasks.push(["gemini",   callGemini(prompt, keys.gemini)]);
+  if (keys.groq)       tasks.push(["groq",      callGroq(prompt, keys.groq)]);
+  if (keys.openrouter) tasks.push(["mistral",   callOpenRouter(prompt, keys.openrouter)]);
+  if (keys.claude)     tasks.push(["claude",    callClaudeForCouncil(prompt, keys.claude)]);
+
+  const settled = await Promise.allSettled(tasks.map(([, p]) => p));
+  tasks.forEach(([name], i) => {
+    const r = settled[i];
+    results[name] = r.status === "fulfilled" ? { ok: true, data: r.value } : { ok: false, error: r.reason.message };
+  });
+  return results;
+}
+
+// ---------- AI Council Modal ----------
+function AIPill({ name }) {
+  const cls = { gemini: "gemini", groq: "groq", mistral: "mistral", claude: "claude" }[name] || "claude";
+  const labels = { gemini: "Gemini", groq: "Groq", mistral: "Mistral", claude: "Claude" };
+  return <span className={`ai-pill ${cls}`}>{labels[name] || name}</span>;
+}
+
+function CouncilColumn({ name, result, loading }) {
+  if (loading) {
+    return (
+      <div className="council-col loading">
+        <AIPill name={name} />
+        <div className="skeleton-block" style={{ height: 28, marginTop: 12, marginBottom: 8 }} />
+        <div className="skeleton-block" style={{ height: 4, marginBottom: 8 }} />
+        <div className="skeleton-block" style={{ height: 60 }} />
+      </div>
+    );
+  }
+  if (!result || !result.ok) {
+    return (
+      <div className="council-col">
+        <AIPill name={name} />
+        <div className="council-verdict unavailable">{result?.error || "unavailable"}</div>
+      </div>
+    );
+  }
+  const d = result.data;
+  const vClass = ["BUY","SELL","HOLD"].includes(d.verdict) ? d.verdict : "unavailable";
+  return (
+    <div className="council-col">
+      <AIPill name={name} />
+      <div className={`council-verdict ${vClass}`}>{d.verdict}</div>
+      <div style={{ fontSize: 11, color: "var(--t-3)", fontFamily: "var(--font-mono)" }}>confidence: {d.confidence}/10</div>
+      <div className="council-conf-bar">
+        <div className="council-conf-fill" style={{ width: `${(d.confidence / 10) * 100}%` }} />
+      </div>
+      {d.entry_price != null && (
+        <div className="council-detail-row"><span>Entry</span><span className="council-detail-val">{d.entry_price?.toLocaleString?.() ?? d.entry_price}</span></div>
+      )}
+      {d.target_price != null && (
+        <div className="council-detail-row"><span>Target</span><span className="council-detail-val up">{d.target_price?.toLocaleString?.() ?? d.target_price}</span></div>
+      )}
+      {d.stop_loss != null && (
+        <div className="council-detail-row"><span>SL</span><span className="council-detail-val dn">{d.stop_loss?.toLocaleString?.() ?? d.stop_loss}</span></div>
+      )}
+      {d.time_horizon && (
+        <div className="council-detail-row"><span>Horizon</span><span className="council-detail-val" style={{ fontSize: 9 }}>{d.time_horizon}</span></div>
+      )}
+      {d.reasoning && <div className="council-reason">{d.reasoning}</div>}
+    </div>
+  );
+}
+
+function CouncilConsensus({ results }) {
+  const verdicts = Object.values(results).filter(r => r?.ok).map(r => r.data.verdict);
+  if (!verdicts.length) return null;
+  const counts = {};
+  verdicts.forEach(v => { counts[v] = (counts[v] || 0) + 1; });
+  const top = Object.entries(counts).sort((a,b) => b[1]-a[1])[0];
+  if (!top) return null;
+  const [verdict, count] = top;
+  const total = verdicts.length;
+  const isStrong = count === total && total >= 3;
+  return (
+    <div className={`council-consensus ${isStrong ? "strong" : ""}`}>
+      {isStrong && <div className="consensus-fire">🔥 STRONG CONSENSUS</div>}
+      <div className="consensus-label">AI Council Consensus</div>
+      <div className={`consensus-verdict ${verdict}`}>{verdict}</div>
+      <div className="consensus-count">{count} of {total} AIs agree</div>
+    </div>
+  );
+}
+
+function AICouncilModal({ rec, displayPrice, displayChange, onClose }) {
+  const [loading, setLoading] = React.useState(true);
+  const [results, setResults] = React.useState({});
+  const [activeNames, setActiveNames] = React.useState([]);
+
+  React.useEffect(() => {
+    const keys = getFreeAIKeys();
+    const names = [];
+    if (keys.gemini)     names.push("gemini");
+    if (keys.groq)       names.push("groq");
+    if (keys.openrouter) names.push("mistral");
+    if (keys.claude)     names.push("claude");
+    setActiveNames(names);
+
+    const init = {};
+    names.forEach(n => { init[n] = null; });
+    setResults(init);
+
+    runAICouncil(rec, displayPrice, displayChange).then(r => {
+      setResults(r);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+
+  return (
+    <div className="council-modal-bg" onClick={onClose}>
+      <div className="council-modal" onClick={e => e.stopPropagation()}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 4 }}>
+          <div>
+            <div className="council-modal-title">🤖 AI Council</div>
+            <div className="council-modal-sub">{rec.name} ({rec.symbol}) · {rec.currency}{displayPrice?.toLocaleString?.() ?? displayPrice} · {displayChange >= 0 ? "+" : ""}{displayChange.toFixed(2)}%</div>
+          </div>
+          <button className="detail-close" onClick={onClose} style={{ flexShrink: 0 }}>✕</button>
+        </div>
+
+        {activeNames.length === 0 ? (
+          <div style={{ padding: "40px 0", textAlign: "center", color: "var(--t-3)", fontFamily: "var(--font-mono)", fontSize: 13 }}>
+            No AI keys configured. Add free AI keys in Profile → Settings.
+          </div>
+        ) : (
+          <>
+            <div className="council-grid">
+              {activeNames.map(name => (
+                <CouncilColumn key={name} name={name} result={results[name]} loading={loading || results[name] === null} />
+              ))}
+            </div>
+            {!loading && Object.keys(results).length > 0 && <CouncilConsensus results={results} />}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ====================================================================
+// FEATURE 2: TODAY'S TOP PICKS (AI Council Edition)
+// ====================================================================
+
+function buildTopPicksPrompt() {
+  const today = new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  return `Today is ${today}. You are a stock market expert for Indian markets (NSE/BSE).
+
+Give me your TOP 3 stock picks to BUY today for short-term gains (1-4 weeks).
+Choose from Indian large/mid cap stocks. Consider market momentum.
+
+Respond STRICT JSON only:
+{
+  "picks": [
+    {
+      "symbol": "RELIANCE.NS",
+      "name": "Reliance Industries",
+      "verdict": "BUY",
+      "entry_range": "2400-2450",
+      "target": 2600,
+      "stop_loss": 2300,
+      "reasoning": "one sentence"
+    }
+  ]
+}`;
+}
+
+async function fetchTopPicksFromAI(aiName, apiKey) {
+  const prompt = buildTopPicksPrompt();
+  let raw;
+  if (aiName === "gemini")  raw = await callGemini(prompt, apiKey);
+  else if (aiName === "groq")   raw = await callGroq(prompt, apiKey);
+  else if (aiName === "mistral") raw = await callOpenRouter(prompt, apiKey);
+  else if (aiName === "claude")  raw = await callClaudeForCouncil(prompt, apiKey);
+  // raw might be the picks wrapper or direct
+  if (raw && Array.isArray(raw.picks)) return raw.picks;
+  if (Array.isArray(raw)) return raw;
+  return [];
+}
+
+function TodayTopPicks({ onOpenDetail }) {
+  const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [picks, setPicks] = React.useState([]);
+  const [error, setError] = React.useState(null);
+
+  const fetchPicks = async () => {
+    setLoading(true);
+    setError(null);
+    const keys = getFreeAIKeys();
+    const tasks = [];
+    if (keys.gemini)     tasks.push(["gemini",  fetchTopPicksFromAI("gemini",  keys.gemini)]);
+    if (keys.groq)       tasks.push(["groq",    fetchTopPicksFromAI("groq",    keys.groq)]);
+    if (keys.openrouter) tasks.push(["mistral", fetchTopPicksFromAI("mistral", keys.openrouter)]);
+    if (keys.claude)     tasks.push(["claude",  fetchTopPicksFromAI("claude",  keys.claude)]);
+
+    if (tasks.length === 0) {
+      setError("No AI keys configured. Add free AI keys in Settings.");
+      setLoading(false);
+      setOpen(true);
+      return;
+    }
+
+    const settled = await Promise.allSettled(tasks.map(([,p]) => p));
+    const allPicks = [];
+    tasks.forEach(([name], i) => {
+      const r = settled[i];
+      if (r.status === "fulfilled" && Array.isArray(r.value)) {
+        r.value.forEach(pick => {
+          allPicks.push({ ...pick, aiName: name });
+        });
+      }
+    });
+
+    // Deduplicate by symbol, count how many AIs picked it
+    const bySymbol = {};
+    allPicks.forEach(p => {
+      const sym = (p.symbol || "").replace(".NS","").replace(".BSE","").toUpperCase();
+      if (!bySymbol[sym]) bySymbol[sym] = { ...p, symbol: sym, ais: [] };
+      bySymbol[sym].ais.push(p.aiName);
+    });
+    const ranked = Object.values(bySymbol).sort((a,b) => b.ais.length - a.ais.length);
+    setPicks(ranked);
+    setOpen(true);
+    setLoading(false);
+  };
+
+  const keys = getFreeAIKeys();
+  const hasKeys = keys.gemini || keys.groq || keys.openrouter || keys.claude;
+
+  return (
+    <div>
+      <button
+        className="top-picks-btn"
+        onClick={fetchPicks}
+        disabled={loading}
+        title={hasKeys ? "Get AI top picks for today" : "Add AI keys in Settings first"}
+      >
+        {loading ? "⟳ Fetching picks…" : "🤖 Today's Picks"}
+      </button>
+
+      {open && (
+        <div className="top-picks-panel" style={{ marginTop: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+            <div style={{ fontSize: 15, fontWeight: 600 }}>🤖 AI Council Top Picks</div>
+            <button className="iconbtn" onClick={() => setOpen(false)} style={{ fontSize: 11 }}>✕ Close</button>
+          </div>
+          <div style={{ fontSize: 12, color: "var(--t-3)", fontFamily: "var(--font-mono)", marginBottom: 12 }}>
+            AI-generated picks for today · Short-term (1-4 weeks) · For educational purposes only
+          </div>
+
+          {error && <div style={{ color: "var(--sell)", fontSize: 12, fontFamily: "var(--font-mono)" }}>{error}</div>}
+
+          {picks.length > 0 && (
+            <div className="top-picks-grid">
+              {picks.map((pick, i) => {
+                const isMulti = pick.ais.length >= 2;
+                const rec = (window.RECOMMENDATIONS || []).find(r => r.symbol === pick.symbol);
+                return (
+                  <div key={i} className={`top-pick-card ${isMulti ? "multi-ai" : ""}`}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                      <div style={{ fontWeight: 700, fontSize: 15 }}>{pick.symbol}</div>
+                      {isMulti
+                        ? <span className="multi-ai-badge">🔥 Multi-AI Pick</span>
+                        : <span className="pick-source-pill">via {pick.ais[0]}</span>}
+                      <span className="action-badge buy" style={{ marginLeft: "auto" }}>{pick.verdict || "BUY"}</span>
+                    </div>
+                    <div style={{ fontSize: 12, color: "var(--t-2)", marginBottom: 10 }}>{pick.name}</div>
+                    {isMulti && (
+                      <div style={{ display: "flex", gap: 5, marginBottom: 8 }}>
+                        {pick.ais.map(n => <AIPill key={n} name={n} />)}
+                      </div>
+                    )}
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+                      {pick.entry_range && <div className="target-cell entry"><div className="tl">ENTRY</div><div className="tv" style={{ fontSize: 11 }}>₹{pick.entry_range}</div></div>}
+                      {pick.target && <div className="target-cell t1"><div className="tl">TARGET</div><div className="tv">₹{pick.target?.toLocaleString?.()}</div></div>}
+                      {pick.stop_loss && <div className="target-cell sl"><div className="tl">SL</div><div className="tv">₹{pick.stop_loss?.toLocaleString?.()}</div></div>}
+                    </div>
+                    {pick.reasoning && (
+                      <div style={{ fontSize: 11, color: "var(--t-2)", marginTop: 8, lineHeight: 1.5 }}>{pick.reasoning}</div>
+                    )}
+                    {rec && (
+                      <button className="btn-secondary" style={{ width: "100%", marginTop: 10, fontSize: 12 }} onClick={() => onOpenDetail(rec)}>
+                        View Full Analysis →
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {!error && picks.length === 0 && !loading && (
+            <div style={{ color: "var(--t-3)", fontSize: 12, fontFamily: "var(--font-mono)" }}>No picks returned from any AI.</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ====================================================================
+// FEATURE 3: AVERAGING ASSISTANT
+// ====================================================================
+
+function buildAveragingPrompt(rec, displayPrice, displayChange, buyPrice, qty) {
+  const pl = (displayPrice - buyPrice) * qty;
+  const plPct = ((displayPrice - buyPrice) / buyPrice) * 100;
+  return `Stock: ${rec.name} (${rec.symbol})
+Current Price: ${rec.currency}${displayPrice} (Change: ${displayChange.toFixed(2)}%)
+User's buy price: ${rec.currency}${buyPrice}
+User's quantity: ${qty} shares
+User's avg cost: ${rec.currency}${buyPrice} (same as buy price for first purchase)
+Current P&L: ${rec.currency}${pl.toFixed(2)} (${plPct.toFixed(2)}%)
+
+Should the user:
+1. Buy more to average down (if current < buy price)
+2. Buy more to pyramid up (if current > buy price, momentum play)
+3. Hold current position
+4. Set a stop loss and exit
+
+Respond STRICT JSON only:
+{
+  "action": "AVERAGE_DOWN",
+  "reason": "2-3 sentence explanation",
+  "add_qty": 0,
+  "add_at_price": null,
+  "new_avg_price": ${buyPrice},
+  "revised_target": ${rec.targets?.[0] ?? displayPrice * 1.1},
+  "revised_stop_loss": ${rec.stopLoss ?? displayPrice * 0.9},
+  "confidence": 7
+}
+
+action must be exactly one of: "AVERAGE_DOWN", "PYRAMID_UP", "HOLD", "EXIT".`;
+}
+
+async function runAveragingAdvisor(rec, displayPrice, displayChange, buyPrice, qty) {
+  const keys = getFreeAIKeys();
+  const prompt = buildAveragingPrompt(rec, displayPrice, displayChange, buyPrice, qty);
+  const results = {};
+  const tasks = [];
+  if (keys.gemini)     tasks.push(["gemini",  callGemini(prompt, keys.gemini)]);
+  if (keys.groq)       tasks.push(["groq",    callGroq(prompt, keys.groq)]);
+  if (keys.openrouter) tasks.push(["mistral", callOpenRouter(prompt, keys.openrouter)]);
+  if (keys.claude)     tasks.push(["claude",  callClaudeForCouncil(prompt, keys.claude)]);
+
+  const settled = await Promise.allSettled(tasks.map(([,p]) => p));
+  tasks.forEach(([name], i) => {
+    const r = settled[i];
+    results[name] = r.status === "fulfilled" ? { ok: true, data: r.value } : { ok: false, error: r.reason.message };
+  });
+  return results;
+}
+
+function AveragingAssistant({ rec, displayPrice, displayChange }) {
+  const [open, setOpen] = React.useState(false);
+  const [buyPrice, setBuyPrice] = React.useState("");
+  const [qty, setQty] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [adviceResults, setAdviceResults] = React.useState(null);
+  const [error, setError] = React.useState(null);
+
+  const keys = getFreeAIKeys();
+  const hasKeys = keys.gemini || keys.groq || keys.openrouter || keys.claude;
+
+  const handleSubmit = async () => {
+    const bp = parseFloat(buyPrice);
+    const q = parseFloat(qty);
+    if (!bp || !q || bp <= 0 || q <= 0) {
+      setError("Please enter valid buy price and quantity.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const results = await runAveragingAdvisor(rec, displayPrice, displayChange, bp, q);
+      setAdviceResults({ results, buyPrice: bp, qty: q });
+    } catch (e) {
+      setError(e.message);
+    }
+    setLoading(false);
+  };
+
+  // Compute consensus from results
+  let consensus = null;
+  let agreeCount = 0;
+  let totalCount = 0;
+  let primaryResult = null;
+  if (adviceResults?.results) {
+    const okResults = Object.values(adviceResults.results).filter(r => r?.ok);
+    totalCount = okResults.length;
+    if (totalCount > 0) {
+      const actionCounts = {};
+      okResults.forEach(r => { actionCounts[r.data.action] = (actionCounts[r.data.action] || 0) + 1; });
+      const top = Object.entries(actionCounts).sort((a,b) => b[1]-a[1])[0];
+      consensus = { action: top[0], count: top[1] };
+      agreeCount = top[1];
+      primaryResult = okResults.find(r => r.data.action === top[0])?.data;
+    }
+  }
+
+  const bp = adviceResults?.buyPrice;
+  const q = adviceResults?.qty;
+  const pl = bp && q ? (displayPrice - bp) * q : null;
+  const plPct = bp ? ((displayPrice - bp) / bp) * 100 : null;
+
+  const ACTION_LABELS = {
+    AVERAGE_DOWN: "📉 AVERAGE DOWN",
+    PYRAMID_UP:   "📈 PYRAMID UP",
+    HOLD:         "⏸ HOLD",
+    EXIT:         "🚨 EXIT NOW",
+  };
+
+  return (
+    <div className="position-section">
+      <div className="position-toggle" onClick={() => setOpen(o => !o)}>
+        <h3>📊 My Position <span style={{ color: "var(--brand)" }}>(Averaging Advisor)</span></h3>
+        <span style={{ color: "var(--t-3)", fontSize: 16 }}>{open ? "▲" : "▼"}</span>
+      </div>
+
+      {open && (
+        <div className="position-form">
+          {!hasKeys && (
+            <div style={{ padding: "10px 12px", background: "rgba(168,85,247,0.08)", border: "1px solid rgba(168,85,247,0.25)", borderRadius: 8, fontSize: 12, color: "#c084fc", fontFamily: "var(--font-mono)" }}>
+              Add free AI keys in Profile → Settings to enable averaging advice.
+            </div>
+          )}
+          <div className="position-input-row">
+            <div className="position-input-group">
+              <label className="position-label">I bought at ({rec.currency})</label>
+              <input className="position-input" type="number" placeholder={rec.price} value={buyPrice}
+                onChange={e => setBuyPrice(e.target.value)} />
+            </div>
+            <div className="position-input-group">
+              <label className="position-label">Quantity (shares)</label>
+              <input className="position-input" type="number" placeholder="100" value={qty}
+                onChange={e => setQty(e.target.value)} />
+            </div>
+          </div>
+
+          {buyPrice && qty && parseFloat(buyPrice) > 0 && parseFloat(qty) > 0 && (
+            <div style={{ display: "flex", gap: 12 }}>
+              {(() => {
+                const curPL = (displayPrice - parseFloat(buyPrice)) * parseFloat(qty);
+                const curPct = ((displayPrice - parseFloat(buyPrice)) / parseFloat(buyPrice)) * 100;
+                const isProfit = curPL >= 0;
+                return (
+                  <>
+                    <div className="avg-pnl-cell" style={{ flex: 1 }}>
+                      <div className="avg-pnl-label">CURRENT P&L</div>
+                      <div className={`avg-pnl-val ${isProfit ? "profit" : "loss"}`}>{isProfit ? "+" : ""}{rec.currency}{Math.abs(curPL).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                    </div>
+                    <div className="avg-pnl-cell" style={{ flex: 1 }}>
+                      <div className="avg-pnl-label">RETURN</div>
+                      <div className={`avg-pnl-val ${isProfit ? "profit" : "loss"}`}>{isProfit ? "+" : ""}{curPct.toFixed(2)}%</div>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          )}
+
+          <button className="avg-advice-btn" onClick={handleSubmit} disabled={loading || !hasKeys}>
+            {loading ? "⟳ Getting AI advice…" : "📊 Get Averaging Advice"}
+          </button>
+
+          {error && <div style={{ color: "var(--sell)", fontSize: 12, fontFamily: "var(--font-mono)" }}>{error}</div>}
+
+          {adviceResults && primaryResult && consensus && (
+            <div className="avg-result">
+              <div className={`avg-action-badge ${consensus.action}`}>
+                {ACTION_LABELS[consensus.action] || consensus.action}
+              </div>
+
+              {(consensus.action === "AVERAGE_DOWN" || consensus.action === "PYRAMID_UP") && primaryResult.add_qty > 0 && (
+                <div className="avg-detail-row">
+                  Buy <strong>{primaryResult.add_qty} more shares</strong>
+                  {primaryResult.add_at_price && <> at <strong>{rec.currency}{primaryResult.add_at_price?.toLocaleString?.()}</strong></>}
+                  {primaryResult.new_avg_price && <> → New avg: <strong>{rec.currency}{primaryResult.new_avg_price?.toLocaleString?.()}</strong></>}
+                </div>
+              )}
+
+              {consensus.action === "EXIT" && (
+                <div className="avg-detail-row">
+                  Exit at <strong>{rec.currency}{displayPrice?.toLocaleString?.()}</strong>
+                  {pl !== null && <> → {pl >= 0 ? "Lock in gain" : "Cut loss"}: <strong style={{ color: pl >= 0 ? "#00e676" : "#ff5252" }}>{pl >= 0 ? "+" : ""}{rec.currency}{Math.abs(pl).toLocaleString(undefined, { maximumFractionDigits: 0 })}</strong></>}
+                </div>
+              )}
+
+              {primaryResult.reason && (
+                <div style={{ fontSize: 12, color: "var(--t-2)", marginTop: 8, lineHeight: 1.6 }}>{primaryResult.reason}</div>
+              )}
+
+              {primaryResult.revised_target && (
+                <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+                  <div className="avg-pnl-cell" style={{ flex: 1 }}>
+                    <div className="avg-pnl-label">REVISED TARGET</div>
+                    <div className="avg-pnl-val profit">{rec.currency}{primaryResult.revised_target?.toLocaleString?.()}</div>
+                  </div>
+                  {primaryResult.revised_stop_loss && (
+                    <div className="avg-pnl-cell" style={{ flex: 1 }}>
+                      <div className="avg-pnl-label">REVISED STOP</div>
+                      <div className="avg-pnl-val loss">{rec.currency}{primaryResult.revised_stop_loss?.toLocaleString?.()}</div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="avg-agree-bar">
+                <span>{agreeCount} of {totalCount} AIs agree</span>
+                <div className="avg-agree-track">
+                  <div className="avg-agree-fill" style={{ width: totalCount > 0 ? `${(agreeCount/totalCount)*100}%` : "0%" }} />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ====================================================================
+// FEATURE 3b: MY HOLDINGS (localStorage)
+// ====================================================================
+
+const HOLDINGS_KEY = "bullseye_holdings";
+
+function loadHoldings() {
+  try { return JSON.parse(localStorage.getItem(HOLDINGS_KEY) || "[]"); } catch { return []; }
+}
+function saveHoldings(arr) {
+  try { localStorage.setItem(HOLDINGS_KEY, JSON.stringify(arr)); } catch {}
+}
+
+function MyHoldings({ onOpenAdvice }) {
+  const [holdings, setHoldings] = React.useState(loadHoldings);
+  const [symbol, setSymbol] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [buyPrice, setBuyPrice] = React.useState("");
+  const [qty, setQty] = React.useState("");
+  const [addMsg, setAddMsg] = React.useState("");
+  const { prices } = React.useContext(LiveDataContext);
+
+  const addHolding = () => {
+    if (!symbol.trim() || !buyPrice || !qty) { setAddMsg("Fill all fields."); return; }
+    const h = { symbol: symbol.toUpperCase(), name: name || symbol.toUpperCase(), buyPrice: parseFloat(buyPrice), qty: parseFloat(qty), addedAt: new Date().toISOString() };
+    const updated = [...holdings, h];
+    setHoldings(updated);
+    saveHoldings(updated);
+    setSymbol(""); setName(""); setBuyPrice(""); setQty("");
+    setAddMsg("Holding added!");
+    setTimeout(() => setAddMsg(""), 2000);
+  };
+
+  const removeHolding = (i) => {
+    const updated = holdings.filter((_, idx) => idx !== i);
+    setHoldings(updated);
+    saveHoldings(updated);
+  };
+
+  return (
+    <div className="holdings-card">
+      <div className="holdings-head">
+        <div className="holdings-title">📊 My Holdings <span className="count-pill" style={{ fontFamily: "var(--font-mono)", fontSize: 10, padding: "2px 7px", background: "var(--surface-3)", color: "var(--t-2)", borderRadius: 10, fontWeight: 600 }}>{holdings.length}</span></div>
+        <div style={{ fontSize: 11, color: "var(--t-3)", fontFamily: "var(--font-mono)" }}>Stored locally · AI advice available</div>
+      </div>
+
+      <div className="add-holding-form">
+        <div className="position-input-group">
+          <label className="position-label">Symbol</label>
+          <input className="position-input" placeholder="RELIANCE" value={symbol} onChange={e => setSymbol(e.target.value)} style={{ padding: "7px 10px", fontSize: 12 }} />
+        </div>
+        <div className="position-input-group">
+          <label className="position-label">Name (optional)</label>
+          <input className="position-input" placeholder="Reliance Industries" value={name} onChange={e => setName(e.target.value)} style={{ padding: "7px 10px", fontSize: 12 }} />
+        </div>
+        <div className="position-input-group">
+          <label className="position-label">Buy Price (₹)</label>
+          <input className="position-input" type="number" placeholder="2800" value={buyPrice} onChange={e => setBuyPrice(e.target.value)} style={{ padding: "7px 10px", fontSize: 12 }} />
+        </div>
+        <div className="position-input-group">
+          <label className="position-label">Qty</label>
+          <input className="position-input" type="number" placeholder="50" value={qty} onChange={e => setQty(e.target.value)} style={{ padding: "7px 10px", fontSize: 12 }} />
+        </div>
+        <div style={{ alignSelf: "flex-end" }}>
+          <button className="btn-primary" onClick={addHolding} style={{ padding: "8px 14px", fontSize: 12 }}>+ Add</button>
+        </div>
+      </div>
+      {addMsg && <div style={{ padding: "6px 20px", fontSize: 11, color: "var(--buy)", fontFamily: "var(--font-mono)" }}>{addMsg}</div>}
+
+      {holdings.length === 0 && (
+        <div className="empty-state" style={{ padding: "32px 20px" }}>No holdings yet. Add your first position above.</div>
+      )}
+
+      {holdings.map((h, i) => {
+        const liveData = prices[h.symbol];
+        const curPrice = liveData?.price ?? null;
+        const pl = curPrice != null ? (curPrice - h.buyPrice) * h.qty : null;
+        const plPct = curPrice != null ? ((curPrice - h.buyPrice) / h.buyPrice) * 100 : null;
+        const rec = (window.RECOMMENDATIONS || []).find(r => r.symbol === h.symbol);
+
+        return (
+          <div className="holding-row" key={i}>
+            <div style={{ minWidth: 70 }}>
+              <div className="holding-symbol">{h.symbol}</div>
+              <div className="holding-name">{h.name}</div>
+            </div>
+            <div className="holding-meta">
+              <div className="holding-cell">
+                <div className="hl">QTY</div>
+                <div className="hv">{h.qty}</div>
+              </div>
+              <div className="holding-cell">
+                <div className="hl">AVG</div>
+                <div className="hv">₹{h.buyPrice?.toLocaleString?.()}</div>
+              </div>
+              <div className="holding-cell">
+                <div className="hl">LTP</div>
+                <div className="hv">{curPrice != null ? `₹${curPrice.toLocaleString(undefined, { maximumFractionDigits: 1 })}` : "—"}</div>
+              </div>
+              <div className="holding-cell">
+                <div className="hl">P&L</div>
+                <div className={`hv ${pl == null ? "" : pl >= 0 ? "up" : "dn"}`}>
+                  {pl == null ? "—" : `${pl >= 0 ? "+" : ""}₹${Math.abs(pl).toLocaleString(undefined, { maximumFractionDigits: 0 })} (${plPct >= 0 ? "+" : ""}${plPct?.toFixed(1)}%)`}
+                </div>
+              </div>
+            </div>
+            <button className="ai-advice-btn-small"
+              onClick={() => onOpenAdvice(h, curPrice ?? h.buyPrice, liveData?.change ?? 0)}>
+              🤖 AI Advice
+            </button>
+            <button className="iconbtn" title="Remove" onClick={() => removeHolding(i)} style={{ flexShrink: 0 }}>✕</button>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ====================================================================
+// FEATURE 4: FREE AI KEYS in Settings
+// ====================================================================
+
+function FreeAIKeysSection() {
+  const mkState = (lsKey) => () => {
+    try { return localStorage.getItem(lsKey) || ""; } catch { return ""; }
+  };
+
+  const [geminiKey,    setGeminiKey]    = React.useState(mkState("bullseye_gemini_key"));
+  const [groqKey,      setGroqKey]      = React.useState(mkState("bullseye_groq_key"));
+  const [orKey,        setOrKey]        = React.useState(mkState("bullseye_openrouter_key"));
+  const [geminiShow,   setGeminiShow]   = React.useState(false);
+  const [groqShow,     setGroqShow]     = React.useState(false);
+  const [orShow,       setOrShow]       = React.useState(false);
+  const [msgs,         setMsgs]         = React.useState({});
+
+  const saveKey = (lsKey, val, msgKey) => {
+    try {
+      if (val.trim()) localStorage.setItem(lsKey, val.trim());
+      else localStorage.removeItem(lsKey);
+      setMsgs(m => ({ ...m, [msgKey]: val.trim() ? "✓ Saved" : "Removed" }));
+      setTimeout(() => setMsgs(m => ({ ...m, [msgKey]: "" })), 2000);
+    } catch (e) {
+      setMsgs(m => ({ ...m, [msgKey]: "Error: " + e.message }));
+    }
+  };
+
+  const configured = [geminiKey, groqKey, orKey].filter(k => k.trim()).length;
+
+  const aiRows = [
+    {
+      label: "Gemini (Google)",
+      sub: "gemini-2.0-flash · Free · No credit card",
+      link: "https://ai.google.dev",
+      linkLabel: "Get free key → ai.google.dev",
+      pill: "gemini",
+      value: geminiKey, setValue: setGeminiKey,
+      show: geminiShow, setShow: setGeminiShow,
+      lsKey: "bullseye_gemini_key", msgKey: "gemini"
+    },
+    {
+      label: "Groq",
+      sub: "llama-3.3-70b-versatile · Very fast · Free tier",
+      link: "https://console.groq.com",
+      linkLabel: "Get free key → console.groq.com",
+      pill: "groq",
+      value: groqKey, setValue: setGroqKey,
+      show: groqShow, setShow: setGroqShow,
+      lsKey: "bullseye_groq_key", msgKey: "groq"
+    },
+    {
+      label: "OpenRouter (Mistral)",
+      sub: "mistral-7b-instruct:free · No billing required",
+      link: "https://openrouter.ai",
+      linkLabel: "Get free key → openrouter.ai",
+      pill: "mistral",
+      value: orKey, setValue: setOrKey,
+      show: orShow, setShow: setOrShow,
+      lsKey: "bullseye_openrouter_key", msgKey: "openrouter"
+    },
+  ];
+
+  return (
+    <div className="free-ai-section" style={{ marginBottom: 20 }}>
+      <div className="free-ai-header">
+        <div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: "var(--t-1)", display: "flex", alignItems: "center", gap: 8 }}>
+            🤖 Free AI Keys
+          </div>
+          <div style={{ fontSize: 11, color: "var(--t-3)", marginTop: 3, fontFamily: "var(--font-mono)" }}>
+            All these AIs are FREE — no credit card needed
+          </div>
+        </div>
+        <span className={`free-ai-status-pill ${configured > 0 ? "some" : "none"}`}>
+          {configured > 0 ? `✓ ${configured} of 3 configured` : "0 of 3 configured"}
+        </span>
+      </div>
+
+      {aiRows.map(row => (
+        <div className="free-ai-row" key={row.msgKey}>
+          <div className="free-ai-row-header">
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <AIPill name={row.pill} />
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600 }}>{row.label}</div>
+                <div style={{ fontSize: 11, color: "var(--t-3)", fontFamily: "var(--font-mono)" }}>{row.sub}</div>
+              </div>
+            </div>
+            <a href={row.link} target="_blank" rel="noopener noreferrer"
+               style={{ fontSize: 11, color: "var(--brand)", fontFamily: "var(--font-mono)", textDecoration: "none" }}>
+              {row.linkLabel} ↗
+            </a>
+          </div>
+          <div className="free-ai-row-inputs">
+            <input
+              type={row.show ? "text" : "password"}
+              value={row.value}
+              onChange={e => row.setValue(e.target.value)}
+              placeholder="Paste your API key here…"
+              style={{
+                flex: 1, background: "var(--surface-2)", border: "1px solid var(--border-2)",
+                borderRadius: 8, padding: "9px 12px", color: "var(--t-1)",
+                fontFamily: "var(--font-mono)", fontSize: 12, outline: "none"
+              }}
+            />
+            <button className="btn-secondary" onClick={() => row.setShow(s => !s)} style={{ flexShrink: 0 }}>
+              {row.show ? "Hide" : "Show"}
+            </button>
+            <button className="btn-primary" onClick={() => saveKey(row.lsKey, row.value, row.msgKey)} style={{ flexShrink: 0 }}>
+              Save
+            </button>
+          </div>
+          {msgs[row.msgKey] && (
+            <div style={{ fontSize: 11, color: msgs[row.msgKey].startsWith("✓") ? "var(--buy)" : "var(--sell)", fontFamily: "var(--font-mono)" }}>
+              {msgs[row.msgKey]}
+            </div>
+          )}
+          {row.value.trim() && (
+            <div style={{ fontSize: 11, color: "var(--buy)", display: "flex", alignItems: "center", gap: 5 }}>
+              <span>✓</span> <span style={{ color: "var(--t-2)" }}>Key saved — Council Vote and AI Advice are now enabled</span>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Expose new components
+Object.assign(window, {
+  getFreeAIKeys,
+  AICouncilModal, AIPill,
+  TodayTopPicks,
+  AveragingAssistant,
+  MyHoldings,
+  FreeAIKeysSection,
+});
+</script>
+
+<script type="text/babel">
+/* global React, fmtPrice, fmtChange, LiveDataContext */
+/* global AICouncilModal, AIPill, TodayTopPicks, AveragingAssistant, MyHoldings, FreeAIKeysSection, getFreeAIKeys */
+// ====================================================================
+// PATCHED SCREENS — wires new features into existing screens
+// ====================================================================
+
+// ---------- Patched RecCard with Council Vote button ----------
+function RecCardWithCouncil({ rec, onClick, compact, aiLoading, hasAI }) {
+  const { prices } = React.useContext(LiveDataContext);
+  const liveData = prices[rec.symbol];
+  const displayPrice = liveData ? liveData.price : rec.price;
+  const displayChange = liveData ? liveData.change : rec.change;
+  const actionCls = rec.action.toLowerCase();
+  const upClass = displayChange >= 0 ? "up" : "dn";
+  const isShort = rec.direction === "SHORT";
+  const [showCouncil, setShowCouncil] = React.useState(false);
+
+  const keys = getFreeAIKeys();
+  const hasFreeAI = keys.gemini || keys.groq || keys.openrouter || keys.claude;
+
+  const handleCouncilClick = (e) => {
+    e.stopPropagation();
+    setShowCouncil(true);
+  };
+
+  return (
+    <>
+      <div className={`rec-card ${actionCls}${aiLoading ? " ai-loading" : ""}`} onClick={onClick}>
+        <div className="rec-head">
+          <div className="rec-ident">
+            <div className={`rec-logo ${rec.market.toLowerCase()}`}>{rec.symbol.slice(0, 3)}</div>
+            <div style={{ minWidth: 0 }}>
+              <div className="rec-symbol">
+                {rec.symbol}
+                <span className="rec-exchange">{rec.exchange}</span>
+                {hasAI && <span className="ai-badge">✦ AI</span>}
+                {hasFreeAI && (
+                  <span className="council-btn" onClick={handleCouncilClick}>
+                    🤖 Council
+                  </span>
+                )}
+              </div>
+              <div className="rec-name">{rec.name}</div>
+            </div>
+          </div>
+          <div className={`action-badge ${actionCls}`}>
+            {rec.action}
+            {isShort && <span className="short-tag">SHORT</span>}
+          </div>
+        </div>
+
+        <div className="rec-price-row">
+          <div className="rec-price">{fmtPrice(displayPrice, rec.currency)}{liveData && <span className="live-price-dot"></span>}</div>
+          <div className={`rec-change ${upClass}`}>{fmtChange(displayChange)}</div>
+          <div className="rec-spark">
+            <Sparkline data={rec.sparkline} action={rec.action} />
+          </div>
+        </div>
+
+        <div className="targets-block">
+          <div className="targets-grid">
+            <div className="target-cell sl">
+              <div className="tl">SL</div>
+              <div className="tv">{fmtPrice(rec.stopLoss, rec.currency)}</div>
+            </div>
+            <div className="target-cell entry">
+              <div className="tl">ENTRY</div>
+              <div className="tv mono">{rec.currency}{rec.entry.low}–{rec.entry.high}</div>
+            </div>
+            {rec.targets.slice(0, 3).map((t, i) => (
+              <div className={`target-cell t${i + 1}`} key={i}>
+                <div className="tl">T{i + 1}</div>
+                <div className="tv">{fmtPrice(t, rec.currency)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rec-foot">
+          <div className="conf-block">
+            <ConfRing value={rec.confidence} />
+            <div className="conf-label">
+              Confidence
+              <strong>{rec.horizon}</strong>
+            </div>
+          </div>
+          <div className="rec-meta-tags">
+            <span className={`risk-chip risk-${rec.risk.replace(" ", "-")}`}>{rec.risk}</span>
+            <span className="rr-chip">{rec.rr}:1 R/R</span>
+          </div>
+        </div>
+      </div>
+
+      {showCouncil && (
+        <AICouncilModal
+          rec={rec}
+          displayPrice={displayPrice}
+          displayChange={displayChange}
+          onClose={() => setShowCouncil(false)}
+        />
+      )}
+    </>
+  );
+}
+
+// ---------- Patched HomeScreen ----------
+function HomeScreenV2({ onOpenDetail }) {
+  const [filter, setFilter] = React.useState("all");
+  const [actionFilter, setActionFilter] = React.useState("ALL");
+  const [aiRunning, setAiRunning] = React.useState(false);
+  const aiCache = useAIAnalysis();
+  const apiKey = typeof localStorage !== "undefined" ? localStorage.getItem("bullseye_anthropic_key") : null;
+
+  const filtered = React.useMemo(() => {
+    let r = RECOMMENDATIONS;
+    if (filter !== "all") r = r.filter(x => x.market === filter);
+    if (actionFilter !== "ALL") r = r.filter(x => x.action === actionFilter);
+    return r;
+  }, [filter, actionFilter]);
+
+  const stats = React.useMemo(() => {
+    const total = RECOMMENDATIONS.length;
+    const buys = RECOMMENDATIONS.filter(r => r.action === "BUY").length;
+    const sells = RECOMMENDATIONS.filter(r => r.action === "SELL").length;
+    const holds = RECOMMENDATIONS.filter(r => r.action === "HOLD").length;
+    const avgConf = Math.round(RECOMMENDATIONS.reduce((a, r) => a + r.confidence, 0) / total);
+    return { total, buys, sells, holds, avgConf };
+  }, []);
+
+  const watchlistRecs = RECOMMENDATIONS.slice(0, 7);
+
+  const handleAnalyzeAll = async () => {
+    if (!apiKey || aiRunning) return;
+    setAiRunning(true);
+    try { await analyzeAllStocks(filtered, apiKey, () => {}); } catch {}
+    setAiRunning(false);
+  };
+
+  return (
+    <div>
+      <div className="hero">
+        <div>
+          <div className="hero-eyebrow">Friday · 16 May 2026 · Market Open</div>
+          <h1>Today's <em>highest-conviction</em><br />picks across the board.</h1>
+        </div>
+        <div className="hero-meta">
+          <div>Active Picks<strong>{stats.total}</strong></div>
+          <div>Avg Confidence<strong>{stats.avgConf}%</strong></div>
+          <div>Buy / Sell / Hold<strong>{stats.buys} / {stats.sells} / {stats.holds}</strong></div>
+        </div>
+      </div>
+
+      <div className="macro-strip">
+        <div className="macro-cell"><div className="ml">NIFTY 50</div><div className="mv">24,180</div><div className="mc up">+0.84%</div></div>
+        <div className="macro-cell"><div className="ml">SENSEX</div><div className="mv">79,450</div><div className="mc up">+0.62%</div></div>
+        <div className="macro-cell"><div className="ml">NASDAQ</div><div className="mv">21,420</div><div className="mc up">+1.12%</div></div>
+        <div className="macro-cell"><div className="ml">S&amp;P 500</div><div className="mv">5,842</div><div className="mc up">+0.48%</div></div>
+        <div className="macro-cell"><div className="ml">BTC / USD</div><div className="mv">$98,420</div><div className="mc up">+1.84%</div></div>
+        <div className="macro-cell"><div className="ml">USD / INR</div><div className="mv">83.42</div><div className="mc dn">−0.12%</div></div>
+        <div className="macro-cell"><div className="ml">India VIX</div><div className="mv">13.8</div><div className="mc dn">−2.40%</div></div>
+        <div className="macro-cell"><div className="ml">GOLD ₹/10g</div><div className="mv">71,820</div><div className="mc up">+0.42%</div></div>
+      </div>
+
+      <div className="page-grid">
+        <div>
+          {/* Today's Picks button */}
+          <div style={{ marginBottom: 16 }}>
+            <TodayTopPicks onOpenDetail={onOpenDetail} />
+          </div>
+
+          <div className="filter-bar">
+            <button className={`chip ${filter === "all" ? "active" : ""}`} onClick={() => setFilter("all")}>
+              All Markets <span className="count">{RECOMMENDATIONS.length}</span>
+            </button>
+            <button className={`chip ${filter === "IN" ? "active" : ""}`} onClick={() => setFilter("IN")}>
+              🇮🇳 Indian <span className="count">{RECOMMENDATIONS.filter(r => r.market === "IN").length}</span>
+            </button>
+            <button className={`chip ${filter === "US" ? "active" : ""}`} onClick={() => setFilter("US")}>
+              🇺🇸 US <span className="count">{RECOMMENDATIONS.filter(r => r.market === "US").length}</span>
+            </button>
+            <button className={`chip ${filter === "CRYPTO" ? "active" : ""}`} onClick={() => setFilter("CRYPTO")}>
+              ₿ Crypto <span className="count">{RECOMMENDATIONS.filter(r => r.market === "CRYPTO").length}</span>
+            </button>
+            <div className="chip-divider"></div>
+            <button className={`chip ${actionFilter === "ALL" ? "active" : ""}`} onClick={() => setActionFilter("ALL")}>Any</button>
+            <button className={`chip ${actionFilter === "BUY" ? "active" : ""}`} onClick={() => setActionFilter("BUY")}>Buy</button>
+            <button className={`chip ${actionFilter === "SELL" ? "active" : ""}`} onClick={() => setActionFilter("SELL")}>Sell</button>
+            <button className={`chip ${actionFilter === "HOLD" ? "active" : ""}`} onClick={() => setActionFilter("HOLD")}>Hold</button>
+            {apiKey && (
+              <button className="chip ai-analyze-btn" onClick={handleAnalyzeAll} disabled={aiRunning}
+                style={{ marginLeft: 4, background: "var(--brand-w)", color: "var(--brand)", borderColor: "var(--brand)" }}>
+                {aiRunning ? "✦ Analyzing…" : "✦ AI Analyze All"}
+              </button>
+            )}
+            <div className="right">
+              <button className="iconbtn" title="Grid">▦</button>
+              <button className="iconbtn" title="List">≡</button>
+            </div>
+          </div>
+
+          <div className="recs-grid">
+            {filtered.map(r => {
+              const ai = aiCache[r.id];
+              const merged = ai?.data ? { ...r, ...ai.data, analyst: "BULLSEYE AI", source: "AI Analysis" } : r;
+              return (
+                <RecCardWithCouncil
+                  key={r.id}
+                  rec={merged}
+                  onClick={() => onOpenDetail(merged)}
+                  aiLoading={ai?.loading}
+                  hasAI={!!ai?.data}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        <aside>
+          <div className="rail-card">
+            <div className="rail-head">
+              <div className="rail-title">Watchlist <span className="count-pill">{watchlistRecs.length}</span></div>
+              <a className="rail-action">Manage</a>
+            </div>
+            {watchlistRecs.map(r => (
+              <WatchlistItem key={r.id} rec={r} onClick={() => onOpenDetail(r)} />
+            ))}
+          </div>
+
+          <div className="rail-card">
+            <div className="rail-head">
+              <div className="rail-title">Live Alerts <span className="count-pill">{ALERTS_DATA.length}</span></div>
+              <a className="rail-action">View all</a>
+            </div>
+            {ALERTS_DATA.slice(0, 4).map(a => (
+              <div className="alert-item" key={a.id}>
+                <div className={`alert-icon ${a.type}`}>
+                  {a.type === "TARGET_HIT" && "✓"}
+                  {a.type === "STOP_LOSS" && "!"}
+                  {a.type === "BREAKOUT" && "↗"}
+                  {a.type === "NEW_PICK" && "★"}
+                  {a.type === "PRICE_ALERT" && "◉"}
+                  {a.type === "NEWS" && "▤"}
+                </div>
+                <div className="alert-body">
+                  <div className="alert-title">{a.type.replace("_", " ")}<span className="alert-sym">{a.symbol}</span></div>
+                  <div className="alert-msg">{a.message}</div>
+                  <div className="alert-time">{a.time}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="rail-card">
+            <div className="rail-head">
+              <div className="rail-title">Market News</div>
+              <a className="rail-action">All news →</a>
+            </div>
+            {NEWS_ITEMS.slice(0, 5).map((n, i) => (
+              <div className="news-item" key={i}>
+                <div className="news-headline">{n.title}</div>
+                <div className="news-meta">
+                  <span className={`news-impact ${n.impact}`}>{n.impact}</span>
+                  <span className="news-source">{n.source}</span>
+                  <span className="news-dot">•</span>
+                  <span>{n.category}</span>
+                  <span className="news-dot">•</span>
+                  <span>{n.time}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Patched DetailPanel with Averaging Assistant ----------
+function DetailPanelV2({ rec, onClose, onRecUpdate }) {
+  if (!rec) return null;
+  const [analyzing, setAnalyzing] = React.useState(false);
+  const [analyzeError, setAnalyzeError] = React.useState(null);
+  const [showCouncil, setShowCouncil] = React.useState(false);
+  const { prices } = React.useContext(LiveDataContext);
+  const liveData = prices[rec.symbol];
+  const displayPrice = liveData ? liveData.price : rec.price;
+  const displayChange = liveData ? liveData.change : rec.change;
+  const actionCls = rec.action.toLowerCase();
+  const upCls = displayChange >= 0 ? "up" : "dn";
+  const isShort = rec.direction === "SHORT";
+  const apiKey = typeof localStorage !== "undefined" ? localStorage.getItem("bullseye_anthropic_key") : null;
+
+  const keys = getFreeAIKeys();
+  const hasFreeAI = keys.gemini || keys.groq || keys.openrouter || keys.claude;
+
+  const handleAnalyze = async () => {
+    if (!apiKey || analyzing) return;
+    setAnalyzing(true);
+    setAnalyzeError(null);
+    try {
+      const result = await analyzeStockWithClaude(rec, apiKey);
+      window.__aiAnalysisCache[rec.id] = { loading: false, data: result };
+      notifyAIListeners();
+      if (onRecUpdate) onRecUpdate({ ...rec, ...result, analyst: "BULLSEYE AI", source: "AI Analysis" });
+    } catch (err) { setAnalyzeError(err.message); }
+    setAnalyzing(false);
+  };
+
+  return (
+    <>
+      <div className={`detail-overlay ${rec ? "open" : ""}`} onClick={onClose}>
+        <div className="detail-panel" onClick={e => e.stopPropagation()}>
+          <div className="detail-head">
+            <div className="detail-title-block">
+              <div className={`detail-logo ${rec.market.toLowerCase()}`} style={{
+                background: rec.market === "CRYPTO" ? "#f7931a22" : rec.market === "US" ? "#4480ff22" : "#d4a04a22",
+                color: rec.market === "CRYPTO" ? "#f7931a" : rec.market === "US" ? "#6fa0ff" : "var(--brand)",
+                borderColor: rec.market === "CRYPTO" ? "#f7931a44" : rec.market === "US" ? "#4480ff44" : "#d4a04a44"
+              }}>{rec.symbol.slice(0, 3)}</div>
+              <div className="detail-name-block">
+                <h2>{rec.name}</h2>
+                <div className="detail-sub">{rec.symbol} · {rec.exchange} · {rec.sector}</div>
+              </div>
+            </div>
+            <button className="detail-close" onClick={onClose}>✕</button>
+          </div>
+
+          <div className="detail-price-row">
+            <div>
+              <span className="detail-price">{fmtPrice(displayPrice, rec.currency)}{liveData && <span className="live-price-dot" style={{marginLeft:6}}></span>}</span>
+              <span className={`detail-change ${upCls}`}>{fmtChange(displayChange)}</span>
+            </div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              {hasFreeAI && (
+                <button
+                  style={{
+                    padding: "6px 12px", borderRadius: 7, fontSize: 12, fontWeight: 600,
+                    background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.4)",
+                    color: "#c084fc", cursor: "pointer"
+                  }}
+                  onClick={() => setShowCouncil(true)}
+                >
+                  🤖 Council Vote
+                </button>
+              )}
+              <div className={`detail-action-large ${actionCls}`}>
+                {rec.action}{isShort && " · SHORT"}
+              </div>
+            </div>
+          </div>
+
+          <div className="detail-chart">
+            <BigChart data={rec.sparkline} action={rec.action} />
+          </div>
+
+          <div className="detail-section">
+            <h3>Price Targets · Risk:Reward {rec.rr}:1</h3>
+            <div className="detail-targets">
+              <div className="detail-target sl">
+                <div className="lbl">STOP LOSS</div>
+                <div className="val">{fmtPrice(rec.stopLoss, rec.currency)}</div>
+                <div className="upside">{pctFromCurrent(rec.price, rec.stopLoss).toFixed(1)}%</div>
+              </div>
+              <div className="detail-target entry">
+                <div className="lbl">ENTRY ZONE</div>
+                <div className="val" style={{ fontSize: 15 }}>{rec.currency}{rec.entry.low}–{rec.entry.high}</div>
+                <div className="upside">avg {rec.currency}{((rec.entry.low + rec.entry.high) / 2).toFixed(2)}</div>
+              </div>
+              {rec.targets.map((t, i) => (
+                <div className={`detail-target t${i + 1}`} key={i}>
+                  <div className="lbl">TARGET {i + 1}</div>
+                  <div className="val">{fmtPrice(t, rec.currency)}</div>
+                  <div className="upside">{pctFromCurrent(rec.price, t) > 0 ? "+" : ""}{pctFromCurrent(rec.price, t).toFixed(1)}%</div>
+                </div>
+              ))}
+            </div>
+            <TargetLadder rec={rec} />
+          </div>
+
+          <div className="detail-section">
+            <h3>Analyst Thesis</h3>
+            <div className={`rationale-box ${actionCls}`}>
+              {rec.rationale}
+              <div className="analyst-line">
+                <span>— {rec.analyst}</span>
+                <span>·</span>
+                <span>via {rec.source}</span>
+                <span>·</span>
+                <span>{rec.posted}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="detail-section">
+            <h3>Catalysts to Watch</h3>
+            <div className="catalyst-list">
+              {rec.catalysts.map((c, i) => (
+                <div className="catalyst-row" key={i}>
+                  <div className="catalyst-num">{i + 1}</div>
+                  <div className="catalyst-text">{c}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="detail-section">
+            <h3>Key Metrics</h3>
+            <div className="metrics-grid">
+              <div className="metric-cell"><div className="metric-lbl">Confidence</div><div className="metric-val">{rec.confidence}%</div></div>
+              <div className="metric-cell"><div className="metric-lbl">Risk Level</div><div className="metric-val">{rec.risk}</div></div>
+              <div className="metric-cell"><div className="metric-lbl">Time Horizon</div><div className="metric-val" style={{ fontSize: 13 }}>{rec.horizon}</div></div>
+              <div className="metric-cell"><div className="metric-lbl">RSI (14)</div><div className="metric-val">{rec.rsi}</div></div>
+              <div className="metric-cell"><div className="metric-lbl">P/E Ratio</div><div className="metric-val">{rec.pe || "—"}</div></div>
+              <div className="metric-cell"><div className="metric-lbl">Market Cap</div><div className="metric-val" style={{ fontSize: 13 }}>{rec.marketCap}</div></div>
+              <div className="metric-cell"><div className="metric-lbl">Upside (T3)</div><div className="metric-val">{(rec.upside > 0 ? "+" : "") + rec.upside.toFixed(1)}%</div></div>
+              <div className="metric-cell"><div className="metric-lbl">Source</div><div className="metric-val" style={{ fontSize: 12 }}>{rec.source}</div></div>
+            </div>
+          </div>
+
+          {/* Averaging Assistant */}
+          <AveragingAssistant rec={rec} displayPrice={displayPrice} displayChange={displayChange} />
+
+          <div className="detail-actions">
+            <button className={`btn-primary ${actionCls === "sell" ? "sell" : ""}`}>
+              {rec.action === "SELL" ? `Sell @ ${rec.currency}${rec.entry.low}–${rec.entry.high}` : `Buy @ ${rec.currency}${rec.entry.low}–${rec.entry.high}`}
+            </button>
+            <button className="btn-secondary">+ Watchlist</button>
+            <button className="btn-secondary">Set Alert</button>
+            {apiKey && (
+              <button className="btn-secondary" onClick={handleAnalyze} disabled={analyzing}
+                style={{ color: "var(--brand)", borderColor: "var(--brand)" }}>
+                {analyzing ? "✦ Analyzing…" : "✦ Analyze"}
+              </button>
+            )}
+          </div>
+          {analyzeError && (
+            <div style={{ padding: "10px 24px", color: "var(--sell)", fontSize: 12, fontFamily: "var(--font-mono)" }}>
+              AI Error: {analyzeError}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showCouncil && (
+        <AICouncilModal
+          rec={rec}
+          displayPrice={displayPrice}
+          displayChange={displayChange}
+          onClose={() => setShowCouncil(false)}
+        />
+      )}
+    </>
+  );
+}
+
+// ---------- Patched PortfolioScreen with My Holdings ----------
+function PortfolioScreenV2({ onOpenDetail }) {
+  const [adviceTarget, setAdviceTarget] = React.useState(null); // { holding, curPrice, curChange }
+
+  const enriched = PORTFOLIO.map(p => {
+    const value = p.qty * p.current;
+    const invested = p.qty * p.avg;
+    const pnl = value - invested;
+    const ret = (pnl / invested) * 100;
+    return { ...p, value, invested, pnl, ret };
+  });
+
+  const totalsByCcy = enriched.reduce((acc, p) => {
+    if (!acc[p.currency]) acc[p.currency] = { value: 0, invested: 0, pnl: 0 };
+    acc[p.currency].value += p.value;
+    acc[p.currency].invested += p.invested;
+    acc[p.currency].pnl += p.pnl;
+    return acc;
+  }, {});
+
+  const handleOpenAdvice = (holding, curPrice, curChange) => {
+    // Find the rec that matches the holding symbol, or create a stub
+    const rec = (window.RECOMMENDATIONS || []).find(r => r.symbol === holding.symbol) || {
+      id: holding.symbol,
+      symbol: holding.symbol,
+      name: holding.name,
+      exchange: "NSE",
+      market: "IN",
+      currency: "₹",
+      price: curPrice,
+      change: curChange,
+      action: "HOLD",
+      targets: [curPrice * 1.1],
+      stopLoss: curPrice * 0.9,
+      entry: { low: curPrice * 0.98, high: curPrice * 1.02 },
+      sparkline: [],
+      rationale: "",
+      catalysts: [],
+      sector: "",
+      rr: 1, upside: 0, confidence: 50, risk: "MEDIUM", horizon: "Short-term"
+    };
+    setAdviceTarget({ rec, curPrice, curChange });
+  };
+
+  return (
+    <div>
+      <div className="hero">
+        <div>
+          <div className="hero-eyebrow">Portfolio</div>
+          <h1>Your <em>positions</em>, all in one view.</h1>
+        </div>
+      </div>
+
+      <div className="portfolio-summary">
+        <div className="ps-cell">
+          <div className="lbl">Total Value (INR)</div>
+          <div className="val large">₹{totalsByCcy["₹"]?.value.toLocaleString("en-IN", { maximumFractionDigits: 0 }) || 0}</div>
+          <div className={`sub ${totalsByCcy["₹"]?.pnl >= 0 ? "up" : "dn"}`}>
+            {totalsByCcy["₹"]?.pnl >= 0 ? "+" : ""}₹{totalsByCcy["₹"]?.pnl.toLocaleString("en-IN", { maximumFractionDigits: 0 })} ({((totalsByCcy["₹"]?.pnl / totalsByCcy["₹"]?.invested) * 100).toFixed(1)}%)
+          </div>
+        </div>
+        <div className="ps-cell">
+          <div className="lbl">USD Positions</div>
+          <div className="val">${totalsByCcy["$"]?.value.toLocaleString("en-US", { maximumFractionDigits: 0 }) || 0}</div>
+          <div className={`sub ${totalsByCcy["$"]?.pnl >= 0 ? "up" : "dn"}`}>
+            {totalsByCcy["$"]?.pnl >= 0 ? "+" : ""}${totalsByCcy["$"]?.pnl.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+          </div>
+        </div>
+        <div className="ps-cell">
+          <div className="lbl">Day P/L</div>
+          <div className="val up">+₹14,820</div>
+          <div className="sub up">+0.84% today</div>
+        </div>
+        <div className="ps-cell">
+          <div className="lbl">Open Positions</div>
+          <div className="val">{enriched.length}</div>
+          <div className="sub">across 3 markets</div>
+        </div>
+      </div>
+
+      <table className="screener-table">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Market</th><th>Qty</th><th>Avg Buy</th>
+            <th>Live</th><th>Value</th><th>P/L</th><th>Return</th><th>Signal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {enriched.map((p, i) => {
+            const rec = RECOMMENDATIONS.find(r => r.symbol === p.symbol);
+            return (
+              <tr key={i} onClick={() => rec && onOpenDetail(rec)} style={{ cursor: "pointer" }}>
+                <td><div style={{ fontWeight: 600 }}>{p.symbol}</div></td>
+                <td><span className="tagchip">{p.market}</span></td>
+                <td className="num">{p.qty}</td>
+                <td className="num">{p.currency}{p.avg.toLocaleString()}</td>
+                <td className="num">{p.currency}{p.current.toLocaleString()}</td>
+                <td className="num">{p.currency}{p.value.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                <td className={`num ${p.pnl >= 0 ? "up" : "dn"}`}>{p.pnl >= 0 ? "+" : ""}{p.currency}{p.pnl.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                <td className={`num ${p.ret >= 0 ? "up" : "dn"}`}>{p.ret >= 0 ? "+" : ""}{p.ret.toFixed(1)}%</td>
+                <td>{rec && <span className={`action-badge ${rec.action.toLowerCase()}`}>{rec.action}</span>}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      {/* My Holdings section */}
+      <MyHoldings onOpenAdvice={handleOpenAdvice} />
+
+      {/* Quick averaging assistant modal triggered from holdings */}
+      {adviceTarget && (
+        <div className="council-modal-bg" onClick={() => setAdviceTarget(null)}>
+          <div className="council-modal" style={{ maxWidth: 560 }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+              <div className="council-modal-title">📊 AI Averaging Advice</div>
+              <button className="detail-close" onClick={() => setAdviceTarget(null)}>✕</button>
+            </div>
+            <div style={{ fontSize: 13, color: "var(--t-2)", marginBottom: 16, fontFamily: "var(--font-mono)" }}>
+              {adviceTarget.rec.symbol} · Current price: {adviceTarget.rec.currency}{adviceTarget.curPrice?.toLocaleString?.()}
+            </div>
+            <AveragingAssistant
+              rec={adviceTarget.rec}
+              displayPrice={adviceTarget.curPrice}
+              displayChange={adviceTarget.curChange}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---------- Patched SettingsScreen with Free AI Keys ----------
+function SettingsScreenV2() {
+  const [apiKeyInput, setApiKeyInput] = React.useState(() => {
+    try { return localStorage.getItem("bullseye_anthropic_key") || ""; } catch { return ""; }
+  });
+  const [apiKeyMasked, setApiKeyMasked] = React.useState(true);
+  const [apiKeySaved, setApiKeySaved] = React.useState(() => {
+    try { return !!localStorage.getItem("bullseye_anthropic_key"); } catch { return false; }
+  });
+  const [apiKeySaveMsg, setApiKeySaveMsg] = React.useState("");
+
+  const handleSaveKey = () => {
+    try {
+      if (apiKeyInput.trim()) {
+        localStorage.setItem("bullseye_anthropic_key", apiKeyInput.trim());
+        setApiKeySaved(true);
+        setApiKeySaveMsg("API key saved successfully.");
+      } else {
+        localStorage.removeItem("bullseye_anthropic_key");
+        setApiKeySaved(false);
+        setApiKeySaveMsg("API key removed.");
+      }
+      setTimeout(() => setApiKeySaveMsg(""), 3000);
+    } catch (e) {
+      setApiKeySaveMsg("Error saving key: " + e.message);
+    }
+  };
+
+  return (
+    <div>
+      <div className="hero">
+        <div>
+          <div className="hero-eyebrow">Profile & Settings</div>
+          <h1>Make BULLSEYE <em>yours</em>.</h1>
+        </div>
+      </div>
+
+      <div className="page-grid">
+        <div>
+          {/* FREE AI KEYS — new section above Claude */}
+          <FreeAIKeysSection />
+
+          <div className="rail-card" style={{ marginBottom: 20 }}>
+            <div className="rail-head"><div className="rail-title">✦ Claude AI (Anthropic)</div></div>
+            <div style={{ padding: "20px 22px" }}>
+              <div style={{ fontSize: 13, color: "var(--t-2)", marginBottom: 14, lineHeight: 1.6 }}>
+                Connect your Anthropic API key to enable Claude AI stock analysis. Stored locally — never sent to any server other than Anthropic.
+              </div>
+              <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+                <input
+                  type={apiKeyMasked ? "password" : "text"}
+                  value={apiKeyInput}
+                  onChange={e => setApiKeyInput(e.target.value)}
+                  placeholder="sk-ant-api03-..."
+                  style={{
+                    flex: 1, background: "var(--surface-2)", border: "1px solid var(--border-2)",
+                    borderRadius: 8, padding: "10px 14px", color: "var(--t-1)",
+                    fontFamily: "var(--font-mono)", fontSize: 13, outline: "none"
+                  }}
+                />
+                <button className="btn-secondary" onClick={() => setApiKeyMasked(!apiKeyMasked)} style={{ flexShrink: 0 }}>
+                  {apiKeyMasked ? "Show" : "Hide"}
+                </button>
+                <button className="btn-primary" onClick={handleSaveKey} style={{ flexShrink: 0 }}>Save Key</button>
+              </div>
+              {apiKeySaveMsg && (
+                <div style={{ fontSize: 12, color: apiKeySaved ? "var(--buy)" : "var(--sell)", fontFamily: "var(--font-mono)" }}>
+                  {apiKeySaveMsg}
+                </div>
+              )}
+              {apiKeySaved && (
+                <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 8, fontSize: 12 }}>
+                  <span style={{ color: "var(--buy)" }}>✓</span>
+                  <span style={{ color: "var(--t-2)" }}>API key active — ✦ AI Analyze and Council Vote are enabled.</span>
+                </div>
+              )}
+              <div style={{ marginTop: 16, padding: "12px 14px", background: "var(--surface-2)", borderRadius: 8, fontSize: 11, color: "var(--t-3)", lineHeight: 1.5, fontFamily: "var(--font-mono)" }}>
+                Model: claude-sonnet-4-6 · Max 5 parallel requests · Key stored in localStorage
+              </div>
+            </div>
+          </div>
+
+          <div className="rail-card">
+            <div className="rail-head"><div className="rail-title">Account</div></div>
+            <div style={{ padding: "20px 22px", display: "flex", alignItems: "center", gap: 16, borderBottom: "1px solid var(--border)" }}>
+              <div className="avatar" style={{ width: 56, height: 56, fontSize: 20 }}>A</div>
+              <div>
+                <div style={{ fontSize: 16, fontWeight: 600 }}>Aarav Sharma</div>
+                <div style={{ fontSize: 12, color: "var(--t-3)", fontFamily: "var(--font-mono)" }}>aarav@gmail.com · PRO member</div>
+              </div>
+              <button className="btn-secondary" style={{ marginLeft: "auto" }}>Edit</button>
+            </div>
+            {[
+              ["Subscription", "BULLSEYE Pro · ₹1,499/month", "Manage"],
+              ["Broker Connection", "Zerodha Kite · Connected", "Switch"],
+              ["Default Currency", "INR (₹)", "Change"],
+              ["Risk Profile", "Moderate · Balanced", "Re-take"],
+              ["Two-Factor Auth", "Enabled · SMS + Authenticator", "Configure"],
+              ["Tax Reports", "FY 2025-26 ready", "Download"],
+            ].map(([k, v, action]) => (
+              <div key={k} style={{ padding: "14px 22px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)" }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500 }}>{k}</div>
+                  <div style={{ fontSize: 11, color: "var(--t-3)", fontFamily: "var(--font-mono)", marginTop: 2 }}>{v}</div>
+                </div>
+                <a className="rail-action">{action} →</a>
+              </div>
+            ))}
+          </div>
+        </div>
+        <aside>
+          <div className="rail-card">
+            <div className="rail-head"><div className="rail-title">Pro Status</div></div>
+            <div style={{ padding: 22 }}>
+              <div className="font-serif" style={{ fontSize: 32, color: "var(--brand)", marginBottom: 4 }}>Pro</div>
+              <div style={{ fontSize: 12, color: "var(--t-2)", marginBottom: 18 }}>Renews on 14 June 2026</div>
+              {[
+                "Unlimited picks across all markets",
+                "Live target & stop alerts",
+                "Analyst thesis & catalysts",
+                "Algorithmic signals",
+                "Portfolio AI review",
+                "API access (200 req/day)",
+                "AI Council Vote (free AIs)",
+                "Averaging Assistant",
+                "My Holdings tracker",
+              ].map(line => (
+                <div key={line} style={{ display: "flex", gap: 8, fontSize: 12, padding: "6px 0", color: "var(--t-2)" }}>
+                  <span style={{ color: "var(--buy)" }}>✓</span> {line}
+                </div>
+              ))}
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+// Override the screens in window so the App picks them up
+Object.assign(window, {
+  HomeScreen: HomeScreenV2,
+  DetailPanel: DetailPanelV2,
+  PortfolioScreen: PortfolioScreenV2,
+  SettingsScreen: SettingsScreenV2,
+});
+
+// Re-render App to use the new components
+// The App is already rendered; since we override window.* BEFORE App runs on first load
+// if this script block runs after the App script block, we need to force a re-render.
+// All V2 components are defined above and will be used by AppV2 below.
+</script>
+
+<script type="text/babel">
+/* global React, ReactDOM */
+/* global HomeScreenV2, DetailPanelV2, PortfolioScreenV2, SettingsScreenV2 */
+/* global TweaksPanel, TweakSection, TweakRadio, TweakColor, TweakToggle, TweakSelect, useTweaks */
+/* global LiveDataContext, LiveDataProvider */
+/* global WatchlistScreen, ScreenerScreen, AlertsScreen, NewsScreen, OnboardingScreen */
+
+// Completely replace App to use V2 components directly (avoids the late-binding issue)
+
+function AppInnerV2() {
+  const [tab, setTab] = React.useState("home");
+  const [detail, setDetail] = React.useState(null);
+  const [t, setTweak] = useTweaks({
+    "accent": "#d4a04a",
+    "theme": "dark",
+    "density": "comfortable",
+    "headlineFont": "Instrument Serif",
+    "showOnboarding": false
+  });
+  const liveData = React.useContext(LiveDataContext);
+
+  React.useEffect(() => {
+    document.documentElement.style.setProperty("--brand", t.accent);
+    document.documentElement.style.setProperty("--brand-w", t.accent + "22");
+    document.documentElement.style.setProperty("--brand-d", t.accent + "14");
+    if (t.theme === "light") {
+      document.documentElement.style.setProperty("--bg", "#f7f6f1");
+      document.documentElement.style.setProperty("--bg-soft", "#efede7");
+      document.documentElement.style.setProperty("--surface", "#ffffff");
+      document.documentElement.style.setProperty("--surface-2", "#f1efe8");
+      document.documentElement.style.setProperty("--surface-3", "#e6e3da");
+      document.documentElement.style.setProperty("--border", "#e6e3da");
+      document.documentElement.style.setProperty("--border-2", "#d4d0c4");
+      document.documentElement.style.setProperty("--border-3", "#b8b3a3");
+      document.documentElement.style.setProperty("--t-1", "#1a1814");
+      document.documentElement.style.setProperty("--t-2", "#5a564e");
+      document.documentElement.style.setProperty("--t-3", "#8a8578");
+      document.documentElement.style.setProperty("--t-4", "#b8b3a3");
+    } else {
+      ["--bg","--bg-soft","--surface","--surface-2","--surface-3","--border","--border-2","--border-3","--t-1","--t-2","--t-3","--t-4"].forEach(p => document.documentElement.style.removeProperty(p));
+    }
+    if (t.headlineFont === "Manrope") document.documentElement.style.setProperty("--font-serif", '"Manrope", sans-serif');
+    else if (t.headlineFont === "Space Grotesk") document.documentElement.style.setProperty("--font-serif", '"Space Grotesk", sans-serif');
+    else document.documentElement.style.setProperty("--font-serif", '"Instrument Serif", serif');
+  }, [t.accent, t.theme, t.headlineFont]);
+
+  React.useEffect(() => {
+    const fn = (e) => { if (e.key === "Escape") setDetail(null); };
+    window.addEventListener("keydown", fn);
+    return () => window.removeEventListener("keydown", fn);
+  }, []);
+
+  const openDetail = (rec) => setDetail(rec);
+
+  return (
+    <React.Fragment>
+      {t.showOnboarding && (
+        <OnboardingScreen onContinue={() => setTweak("showOnboarding", false)} />
+      )}
+
+      {!t.showOnboarding && (
+        <React.Fragment>
+          <nav className="topnav">
+            <div className="brand-mark">
+              <div className="bull"></div>
+              <span>BULL<em>seye</em></span>
+            </div>
+            <div className="navtabs">
+              <button className={`navtab ${tab === "home" ? "active" : ""}`} onClick={() => setTab("home")}>Picks</button>
+              <button className={`navtab ${tab === "screener" ? "active" : ""}`} onClick={() => setTab("screener")}>Screener</button>
+              <button className={`navtab ${tab === "watchlist" ? "active" : ""}`} onClick={() => setTab("watchlist")}>Watchlist</button>
+              <button className={`navtab ${tab === "portfolio" ? "active" : ""}`} onClick={() => setTab("portfolio")}>Portfolio</button>
+              <button className={`navtab ${tab === "alerts" ? "active" : ""}`} onClick={() => setTab("alerts")}>
+                Alerts<span className="dot-new"></span>
+              </button>
+              <button className={`navtab ${tab === "news" ? "active" : ""}`} onClick={() => setTab("news")}>News</button>
+              <button className={`navtab ${tab === "settings" ? "active" : ""}`} onClick={() => setTab("settings")}>Profile</button>
+            </div>
+            <div className="navright">
+              <div className="search-mini" onClick={() => alert("Search opens here")}>
+                <span>🔍</span>
+                <span>Search any stock or crypto…</span>
+                <span className="kbd">⌘K</span>
+              </div>
+              <div className="market-pill">
+                <span className={liveData.isLive ? "live-dot" : "live-dot offline"}></span>
+                {liveData.isLive ? <>🟢 LIVE · NSE OPEN</> : <>⚫ CACHED · NSE OPEN</>}
+              </div>
+              <div className="avatar">A</div>
+            </div>
+          </nav>
+
+          <div className="page">
+            {tab === "home"      && <HomeScreenV2 onOpenDetail={openDetail} />}
+            {tab === "screener"  && <ScreenerScreen onOpenDetail={openDetail} />}
+            {tab === "watchlist" && <WatchlistScreen onOpenDetail={openDetail} />}
+            {tab === "portfolio" && <PortfolioScreenV2 onOpenDetail={openDetail} />}
+            {tab === "alerts"    && <AlertsScreen onOpenDetail={openDetail} />}
+            {tab === "news"      && <NewsScreen />}
+            {tab === "settings"  && <SettingsScreenV2 />}
+          </div>
+
+          {detail && <DetailPanelV2 rec={detail} onClose={() => setDetail(null)} onRecUpdate={(updated) => setDetail(updated)} />}
+        </React.Fragment>
+      )}
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection title="Style">
+          <TweakColor label="Brand accent" value={t.accent} options={["#d4a04a","#34d399","#6fa0ff","#f87171","#c084fc"]} onChange={v => setTweak("accent", v)} />
+          <TweakRadio label="Theme" value={t.theme} options={[{ value: "dark", label: "Dark" }, { value: "light", label: "Light" }]} onChange={v => setTweak("theme", v)} />
+          <TweakSelect label="Headline font" value={t.headlineFont} options={["Instrument Serif","Manrope","Space Grotesk"].map(f => ({ value: f, label: f }))} onChange={v => setTweak("headlineFont", v)} />
+        </TweakSection>
+        <TweakSection title="Demo">
+          <TweakToggle label="Show onboarding screen" value={t.showOnboarding} onChange={v => setTweak("showOnboarding", v)} />
+        </TweakSection>
+      </TweaksPanel>
+    </React.Fragment>
+  );
+}
+
+function AppV2() {
+  return (
+    <LiveDataProvider>
+      <AppInnerV2 />
+    </LiveDataProvider>
+  );
+}
+
+// Re-render into root (replaces the old App render)
+ReactDOM.createRoot(document.getElementById("root")).render(<AppV2 />);
 </script>
 </body>
 </html>
