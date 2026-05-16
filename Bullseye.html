@@ -5118,7 +5118,7 @@ async function fetchTopPicksFromAI(aiName, apiKey) {
   return [];
 }
 
-function TodayTopPicks({ onOpenDetail }) {
+function TodayTopPicks({ onOpenDetail, onGoToSettings }) {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [picks, setPicks] = React.useState([]);
@@ -5168,13 +5168,29 @@ function TodayTopPicks({ onOpenDetail }) {
   const keys = getFreeAIKeys();
   const hasKeys = keys.gemini || keys.groq || keys.openrouter || keys.claude;
 
+  if (!hasKeys) {
+    return (
+      <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12, padding: "16px 20px", marginBottom: 16, display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ fontSize: 24 }}>🤖</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Set up a free AI key to get Today's Picks</div>
+          <div style={{ fontSize: 12, color: "var(--t-3)", lineHeight: 1.5 }}>Gemini, Groq (Llama), and Mistral are all free — no credit card needed. Takes 2 minutes.</div>
+        </div>
+        {onGoToSettings && (
+          <button className="btn-secondary" onClick={onGoToSettings} style={{ whiteSpace: "nowrap", fontSize: 12 }}>
+            Go to Profile →
+          </button>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div>
       <button
         className="top-picks-btn"
         onClick={fetchPicks}
         disabled={loading}
-        title={hasKeys ? "Get AI top picks for today" : "Add AI keys in Settings first"}
       >
         {loading ? "⟳ Fetching picks…" : "🤖 Today's Picks"}
       </button>
@@ -5189,7 +5205,12 @@ function TodayTopPicks({ onOpenDetail }) {
             AI-generated picks for today · Short-term (1-4 weeks) · For educational purposes only
           </div>
 
-          {error && <div style={{ color: "var(--sell)", fontSize: 12, fontFamily: "var(--font-mono)" }}>{error}</div>}
+          {error && (
+            <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,82,82,0.08)", border: "1px solid rgba(255,82,82,0.2)", borderRadius: 8, padding: "10px 14px" }}>
+              <div style={{ color: "var(--sell)", fontSize: 12, flex: 1 }}>{error}</div>
+              {onGoToSettings && <button className="btn-secondary" onClick={onGoToSettings} style={{ fontSize: 11, whiteSpace: "nowrap" }}>Profile →</button>}
+            </div>
+          )}
 
           {picks.length > 0 && (
             <div className="top-picks-grid">
@@ -5825,7 +5846,7 @@ function RecCardWithCouncil({ rec, onClick, compact, aiLoading, hasAI }) {
 }
 
 // ---------- Patched HomeScreen ----------
-function HomeScreenV2({ onOpenDetail }) {
+function HomeScreenV2({ onOpenDetail, onGoToSettings }) {
   const [filter, setFilter] = React.useState("all");
   const [actionFilter, setActionFilter] = React.useState("ALL");
   const [aiRunning, setAiRunning] = React.useState(false);
@@ -5886,7 +5907,7 @@ function HomeScreenV2({ onOpenDetail }) {
         <div>
           {/* Today's Picks button */}
           <div style={{ marginBottom: 16 }}>
-            <TodayTopPicks onOpenDetail={onOpenDetail} />
+            <TodayTopPicks onOpenDetail={onOpenDetail} onGoToSettings={onGoToSettings} />
           </div>
 
           <div className="filter-bar">
@@ -6553,7 +6574,7 @@ function AppInnerV2() {
           </nav>
 
           <div className="page">
-            {tab === "home"      && <HomeScreenV2 onOpenDetail={openDetail} />}
+            {tab === "home"      && <HomeScreenV2 onOpenDetail={openDetail} onGoToSettings={() => setTab("settings")} />}
             {tab === "screener"  && <ScreenerScreen onOpenDetail={openDetail} />}
             {tab === "watchlist" && <WatchlistScreen onOpenDetail={openDetail} />}
             {tab === "portfolio" && <PortfolioScreenV2 onOpenDetail={openDetail} />}
