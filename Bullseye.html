@@ -4145,6 +4145,30 @@ function LiveDataProvider({ children }) {
   );
 }
 
+// ── Live picks + news from Worker ─────────────────────────────────────────────
+async function fetchLivePicks() {
+  if (!BULLSEYE_API) return null;
+  try {
+    const res = await fetch(`${BULLSEYE_API}/api/picks`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.fresh && data.picks?.length > 0 ? data : null;
+  } catch { return null; }
+}
+
+async function fetchLiveNews() {
+  if (!BULLSEYE_API) return null;
+  try {
+    const res = await fetch(`${BULLSEYE_API}/api/news`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.news?.length > 0 ? data.news : null;
+  } catch { return null; }
+}
+
+window.fetchLivePicks = fetchLivePicks;
+window.fetchLiveNews = fetchLiveNews;
+
 // AI Analysis state — stored in module scope so it persists across re-renders
 window.__aiAnalysisCache = window.__aiAnalysisCache || {};
 window.__aiAnalysisListeners = window.__aiAnalysisListeners || [];
@@ -8259,28 +8283,51 @@ function HomeScreenV3({ onOpenDetail, onGoToSettings }) {
   const [filter, setFilter] = React.useState("all");
   const [actionFilter, setActionFilter] = React.useState("ALL");
   const [aiRunning, setAiRunning] = React.useState(false);
+  const [livePicks, setLivePicks] = React.useState(null);   // {picks, date, generatedAt}
+  const [liveNews, setLiveNews] = React.useState(null);     // array of news items
+  const [picksLoading, setPicksLoading] = React.useState(true);
   const aiCache = useAIAnalysis();
-  const apiKey = typeof localStorage !== "undefined" ? localStorage.getItem("bullseye_anthropic_key") : null;
+
+  // Load live picks + news on mount
+  React.useEffect(() => {
+    setPicksLoading(true);
+    Promise.allSettled([fetchLivePicks(), fetchLiveNews()]).then(([picksRes, newsRes]) => {
+      if (picksRes.status === "fulfilled" && picksRes.value) setLivePicks(picksRes.value);
+      if (newsRes.status === "fulfilled" && newsRes.value) setLiveNews(newsRes.value);
+      setPicksLoading(false);
+    });
+  }, []);
+
+  // Merge: live AI picks on top, then static crypto picks at bottom
+  const allPicks = React.useMemo(() => {
+    const staticCrypto = RECOMMENDATIONS.filter(r => r.market === "CRYPTO");
+    const staticBSE    = RECOMMENDATIONS.filter(r => r.exchange === "BSE");
+    if (livePicks?.picks?.length > 0) {
+      return [...livePicks.picks, ...staticBSE, ...staticCrypto];
+    }
+    return RECOMMENDATIONS;
+  }, [livePicks]);
 
   const filtered = React.useMemo(() => {
-    let r = RECOMMENDATIONS;
+    let r = allPicks;
     if (filter === "NSE") r = r.filter(x => x.exchange === "NSE");
     else if (filter === "BSE") r = r.filter(x => x.exchange === "BSE");
     else if (filter === "CRYPTO") r = r.filter(x => x.market === "CRYPTO");
     if (actionFilter !== "ALL") r = r.filter(x => x.action === actionFilter);
     return r;
-  }, [filter, actionFilter]);
+  }, [filter, actionFilter, allPicks]);
 
   const stats = React.useMemo(() => {
-    const total = RECOMMENDATIONS.length;
-    const buys = RECOMMENDATIONS.filter(r => r.action === "BUY").length;
-    const sells = RECOMMENDATIONS.filter(r => r.action === "SELL").length;
-    const holds = RECOMMENDATIONS.filter(r => r.action === "HOLD").length;
-    const avgConf = Math.round(RECOMMENDATIONS.reduce((a, r) => a + r.confidence, 0) / total);
+    const total = allPicks.length;
+    const buys = allPicks.filter(r => r.action === "BUY").length;
+    const sells = allPicks.filter(r => r.action === "SELL").length;
+    const holds = allPicks.filter(r => r.action === "HOLD").length;
+    const avgConf = total > 0 ? Math.round(allPicks.reduce((a, r) => a + (r.confidence||0), 0) / total) : 0;
     return { total, buys, sells, holds, avgConf };
-  }, []);
+  }, [allPicks]);
 
-  const watchlistRecs = RECOMMENDATIONS.slice(0, 7);
+  const watchlistRecs = allPicks.slice(0, 7);
+  const newsItems = liveNews || NEWS_ITEMS;
 
   const handleAnalyzeAll = async () => {
     if (aiRunning) return;
@@ -8324,6 +8371,15 @@ function HomeScreenV3({ onOpenDetail, onGoToSettings }) {
         <div>
           <div className="hero-eyebrow">{getDynamicEyebrow()}</div>
           <h1>Today's <em>highest-conviction</em><br />picks across the board.</h1>
+          {livePicks && (
+            <div style={{ marginTop: 8, fontSize: 12, color: "var(--buy)", fontFamily: "var(--font-mono)", display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--buy)", display: "inline-block", boxShadow: "0 0 6px var(--buy)" }}></span>
+              AI-generated · {livePicks.date} · {livePicks.count} picks from {livePicks.scannedCount}+ stocks scanned
+            </div>
+          )}
+          {picksLoading && BULLSEYE_API && (
+            <div style={{ marginTop: 8, fontSize: 12, color: "var(--t-3)", fontFamily: "var(--font-mono)" }}>⟳ Loading today's AI scan…</div>
+          )}
         </div>
         <div className="hero-meta">
           <div>Active Picks<strong>{stats.total}</strong></div>
@@ -8429,7 +8485,7 @@ function HomeScreenV3({ onOpenDetail, onGoToSettings }) {
               <div className="rail-title">Market News</div>
               <a className="rail-action">All news →</a>
             </div>
-            {NEWS_ITEMS.slice(0, 5).map((n, i) => (
+            {newsItems.slice(0, 5).map((n, i) => (
               <div className="news-item" key={i}>
                 <div className="news-headline">{n.title}</div>
                 <div className="news-meta">
