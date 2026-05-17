@@ -5525,7 +5525,9 @@ function App() {
 const GEMINI_KEY = "AIzaSyDsfyiPJKoORXlraWSlbAi1D7muG-r6Jns";
 
 function getFreeAIKeys() {
-  return { gemini: GEMINI_KEY, groq: "", openrouter: "", claude: "" };
+  // Gemini is always available — either via the Cloudflare Worker (server-side key)
+  // or via the fallback hardcoded key. No user input needed.
+  return { gemini: BULLSEYE_API ? "server" : GEMINI_KEY, groq: "", openrouter: "", claude: "" };
 }
 
 function extractJSON(text) {
@@ -5552,17 +5554,31 @@ verdict must be exactly "BUY", "SELL", or "HOLD". confidence is 1-10. time_horiz
 }
 
 async function callGemini(prompt, apiKey) {
-  const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    if (res.status === 429) throw new Error("Rate limited — try again in 60s");
-    throw new Error(`Gemini error ${res.status}`);
+  let data;
+  if (BULLSEYE_API) {
+    const res = await fetch(`${BULLSEYE_API}/api/ai`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+    if (!res.ok) {
+      if (res.status === 429) throw new Error("Rate limited — try again in 60s");
+      throw new Error(`AI error ${res.status}`);
+    }
+    data = await res.json();
+  } else {
+    const key = apiKey || GEMINI_KEY;
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    });
+    if (!res.ok) {
+      if (res.status === 429) throw new Error("Rate limited — try again in 60s");
+      throw new Error(`Gemini error ${res.status}`);
+    }
+    data = await res.json();
   }
-  const data = await res.json();
   return extractJSON(data.candidates[0].content.parts[0].text);
 }
 
@@ -6991,103 +7007,123 @@ function PortfolioScreenV2({ onOpenDetail }) {
 
 // ---------- Patched SettingsScreen with Free AI Keys ----------
 function SettingsScreenV2() {
-  const [apiKeyInput, setApiKeyInput] = React.useState(() => {
-    try { return localStorage.getItem("bullseye_anthropic_key") || ""; } catch { return ""; }
-  });
-  const [apiKeyMasked, setApiKeyMasked] = React.useState(true);
-  const [apiKeySaved, setApiKeySaved] = React.useState(() => {
-    try { return !!localStorage.getItem("bullseye_anthropic_key"); } catch { return false; }
-  });
-  const [apiKeySaveMsg, setApiKeySaveMsg] = React.useState("");
+  const backendActive = typeof BULLSEYE_API !== "undefined" && !!BULLSEYE_API;
 
-  const handleSaveKey = () => {
-    try {
-      if (apiKeyInput.trim()) {
-        localStorage.setItem("bullseye_anthropic_key", apiKeyInput.trim());
-        setApiKeySaved(true);
-        setApiKeySaveMsg("API key saved successfully.");
-      } else {
-        localStorage.removeItem("bullseye_anthropic_key");
-        setApiKeySaved(false);
-        setApiKeySaveMsg("API key removed.");
-      }
-      setTimeout(() => setApiKeySaveMsg(""), 3000);
-    } catch (e) {
-      setApiKeySaveMsg("Error saving key: " + e.message);
-    }
-  };
+  const dataRows = [
+    { label: "NSE Stocks",   src: "Yahoo Finance (.NS)",  note: "25 large + mid cap",  status: "live" },
+    { label: "BSE Stocks",   src: "Yahoo Finance (.BO)",  note: "5 BSE picks",          status: "live" },
+    { label: "Crypto",       src: "CoinGecko Public API", note: "Top 50 by market cap", status: "live" },
+    { label: "Macro Indices",src: "Yahoo Finance",        note: "NIFTY · SENSEX · VIX · GOLD · USD/INR", status: "live" },
+  ];
 
   return (
     <div>
       <div className="hero">
         <div>
-          <div className="hero-eyebrow">Profile & Settings</div>
-          <h1>Make BULLSEYE <em>yours</em>.</h1>
+          <div className="hero-eyebrow">Settings</div>
+          <h1>BULLSEYE is <em>100% free</em>.</h1>
+        </div>
+        <div className="hero-meta">
+          <div>Cost to use<strong>₹0</strong></div>
+          <div>Cost forever<strong>₹0</strong></div>
+          <div>No login needed<strong>✓</strong></div>
         </div>
       </div>
 
       <div className="page-grid">
         <div>
+
+          {/* AI Status */}
           <div className="rail-card" style={{ marginBottom: 20 }}>
             <div className="rail-head"><div className="rail-title">✦ AI Engine</div></div>
-            <div style={{ padding: "20px 22px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#00e676", boxShadow: "0 0 8px #00e676" }}></div>
+            <div style={{ padding: "18px 22px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#00e676", boxShadow: "0 0 8px #00e676", flexShrink: 0 }}></div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 600 }}>Gemini Active</div>
-                  <div style={{ fontSize: 11, color: "var(--t-3)", fontFamily: "var(--font-mono)", marginTop: 2 }}>gemini-3-flash-preview · Google AI · All features enabled</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: "var(--t-1)" }}>Gemini 2.0 Flash — Active</div>
+                  <div style={{ fontSize: 11, color: "var(--t-3)", fontFamily: "var(--font-mono)", marginTop: 2 }}>
+                    Google AI · Free tier · No key needed · {backendActive ? "Routed via Bullseye API" : "Direct (fallback)"}
+                  </div>
                 </div>
+              </div>
+              <div style={{ fontSize: 12, color: "var(--t-3)", lineHeight: 1.6, padding: "10px 14px", background: "var(--surface-2)", borderRadius: 8 }}>
+                AI analysis, stock verdicts, crypto signals, and Today's Picks are all powered by Google Gemini — completely free, no account or API key required.
               </div>
             </div>
           </div>
 
-          <div className="rail-card">
-            <div className="rail-head"><div className="rail-title">Account</div></div>
-            <div style={{ padding: "20px 22px", display: "flex", alignItems: "center", gap: 16, borderBottom: "1px solid var(--border)" }}>
-              <div className="avatar" style={{ width: 56, height: 56, fontSize: 20 }}>A</div>
-              <div>
-                <div style={{ fontSize: 16, fontWeight: 600 }}>Aarav Sharma</div>
-                <div style={{ fontSize: 12, color: "var(--t-3)", fontFamily: "var(--font-mono)" }}>aarav@gmail.com · PRO member</div>
-              </div>
-              <button className="btn-secondary" style={{ marginLeft: "auto" }}>Edit</button>
-            </div>
-            {[
-              ["Subscription", "BULLSEYE Pro · ₹1,499/month", "Manage"],
-              ["Broker Connection", "Zerodha Kite · Connected", "Switch"],
-              ["Default Currency", "INR (₹)", "Change"],
-              ["Risk Profile", "Moderate · Balanced", "Re-take"],
-              ["Two-Factor Auth", "Enabled · SMS + Authenticator", "Configure"],
-              ["Tax Reports", "FY 2025-26 ready", "Download"],
-            ].map(([k, v, action]) => (
-              <div key={k} style={{ padding: "14px 22px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)" }}>
+          {/* Data Sources */}
+          <div className="rail-card" style={{ marginBottom: 20 }}>
+            <div className="rail-head"><div className="rail-title">Live Data Sources</div></div>
+            {dataRows.map(row => (
+              <div key={row.label} style={{ padding: "12px 22px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)" }}>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 500 }}>{k}</div>
-                  <div style={{ fontSize: 11, color: "var(--t-3)", fontFamily: "var(--font-mono)", marginTop: 2 }}>{v}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "var(--t-1)" }}>{row.label}</div>
+                  <div style={{ fontSize: 11, color: "var(--t-3)", fontFamily: "var(--font-mono)", marginTop: 2 }}>{row.src} · {row.note}</div>
                 </div>
-                <a className="rail-action">{action} →</a>
+                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--buy)", background: "var(--buy-w)", padding: "2px 8px", borderRadius: 10 }}>FREE</span>
               </div>
             ))}
           </div>
+
+          {/* Backend status */}
+          <div className="rail-card">
+            <div className="rail-head"><div className="rail-title">Backend (Cloudflare Worker)</div></div>
+            <div style={{ padding: "18px 22px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", background: backendActive ? "#00e676" : "#888", boxShadow: backendActive ? "0 0 8px #00e676" : "none", flexShrink: 0 }}></div>
+                <div style={{ fontSize: 14, fontWeight: 600 }}>{backendActive ? "Connected" : "Not deployed yet"}</div>
+              </div>
+              <div style={{ fontSize: 12, color: "var(--t-3)", lineHeight: 1.7 }}>
+                {backendActive
+                  ? `API: ${BULLSEYE_API} — All market data and AI routed through your Cloudflare Worker.`
+                  : "Deploy the Cloudflare Worker from the /worker folder, then set BULLSEYE_API in Bullseye.html. Free forever on Cloudflare's free tier (100k req/day)."}
+              </div>
+            </div>
+          </div>
+
         </div>
         <aside>
           <div className="rail-card">
-            <div className="rail-head"><div className="rail-title">Pro Status</div></div>
+            <div className="rail-head"><div className="rail-title">Everything Included — Free</div></div>
             <div style={{ padding: 22 }}>
-              <div className="font-serif" style={{ fontSize: 32, color: "var(--brand)", marginBottom: 4 }}>Pro</div>
-              <div style={{ fontSize: 12, color: "var(--t-2)", marginBottom: 18 }}>Renews on 14 June 2026</div>
+              <div className="font-serif" style={{ fontSize: 28, color: "var(--brand)", marginBottom: 4 }}>₹0 / forever</div>
+              <div style={{ fontSize: 12, color: "var(--t-3)", marginBottom: 18 }}>No credit card. No signup. No limits.</div>
               {[
-                "Unlimited picks across all markets",
-                "Live target & stop alerts",
-                "Analyst thesis & catalysts",
-                "Algorithmic signals",
-                "Portfolio AI review",
-                "API access (200 req/day)",
-                "AI Council Vote (free AIs)",
-                "Averaging Assistant",
-                "My Holdings tracker",
+                "NSE + BSE stock picks (30 stocks)",
+                "Top 50 crypto live prices",
+                "AI analysis via Gemini 2.0 Flash",
+                "Live macro strip (NIFTY/SENSEX/BTC)",
+                "Market movers (gainers & losers)",
+                "Crypto screener with filters",
+                "Search (⌘K) across all assets",
+                "NSE/BSE/Crypto exchange filter",
+                "60s auto-refresh on all data",
+                "Portfolio & alerts tracker",
               ].map(line => (
-                <div key={line} style={{ display: "flex", gap: 8, fontSize: 12, padding: "6px 0", color: "var(--t-2)" }}>
+                <div key={line} style={{ display: "flex", gap: 8, fontSize: 12, padding: "5px 0", color: "var(--t-2)" }}>
                   <span style={{ color: "var(--buy)" }}>✓</span> {line}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rail-card" style={{ marginTop: 16 }}>
+            <div className="rail-head"><div className="rail-title">Hosting</div></div>
+            <div style={{ padding: "14px 22px" }}>
+              {[
+                ["Frontend", "GitHub Pages", "Free forever"],
+                ["Backend API", "Cloudflare Workers", "100k req/day free"],
+                ["AI", "Google Gemini 2.0 Flash", "1.5k req/day free"],
+                ["Market Data", "Yahoo Finance", "Unlimited (unofficial)"],
+                ["Crypto Data", "CoinGecko", "Free public tier"],
+              ].map(([service, provider, tier]) => (
+                <div key={service} style={{ padding: "8px 0", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: "var(--t-1)" }}>{service}</div>
+                    <div style={{ fontSize: 11, color: "var(--t-3)", fontFamily: "var(--font-mono)" }}>{provider}</div>
+                  </div>
+                  <span style={{ fontSize: 10, color: "var(--buy)", fontWeight: 700, whiteSpace: "nowrap" }}>{tier}</span>
                 </div>
               ))}
             </div>

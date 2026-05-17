@@ -1,8 +1,21 @@
 const CORS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
 };
+
+// Simple in-memory rate limiter — 20 AI calls per IP per hour
+const _rl = new Map();
+function checkRateLimit(ip) {
+  const bucket = `${ip}:${Math.floor(Date.now() / 3600000)}`;
+  const n = (_rl.get(bucket) || 0) + 1;
+  _rl.set(bucket, n);
+  if (_rl.size > 5000) {
+    const cur = Math.floor(Date.now() / 3600000);
+    for (const k of _rl.keys()) if (!k.endsWith(`:${cur}`)) _rl.delete(k);
+  }
+  return n <= 20;
+}
 
 const MACRO_SYMBOLS = "^NSEI,^BSESN,^IXIC,^GSPC,USDINR=X,^INDIAVIX,GC=F";
 
@@ -160,8 +173,47 @@ async function handleMovers(type) {
   }
 }
 
+async function handleAI(request, env) {
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  if (!checkRateLimit(ip)) {
+    return new Response(JSON.stringify({ error: "Rate limit: 20 AI requests/hour" }), {
+      status: 429, headers: { ...CORS, "Content-Type": "application/json" }
+    });
+  }
+  let body;
+  try { body = await request.json(); } catch { return err("Invalid JSON", 400); }
+  const prompt = body?.prompt;
+  if (!prompt) return err("Missing prompt", 400);
+
+  const key = env?.GEMINI_KEY;
+  if (!key) return err("AI not configured on server", 503);
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
+        })
+      }
+    );
+    if (!res.ok) {
+      const txt = await res.text();
+      if (res.status === 429) return err("Gemini rate limited — try again shortly", 429);
+      throw new Error(`Gemini ${res.status}: ${txt.slice(0, 200)}`);
+    }
+    const data = await res.json();
+    return json(data, 0);
+  } catch (e) {
+    return err(e.message);
+  }
+}
+
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -181,6 +233,7 @@ export default {
     if (path === "/api/gainers")         return handleMovers("gainers");
     if (path === "/api/losers")          return handleMovers("losers");
     if (path.startsWith("/api/chart/"))  return handleChart(path);
+    if (path === "/api/ai")              return handleAI(request, env);
     if (path === "/")                    return new Response("Bullseye API — OK", { headers: CORS });
 
     return err("Not found", 404);
