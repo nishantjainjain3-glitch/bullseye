@@ -1840,6 +1840,13 @@ input, select { font-family: inherit; color: inherit; }
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
 <script>
+// ── BACKEND CONFIG ─────────────────────────────────────────────────────────
+// After deploying the Cloudflare Worker, replace this URL with your worker URL.
+// e.g. "https://bullseye-api.YOUR-NAME.workers.dev"
+// While this is empty the app falls back to direct Yahoo Finance / CoinGecko calls.
+const BULLSEYE_API = "";
+// ───────────────────────────────────────────────────────────────────────────
+
 // Stock recommendation data — Indian (NSE) and Crypto focus
 // All prices and targets are illustrative for design purposes
 
@@ -3974,6 +3981,11 @@ const CRYPTO_ID_MAP = {
 const MACRO_SYMBOLS = ["^NSEI","^BSESN","^IXIC","^GSPC","USDINR=X","^INDIAVIX","GC=F"];
 
 async function fetchMacroQuotes() {
+  if (BULLSEYE_API) {
+    const res = await fetch(`${BULLSEYE_API}/api/macro`);
+    if (!res.ok) throw new Error(`Macro fetch failed: ${res.status}`);
+    return res.json(); // already parsed {symbol: {price, change}}
+  }
   const res = await fetch(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${MACRO_SYMBOLS.join(",")}`);
   if (!res.ok) throw new Error(`Macro fetch failed: ${res.status}`);
   const data = await res.json();
@@ -4001,6 +4013,11 @@ const BSE_SYMBOLS_LIST = [
 ];
 
 async function fetchBSEQuotes() {
+  if (BULLSEYE_API) {
+    const res = await fetch(`${BULLSEYE_API}/api/bse`);
+    if (!res.ok) throw new Error(`BSE fetch failed: ${res.status}`);
+    return res.json(); // already parsed {symbol: {price, change}}
+  }
   const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${BSE_SYMBOLS_LIST.join(",")}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`BSE fetch failed: ${res.status}`);
@@ -4020,6 +4037,11 @@ let _cgMarketsCacheTime = 0;
 const CG_MARKETS_TTL = 60000; // 60s
 
 async function fetchYahooQuotes(symbols) {
+  if (BULLSEYE_API) {
+    const res = await fetch(`${BULLSEYE_API}/api/nse`);
+    if (!res.ok) throw new Error(`NSE fetch failed: ${res.status}`);
+    return res.json(); // already parsed {symbol: {price, change}}
+  }
   const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols.join(",")}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Yahoo fetch failed: ${res.status}`);
@@ -4028,10 +4050,7 @@ async function fetchYahooQuotes(symbols) {
   const out = {};
   for (const q of quotes) {
     const sym = q.symbol.replace(".NS", "");
-    out[sym] = {
-      price: q.regularMarketPrice,
-      change: q.regularMarketChangePercent
-    };
+    out[sym] = { price: q.regularMarketPrice, change: q.regularMarketChangePercent };
   }
   return out;
 }
@@ -4041,9 +4060,11 @@ async function fetchCoinGeckoMarkets() {
   if (_cgMarketsCache && (now - _cgMarketsCacheTime) < CG_MARKETS_TTL) {
     return _cgMarketsCache;
   }
-  const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h,7d`;
+  const url = BULLSEYE_API
+    ? `${BULLSEYE_API}/api/crypto`
+    : `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h,7d`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`CoinGecko markets fetch failed: ${res.status}`);
+  if (!res.ok) throw new Error(`Crypto fetch failed: ${res.status}`);
   const data = await res.json();
   _cgMarketsCache = data;
   _cgMarketsCacheTime = now;
@@ -4822,7 +4843,9 @@ function ScreenerScreen({ onOpenDetail }) {
     setNseLoading(true);
     setNseError(null);
     try {
-      const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${NIFTY50_SYMBOLS.join(",")}`;
+      const url = BULLSEYE_API
+        ? `${BULLSEYE_API}/api/quotes?symbols=${NIFTY50_SYMBOLS.join(",")}`
+        : `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${NIFTY50_SYMBOLS.join(",")}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
@@ -7156,7 +7179,9 @@ async function fetchTechnicalData(symbol) {
     const yahooSym = symbol.includes('.') ? symbol : (
       NSE_LOOKUP.includes(symbol) ? symbol + ".NS" : symbol
     );
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSym}?interval=1d&range=3mo&includePrePost=false`;
+    const url = BULLSEYE_API
+      ? `${BULLSEYE_API}/api/chart/${yahooSym}`
+      : `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSym}?interval=1d&range=3mo&includePrePost=false`;
     const res = await fetch(url, { mode: 'cors' });
     if (!res.ok) throw new Error('fetch failed');
     const json = await res.json();
@@ -7385,9 +7410,15 @@ function MarketMovers({ onOpenDetail }) {
     let gotData = false;
     // Try Yahoo screener first
     try {
+      const gainersUrl = BULLSEYE_API
+        ? `${BULLSEYE_API}/api/gainers`
+        : 'https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?formatted=true&scrIds=day_gainers&count=5&region=IN&lang=en-IN';
+      const losersUrl = BULLSEYE_API
+        ? `${BULLSEYE_API}/api/losers`
+        : 'https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?formatted=true&scrIds=day_losers&count=5&region=IN&lang=en-IN';
       const [gRes, lRes] = await Promise.allSettled([
-        fetch('https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?formatted=true&scrIds=day_gainers&count=5&region=IN&lang=en-IN', { mode: 'cors' }),
-        fetch('https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?formatted=true&scrIds=day_losers&count=5&region=IN&lang=en-IN', { mode: 'cors' })
+        fetch(gainersUrl, { mode: 'cors' }),
+        fetch(losersUrl, { mode: 'cors' })
       ]);
       if (gRes.status === 'fulfilled' && lRes.status === 'fulfilled' && gRes.value.ok && lRes.value.ok) {
         const gData = await gRes.value.json();
@@ -7534,7 +7565,9 @@ function ScreenerScreenV3({ onOpenDetail }) {
         "APOLLOHOSP.NS","HEROMOTOCO.NS","BRITANNIA.NS","BAJAJ-AUTO.NS","SBILIFE.NS",
         "HDFCLIFE.NS","HINDALCO.NS","M&M.NS","TATACONSUM.NS","UPL.NS"
       ];
-      const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${NIFTY50_SYMBOLS.join(",")}`;
+      const url = BULLSEYE_API
+        ? `${BULLSEYE_API}/api/quotes?symbols=${NIFTY50_SYMBOLS.join(",")}`
+        : `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${NIFTY50_SYMBOLS.join(",")}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
